@@ -1,7 +1,15 @@
 {
   "name": "@zpnester/bs-sw",
-  "version": "0.1.0",
-  "author": "Andriy Nesterenko",
+  "version": "0.0.0",
+  "author": {
+    "name": "Andriy Nesterenko",
+    "email": "zpnester@gmail.com",
+    "url": "https://github.com/zpnester"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/zpnester/bs-sw.git"
+  },
   "license": "MIT",
   "scripts": {
     "clean": "bsb -clean-world",
@@ -10,9 +18,7 @@
     "test:webpack": "webpack -w",
     "test:serve": "serve test_dist"
   },
-  "keywords": [
-    "BuckleScript"
-  ],
+  "keywords": [],
   "devDependencies": {
     "bs-platform": "^4.0.5",
     "cross-env": "^5.2.0",

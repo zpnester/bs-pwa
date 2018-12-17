@@ -1,30 +1,5 @@
 type t;
 
-open SW_Types;
-
-module Action = SW_Notification_Action;
-
-[@bs.get] external scope: t => any = "scope";
-
-[@bs.get]
-external installing_: t => Js.Nullable.t(SW_ServiceWorker.t) = "installing";
-
-let installing = self => self->installing_->Js.Nullable.toOption;
-
-[@bs.get]
-external waiting_: t => Js.Nullable.t(SW_ServiceWorker.t) = "waiting";
-
-let waiting = self => self->waiting_->Js.Nullable.toOption;
-
-[@bs.get] external active_: t => Js.Nullable.t(SW_ServiceWorker.t) = "active";
-
-let active = self => self->active_->Js.Nullable.toOption;
-
-/* navigationPreload  */
-/* pushManager */
-/* onupdatefound */
-/* inherits EventTarget */
-
 [@bs.send]
 external getNotifications_:
   (t, Js.Nullable.t({. "tag": string})) =>
@@ -41,9 +16,23 @@ let getNotifications = (self: t, ~tag: option(string)=?, ()) => {
   self->getNotifications_(opts);
 };
 
-type show_notification_options = {
+[@bs.get] external active_: t => Js.Nullable.t(SW_ServiceWorker.t) = "active";
+
+let active = self => self->active_->Js.Nullable.toOption;
+
+[@bs.get]
+external installing_: t => Js.Nullable.t(SW_ServiceWorker.t) = "installing";
+
+let installing = self => self->installing_->Js.Nullable.toOption;
+
+[@bs.get]
+external waiting_: t => Js.Nullable.t(SW_ServiceWorker.t) = "waiting";
+
+let waiting = self => self->waiting_->Js.Nullable.toOption;
+
+type show_notification_options('a, 'b, 'c) = {
   .
-  "actions": Js.Nullable.t(array(Action.t)),
+  "actions": Js.Nullable.t(array(SW_Notification_Action.t)),
   "badge": Js.Nullable.t(string),
   "body": Js.Nullable.t(string),
   "dir": Js.Nullable.t(string),
@@ -52,23 +41,22 @@ type show_notification_options = {
   "lang": Js.Nullable.t(string),
   "renotify": Js.Nullable.t(bool),
   "requireInteraction": Js.Nullable.t(bool),
-  "tag": Js.Nullable.t(any),
-  "vibrate": Js.Nullable.t(any),
-  "data": Js.Nullable.t(any),
+  "tag": Js.Nullable.t(string),
+  "vibrate": Js.Nullable.t('b),
+  "data": Js.Nullable.t('c),
 };
 
-/* returns notification event, not notification */
 [@bs.send]
 external showNotification_:
-  (t, string, Js.Nullable.t(show_notification_options)) =>
-  Js.Promise.t(SW_NotificationEvent.t) =
+  (t, string, Js.Nullable.t(show_notification_options('a, 'b, 'c))) =>
+  Js.Promise.t(unit) =
   "showNotification";
 
 let showNotification =
     (
       self: t,
       title: string,
-      ~actions: option(array(Action.t))=?,
+      ~actions: option(array(SW_Notification_Action.t))=?,
       ~badge: option(string)=?,
       ~body: option(string)=?,
       ~dir: option(string)=?,
@@ -77,9 +65,9 @@ let showNotification =
       ~lang: option(string)=?,
       ~renotify: option(bool)=?,
       ~requireInteraction: option(bool)=?,
-      ~tag: option(any)=?,
-      ~vibrate: option(any)=?,
-      ~data: option(any)=?,
+      ~tag: option('a)=?,
+      ~vibrate: option('b)=?,
+      ~data: option('c)=?,
       (),
     ) => {
   open Belt.Option;
@@ -116,7 +104,3 @@ let showNotification =
 
   self->showNotification_(title, opts);
 };
-
-[@bs.send] external update: t => unit = "update";
-
-[@bs.send] external unregister: t => Js.Promise.t(bool) = "unregister";

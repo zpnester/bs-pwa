@@ -1,26 +1,18 @@
 type t;
 
-open SW_Types;
-
-module Action = SW_Notification_Action;
-
-let scope: t => any;
-
-let installing: t => option(SW_ServiceWorker.t);
-let waiting: t => option(SW_ServiceWorker.t);
-let active: t => option(SW_ServiceWorker.t);
-/* navigationPreload  */
-/* pushManager */
-/* onupdatefound */
-/* inherits EventTarget */
 let getNotifications:
   (t, ~tag: string=?, unit) => Js.Promise.t(array(SW_Notification.t));
 
+let active: t => option(SW_ServiceWorker.t);
+let installing: t => option(SW_ServiceWorker.t);
+let waiting: t => option(SW_ServiceWorker.t);
+
+/* docs says it returns promise of message event, got promise of undefined when tested */
 let showNotification:
   (
     t,
     string,
-    ~actions: array(Action.t)=?,
+    ~actions: array(SW_Notification_Action.t)=?,
     ~badge: string=?,
     ~body: string=?,
     ~dir: string=?,
@@ -29,11 +21,9 @@ let showNotification:
     ~lang: string=?,
     ~renotify: bool=?,
     ~requireInteraction: bool=?,
-    ~tag: any=?,
-    ~vibrate: any=?,
-    ~data: any=?,
+    ~tag: string=?,
+    ~vibrate: 'b=?,
+    ~data: 'c=?,
     unit
   ) =>
-  Js.Promise.t(SW_NotificationEvent.t);
-let update: t => unit;
-let unregister: t => Js.Promise.t(bool);
+  Js.Promise.t(unit);

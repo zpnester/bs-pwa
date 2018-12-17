@@ -1,7 +1,4 @@
 type t;
 
-type event;
-
-let addEventListener: (t, SW_EventType.t('a), 'a => unit) => unit;
-let dispatchEvent: (t, event) => bool;
-let removeEventListener: (t, 'a => unit) => unit;
+let addEventListener: (t, SW_EventType.t(t, 'e), 'e => unit) => unit;
+let removeEventListener: (t, SW_EventType.t(t, 'e) => unit) => unit;

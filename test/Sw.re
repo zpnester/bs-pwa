@@ -3,58 +3,143 @@ open Expect;
 Js.log("hello sw");
 
 open SW;
-open EventTarget;
 open ServiceWorkerGlobalScope;
 open ServiceWorkerRegistration;
 open Js.Promise;
-open SW_Prelude;
+open Belt;
+open Clients;
 
-/* expectToEqual(Notification.permission, "default"); */
+self->addEventListener(install, _ => Js.log("on install"));
 
-self->registration->showNotification("hello sw", ());
+self->addEventListener(activate, _ => Js.log("on activate"));
 
-self->addEventListener(install, event => Js.log("on install"));
+self->skipWaiting;
 
+self->addEventListener(fetch, _ => Js.log("on fetch"));
 self->addEventListener(
-  activate,
-  event => {
-    Js.log("on activate");
-    self->registration->showNotification("on activate", ());
-    ();
+  message,
+  e => {
+    open MessageEvent;
+    Js.log("on message");
+
+    expectToEqualAny(e->ports, [||]);
+    switch (e->ports->Belt.Array.get(0)) {
+    | Some(port) => port->SW_MessagePort.postMessage("response via port")
+    | _ => Js.log("no port")
+    };
+
+    Js.log2("data", e->data);
+    Js.log2("origin", e->origin);
+    Js.log2("lastEventId", e->lastEventId);
+    Js.log2("source", e->source);
+    Js.log2("ports", e->ports);
+
+    let reg = self->registration;
+
+    reg->SW_ServiceWorkerRegistration.getNotifications()
+    |> then_(ns => {
+         Js.log2("notifications", ns);
+         resolve();
+       })
+    |> ignore;
+
+    Js.log2(
+      "active",
+      reg->SW_ServiceWorkerRegistration.active->Belt.Option.isSome,
+    );
+    Js.log2(
+      "installing",
+      reg->SW_ServiceWorkerRegistration.installing->Belt.Option.isSome,
+    );
+    Js.log2(
+      "waiting",
+      reg->SW_ServiceWorkerRegistration.waiting->Belt.Option.isSome,
+    );
+
+    let clients = self->clients;
+    clients->matchAll()
+    |> then_(arr => {
+         arr
+         |> Js.Array.forEachi((x, i) => {
+              x->SW_Client.postMessage("message for client");
+              Js.log2("client id", x->SW_Client.id);
+              Js.log2("client type_", x->SW_Client.type_);
+              Js.log2("client url", x->SW_Client.url);
+            });
+
+         Js.log2("clients", arr);
+         resolve();
+       })
+    |> ignore;
+
+    clients->get("/")
+    |> then_(cl => {
+         Js.log2("client", cl);
+         resolve();
+       })
+    |> ignore;
+
+    Js.log2("clients", clients);
+
+    self
+    ->registration
+    ->showNotification(
+        "Test Notification",
+        ~body="Hello there",
+        ~icon="https://image.flaticon.com/icons/png/512/1374/1374680.png",
+        ~badge="https://image.flaticon.com/icons/png/512/1374/1374680.png",
+        ~image="https://image.flaticon.com/icons/png/512/1374/1374679.png",
+        ~tag="tag1",
+        /* ~requireInteraction=true, */
+        ~actions=[|
+          SW_Notification_Action.t(~title="Open window", ~action="left", ()),
+          SW_Notification_Action.t(~title="Do nothing", ~action="right", ()),
+        |],
+        (),
+      )
+    |> Js.Promise.then_(() => {
+         Js.log("notification fired");
+         resolve();
+       })
+    |> ignore;
   },
 );
-
-self->addEventListener(message, event => Js.log("on message"));
-
-self->addEventListener(fetch, event => Js.log("on fetch"));
 
 self->addEventListener(
   notificationclick,
   event => {
-    Js.log("on notificationclick");
-    open Notification;
     open NotificationEvent;
-    Js.log(event);
-    Js.log2("notification action:", event->action);
-    Js.log2("notification title:", event->notification->title);
+    open Notification;
+    Js.log("on notification click");
 
-    self->clients->Clients.matchAll()
-    |> then_(clients => {
-         Js.log2("clients", clients);
-         resolve();
-       });
-    ();
+    Js.log2("action", event->action);
+    Js.log2("tag", event->notification->tag);
+    Js.log2("timestamp", event->notification->timestamp);
+
+    if (event->action == Some("left")) {
+      self->clients->openWindow("/")
+      |> then_(wc => {
+           Js.log2("wc", wc);
+           wc->Belt.Option.getExn->SW_WindowClient.navigate("/elsewhere");
+         })
+      |> then_(wc => {
+           Js.log2("navigated", wc);
+           resolve();
+         })
+      |> ignore;
+      ();
+    };
   },
 );
 
-self->addEventListener(notificationclose, event =>
-  Js.log("on notificationclose")
+self->addEventListener(notificationclose, _ =>
+  Js.log("on notification close")
 );
 
-self->addEventListener(push, event => Js.log("on push"));
+self->addEventListener(push, _ => Js.log("on push"));
 
-self->addEventListener(pushsubscriptionchange, event =>
+self->addEventListener(pushsubscriptionchange, _ =>
   Js.log("on pushsubscriptionchange")
 );
 
-self->addEventListener(sync, event => Js.log("on sync"));
+self->addEventListener(sync, _ => Js.log("on sync"));

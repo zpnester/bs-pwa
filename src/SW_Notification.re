@@ -1,15 +1,14 @@
-type t;
+ type t;
 
-open SW_Types;
 
 /* static */
 [@bs.val] [@bs.scope "Notification"]
 external permission: SW_Notification_Permission.t = "permission";
 
-[@bs.get] external actions_: t => Js.Nullable.t(array(any)) = "actions";
+[@bs.get] external actions_: t => Js.Nullable.t(array(SW_Notification_Action.t)) = "actions";
 [@bs.get] external badge_: t => Js.Nullable.t(string) = "badge";
 [@bs.get] external body_: t => Js.Nullable.t(string) = "body";
-[@bs.get] external data_: t => Js.Nullable.t(any) = "data";
+[@bs.get] external data_: t => Js.Nullable.t(Js.Json.t) = "data";
 [@bs.get] external dir_: t => Js.Nullable.t(string) = "dir";
 [@bs.get] external tag_: t => Js.Nullable.t(string) = "tag";
 [@bs.get] external icon_: t => Js.Nullable.t(string) = "icon";
@@ -18,10 +17,10 @@ external permission: SW_Notification_Permission.t = "permission";
 [@bs.get] external silent_: t => Js.Nullable.t(bool) = "silent";
 
 [@bs.get]
-external timestamp_: t => Js.Nullable.t(dom_time_stamp) = "timestamp";
+external timestamp_: t => Js.Nullable.t(float) = "timestamp";
 [@bs.get] external title_: t => Js.Nullable.t(string) = "title";
 
-[@bs.get] external vibrate_: t => Js.Nullable.t(any) = "vibrate";
+[@bs.get] external vibrate_: t => Js.Nullable.t(Js.Json.t) = "vibrate";
 
 let actions = (self: t) => self->actions_->Js.Nullable.toOption;
 let badge = (self: t) => self->badge_->Js.Nullable.toOption;
@@ -38,13 +37,5 @@ let timestamp = (self: t) => self->timestamp_->Js.Nullable.toOption;
 let title = (self: t) => self->title_->Js.Nullable.toOption;
 
 let vibrate = (self: t) => self->vibrate_->Js.Nullable.toOption;
-
-/* TODO onclick onclose onerror onshow */
-
-/* static */
-[@bs.val] [@bs.scope "Notification"]
-external requestPermission:
-  unit => Js.Promise.t(SW_Notification_Permission.t) =
-  "requestPermission";
 
 [@bs.send] external close: t => unit = "close";

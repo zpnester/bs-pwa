@@ -1,1 +1,0 @@
-[@bs.val] external self: SW_ServiceWorkerGlobalScope.t = "self";
