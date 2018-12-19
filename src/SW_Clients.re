@@ -3,7 +3,7 @@ type t;
 type match_all_options = {
   .
   "includeUncontrolled": Js.Nullable.t(bool),
-  "type": Js.Nullable.t(string),
+  "type": Js.Nullable.t(SW_ClientType.t),
 };
 
 
@@ -26,7 +26,7 @@ let matchAll =
     (
       self: t,
       ~includeUncontrolled: option(bool)=?,
-      ~type_: option(string)=?,
+      ~type_: option(SW_ClientType.t)=?,
       (),
     ) => {
   let opts =
