@@ -1,3 +1,3 @@
 include SW_EventTarget;
 
-[@bs.val] external importScripts: string => unit = "importScripts";
+[@bs.send] external importScripts: (t, string) => unit = "importScripts";

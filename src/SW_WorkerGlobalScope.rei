@@ -1,3 +1,3 @@
 include (module type of SW_EventTarget);
 
-let importScripts: string => unit;
+let importScripts: (t, string) => unit;

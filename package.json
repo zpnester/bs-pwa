@@ -1,6 +1,6 @@
 {
   "name": "@zpnester/bs-sw",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "author": {
     "name": "Andriy Nesterenko",
     "email": "zpnester@gmail.com",
@@ -16,7 +16,7 @@
     "build": "bsb -make-world",
     "watch": "bsb -make-world -w",
     "test:webpack": "webpack -w",
-    "test:serve": "serve test_dist"
+    "test:serve": "serve -p 5001 test_dist"
   },
   "keywords": [],
   "devDependencies": {

@@ -9,6 +9,10 @@ open Js.Promise;
 open Belt;
 open Clients;
 
+self->importScripts(
+  "1.js",
+);
+
 self->addEventListener(install, _ => Js.log("on install"));
 
 self->addEventListener(activate, _ => Js.log("on activate"));
