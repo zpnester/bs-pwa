@@ -1,9 +1,4 @@
-[@bs.deriving abstract]
-type t = {
-  [@bs.optional]
-  action: string,
-  [@bs.optional]
-  title: string,
-  [@bs.optional]
-  icon: string,
-};
+type t;
+
+[@bs.obj]
+external make: (~action: string, ~title: string, ~icon: string=?, unit) => t = "";

@@ -30,7 +30,9 @@ external waiting_: t => Js.Nullable.t(SW_ServiceWorker.t) = "waiting";
 
 let waiting = self => self->waiting_->Js.Nullable.toOption;
 
-type show_notification_options('a, 'b, 'c) = {
+
+/* same as in Notification */
+type show_notification_options('a, 'b) = {
   .
   "actions": Js.Nullable.t(array(SW_Notification_Action.t)),
   "badge": Js.Nullable.t(string),
@@ -42,13 +44,13 @@ type show_notification_options('a, 'b, 'c) = {
   "renotify": Js.Nullable.t(bool),
   "requireInteraction": Js.Nullable.t(bool),
   "tag": Js.Nullable.t(string),
-  "vibrate": Js.Nullable.t('b),
-  "data": Js.Nullable.t('c),
+  "vibrate": Js.Nullable.t('a),
+  "data": Js.Nullable.t('b),
 };
 
 [@bs.send]
 external showNotification_:
-  (t, string, Js.Nullable.t(show_notification_options('a, 'b, 'c))) =>
+  (t, string, Js.Nullable.t(show_notification_options('a, 'b))) =>
   Js.Promise.t(unit) =
   "showNotification";
 
@@ -65,9 +67,9 @@ let showNotification =
       ~lang: option(string)=?,
       ~renotify: option(bool)=?,
       ~requireInteraction: option(bool)=?,
-      ~tag: option('a)=?,
-      ~vibrate: option('b)=?,
-      ~data: option('c)=?,
+      ~tag: option(string)=?,
+      ~vibrate: option('a)=?,
+      ~data: option('b)=?,
       (),
     ) => {
   open Belt.Option;
@@ -104,3 +106,7 @@ let showNotification =
 
   self->showNotification_(title, opts);
 };
+
+[@bs.get] external pushManager_: t => Js.Nullable.t(SW_PushManager.t) = "pushManager";
+
+let pushManager = self => pushManager_(self)->Js.Nullable.toOption; 

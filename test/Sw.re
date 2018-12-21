@@ -9,9 +9,10 @@ open Js.Promise;
 open Belt;
 open Clients;
 
-self->importScripts(
-  "1.js",
-);
+self->importScripts("1.js");
+
+Js.log2("sw registration", self->registration);
+Js.log2("push manager", self->registration->pushManager);
 
 self->addEventListener(install, _ => Js.log("on install"));
 
@@ -96,8 +97,15 @@ self->addEventListener(
         ~tag="tag1",
         /* ~requireInteraction=true, */
         ~actions=[|
-          SW_Notification_Action.t(~title="Open window", ~action="left", ()),
-          SW_Notification_Action.t(~title="Do nothing", ~action="right", ()),
+          Notification.Action.make(~title="Open window", ~action="left", ()),
+          Notification.Action.make(~title="Do nothing", ~action="right", ()),
+          Notification.Action.make(
+            ~action="a1",
+            ~title="Click",
+            ~icon=
+              "https://upload.wikimedia.org/wikipedia/commons/thumb/e/e6/Noto_Emoji_KitKat_263a.svg/1200px-Noto_Emoji_KitKat_263a.svg.png",
+            (),
+          ),
         |],
         (),
       )

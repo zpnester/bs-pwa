@@ -22,8 +22,10 @@ let showNotification:
     ~renotify: bool=?,
     ~requireInteraction: bool=?,
     ~tag: string=?,
-    ~vibrate: 'b=?,
-    ~data: 'c=?,
+    ~vibrate: 'a=?,
+    ~data: 'b=?,
     unit
   ) =>
   Js.Promise.t(unit);
+
+let pushManager: t => option(SW_PushManager.t);

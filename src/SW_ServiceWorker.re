@@ -1,1 +1,1 @@
-type t;
+include SW_Worker;

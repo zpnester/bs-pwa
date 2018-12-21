@@ -28,3 +28,5 @@ let pushsubscriptionchange: SW_EventType.t(t, SW_PushEvent.t) =
   SW_EventType.unsafe("pushsubscriptionchange");
 
 [@bs.send] external skipWaiting: t => Js.Promise.t(unit) = "skipWaiting";
+
+
