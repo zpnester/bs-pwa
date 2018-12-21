@@ -38,4 +38,4 @@ let make:
     ~data: 'b=?,
     unit
   ) =>
-  Js.Promise.t(unit);
+  t;

@@ -65,8 +65,7 @@ type show_notification_options('a, 'b) = {
 
 [@bs.new]
 external make_:
-  (string, Js.Nullable.t(show_notification_options('a, 'b))) =>
-  Js.Promise.t(unit) =
+  (string, Js.Nullable.t(show_notification_options('a, 'b))) => t =
   "Notification";
 
 let make =

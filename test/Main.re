@@ -5,12 +5,16 @@ open Belt;
 open ServiceWorkerContainer;
 open ServiceWorker;
 open Js.Promise;
-
+open Expect;
 Notification.requestPermission()
 |> then_(p => {
-     if (p == Notification.Permission.granted) {
-       Notification.make("hi", ~body="hello", ()) |> ignore;
-     };
+     expectToEqual(p, Notification.Permission.granted);
+     let n = Notification.make("hi", ~body="hello", ());
+
+     expectToEqual(n->Notification.icon, Some(""));
+     expectToEqual(n->Notification.title, Some("hi"));
+     expectToEqual(n->Notification.body, Some("hello"));
+     expectToEqual(n->Notification.actions, Some([||]));
      resolve();
    })
 |> ignore;
