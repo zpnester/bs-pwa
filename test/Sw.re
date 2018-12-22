@@ -65,11 +65,11 @@ self->addEventListener(
     clients->matchAll()
     |> then_(arr => {
          arr
-         |> Js.Array.forEachi((x, i) => {
-              x->SW_Client.postMessage("message for client");
-              Js.log2("client id", x->SW_Client.id);
-              Js.log2("client type_", x->SW_Client.type_);
-              Js.log2("client url", x->SW_Client.url);
+         |> Js.Array.forEachi((c, i) => {
+              c->SW_Client.postMessage("message for client");
+              Js.log2("client id", c->SW_Client.id);
+              Js.log2("client type_", c->SW_Client.type_);
+              Js.log2("client url", c->SW_Client.url);
             });
 
          Js.log2("clients", arr);

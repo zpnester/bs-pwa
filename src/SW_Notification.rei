@@ -21,6 +21,8 @@ let title: t => option(string);
 let vibrate: t => option(Js.Json.t);
 let close: t => unit;
 
+let onclick: (t, SW_Event.t => unit) => unit;
+
 let make:
   (
     string,

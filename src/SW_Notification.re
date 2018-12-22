@@ -47,6 +47,9 @@ let vibrate = (self: t) => self->vibrate_->Js.Nullable.toOption;
 
 [@bs.send] external close: t => unit = "close";
 
+
+[@bs.set] external onclick: (t, SW_Event.t => unit) => unit = "onclick";
+
 type show_notification_options('a, 'b) = {
   .
   "actions": Js.Nullable.t(array(SW_Notification_Action.t)),

@@ -10,6 +10,9 @@ Notification.requestPermission()
 |> then_(p => {
      expectToEqual(p, Notification.Permission.granted);
      let n = Notification.make("hi", ~body="hello", ());
+     n->Notification.onclick(_ => {
+       Js.log("clicked");
+     });
 
      expectToEqual(n->Notification.icon, Some(""));
      expectToEqual(n->Notification.title, Some("hi"));

@@ -1,6 +1,6 @@
 {
   "name": "@zpnester/bs-sw",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": {
     "name": "Andriy Nesterenko",
     "email": "zpnester@gmail.com",
@@ -16,11 +16,13 @@
     "build": "bsb -make-world",
     "watch": "bsb -make-world -w",
     "test:webpack": "webpack -w",
-    "test:serve": "serve -p 5001 test_dist"
+    "test:serve": "serve -p 5001 test_dist",
+    "start": "concurrently --raw \"npm:watch\" \"npm:test:webpack\" \"npm:test:serve\""
   },
   "keywords": [],
   "devDependencies": {
     "bs-platform": "^4.0.5",
+    "concurrently": "^4.1.0",
     "cross-env": "^5.2.0",
     "expect": "^23.6.0",
     "serve": "^10.0.2",
