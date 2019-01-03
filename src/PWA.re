@@ -28,3 +28,4 @@ module MediaStreamTrack = PWA_MediaStreamTrack;
 module HTMLVideoElement = PWA_HTMLVideoElement;
 module HTMLCanvasElement = PWA_HTMLCanvasElement;
 module CanvasRenderingContext2D = PWA_CanvasRenderingContext2D;
+module HTMLInputElement = PWA_HTMLInputElement;

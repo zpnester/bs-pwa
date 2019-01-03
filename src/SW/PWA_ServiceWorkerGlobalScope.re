@@ -27,7 +27,7 @@ let message: PWA_EventType.t(t, PWA_MessageEvent.t) =
 let pushsubscriptionchange: PWA_EventType.t(t, PWA_ExtendableEvent.t) =
   PWA_EventType.unsafe("pushsubscriptionchange");
 
-[@bs.send] external skipWaiting: (t, unit) => Js.Promise.t(unit) = "skipWaiting";
+[@bs.send] external skipWaiting: t => Js.Promise.t(unit) = "skipWaiting";
 
 
 

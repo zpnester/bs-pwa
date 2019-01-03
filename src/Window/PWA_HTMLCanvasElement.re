@@ -22,7 +22,12 @@ function(self) {
 /* 2 params omitted */
 [@bs.send] external toDataURL: t => string = "toDataURL";
 
-external fromDomUnsafe: Dom.element => t = "%identity";
+let asCanvasElement_: Dom.element => Js.Nullable.t(t) = [%raw {|
+    function(element) {
+      return (element instanceof HTMLCanvasElement) ? element : null;
+    }
+|}];
+let asCanvasElement = elem => elem->asCanvasElement_ ->Js.Nullable.toOption;
 
 /* TODO */
 [@bs.send]

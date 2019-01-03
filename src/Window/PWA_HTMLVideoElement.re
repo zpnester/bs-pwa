@@ -1,16 +1,7 @@
 type t;
 
-[@bs.set]
-external setSrcObject:
-  (
-    t,
-    [@bs.unwrap] [
-      | `MediaStream(PWA_MediaStream.t)
-      | `Blob(FileReader.Blob.t)
-    ]
-  ) =>
-  unit =
-  "srcObject";
+/* As of November 2017, browsers only support MediaStream */
+[@bs.set] external setSrcObject: (t, PWA_MediaStream.t) => unit = "srcObject";
 
 [@bs.send] external play: t => Js.Promise.t(unit) = "play";
 [@bs.send] external pause: t => unit = "pause";
@@ -18,4 +9,11 @@ external setSrcObject:
 [@bs.get] external videoWidth: t => float = "videoWidth";
 [@bs.get] external videoHeight: t => float = "videoHeight";
 
-external fromDomUnsafe: Dom.element => t = "%identity";
+let asVideoElement_: Dom.element => Js.Nullable.t(t) = [%raw
+  {|
+function(element) {
+  return (element instanceof HTMLVideoElement) ? element : null;
+}
+|}
+];
+let asVideoElement = elem => elem->asVideoElement_->Js.Nullable.toOption;
