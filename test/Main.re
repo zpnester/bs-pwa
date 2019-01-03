@@ -1,4 +1,4 @@
-open SW;
+open PWA;
 open WindowGlobalScope;
 open Navigator;
 open Belt;
@@ -6,9 +6,11 @@ open ServiceWorkerContainer;
 open ServiceWorker;
 open Js.Promise;
 open Expect;
+
+
 Notification.requestPermission()
 |> then_(p => {
-     expectToEqual(p, Notification.Permission.granted);
+     expectToEqual(p, `granted);
      let n = Notification.make("hi", ~body="hello", ());
      n->Notification.onclick(_ => {
        Js.log("clicked");
@@ -22,9 +24,9 @@ Notification.requestPermission()
    })
 |> ignore;
 
-switch (self->navigator->serviceWorker) {
+switch (window->navigator->serviceWorker) {
 | Some(c) =>
-  c->register("/sw.wp.js")
+  c->register("/sw.js")
   |> then_(reg => {
        Js.log2("window registration", reg);
        Js.log("register OK");
@@ -32,14 +34,123 @@ switch (self->navigator->serviceWorker) {
      })
   |> catch(e => {
        Js.log2("err", e);
-       resolve();
+       failwith("fail");
      })
 | None => resolve()
 };
 
-switch (self->navigator->serviceWorker->Option.flatMap(controller)) {
+switch (window->navigator->serviceWorker->Option.flatMap(controller)) {
 | Some(sw) =>
   Js.Global.setTimeout(() => sw->postMessage("hello"), 3000) |> ignore;
   Js.log("posted");
 | None => Js.log("no sw")
 };
+
+
+let getVideoUnsafe: unit => PWA_HTMLVideoElement.t = [%raw {|
+function(unit) {
+  return document.getElementById("video");
+}
+|}];
+
+/* let getCanvasUnsafe: unit => PWA_HTMLCanvasElement.t = [%raw {|
+function(unit) {
+  return document.getElementById("canvas");
+}
+|}]; */
+
+type img;
+[@bs.set] external src: (img, string) => unit = "src";
+
+let image = [%bs.raw {|
+(document.getElementById("image"))
+|}];
+
+type button;
+[@bs.set] external onclick: (button, unit => unit) => unit = "onclick";
+
+let video = getVideoUnsafe();
+let canvas = HTMLCanvasElement.create(window);
+let take: button = [%raw {|
+(document.getElementById("take"))
+|}];
+
+let tracks: button = [%raw {|
+(document.getElementById("tracks"))
+|}];
+
+let stop: button = [%raw {|
+(document.getElementById("stop"))
+|}];
+
+let stream = ref(None);
+
+
+take->onclick(() => {
+  open HTMLCanvasElement;
+  canvas->setWidth(video->HTMLVideoElement.videoWidth);
+  canvas->setHeight(video->HTMLVideoElement.videoHeight);
+  let ctx = canvas->getContext2d;
+  ctx->PWA_CanvasRenderingContext2D.drawImage(`Video(video), ~dx=0.0, ~dy=0.0);
+  /* image->src(canvas->toDataURL); */
+  canvas->toBlob
+  |> then_(blob => blob->FileReader.toDataURL)
+  |> then_(dataUrl => {
+    image->src(dataUrl)
+    resolve();
+  })
+  |> ignore;
+});
+
+window->navigator->Navigator.mediaDevicesExn->MediaDevices.getUserMediaUnsafe({ 
+  "video": { "width": 320, "height": 240} ,
+  /* "audio": true */
+})
+|> then_(media => {
+  stream := Some(media);
+  /* let clone = media->MediaStream.clone;
+  Js.log2("clone", clone); */
+
+  expectToEqual(media->MediaStream.id->Js.typeof, "string");
+  expectToEqual(media->MediaStream.active, true);
+
+  Js.log2("setting stream", media);
+  video->HTMLVideoElement.setSrcObject(`MediaStream(media))
+  resolve()
+});
+
+stop->onclick(() => {
+  let ts = stream^ ->Option.getExn->MediaStream.getTracks;
+  ts->Array.forEach(MediaStreamTrack.stop);
+
+  /* stream := None; */
+});
+
+
+tracks->onclick(() => {
+  Js.log("tracks");
+  let stream = stream^ ->Option.getExn
+  let ts = stream->MediaStream.getTracks;
+  ts->Array.forEach(t => {
+    open MediaStreamTrack;
+    expectToEqual(t->id->Js.typeof, "string")
+    expectToEqual(t->enabled->Js.typeof, "boolean")
+    expectToEqual(t->kind->Js.typeof, "string")
+    expectToEqual(t->label->Js.typeof, "string")
+    expectToEqual(t->muted->Js.typeof, "boolean")
+    expectToEqual(t->readyState->Js.typeof, "string")
+    Js.log2("id", t->id);
+    Js.log2("enabled", t->enabled);
+    Js.log2("kind", t->kind);
+    Js.log2("label", t->label);
+    Js.log2("muted", t->muted);
+    Js.log2("readyState", t->readyState);
+    Js.log("---------");
+  });
+
+  let first =  stream->MediaStream.getVideoTracks->Array.get(0)->Option.getExn;
+  Js.log2("by id", stream->MediaStream.getTrackById(first->MediaStreamTrack.id));
+
+  Js.log2("audio tracks",  stream->MediaStream.getAudioTracks);
+  Js.log2("video tracks",  stream->MediaStream.getVideoTracks);
+});

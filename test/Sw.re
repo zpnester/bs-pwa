@@ -2,11 +2,10 @@ open Expect;
 
 Js.log("hello sw");
 
-open SW;
+open PWA;
 open ServiceWorkerGlobalScope;
 open ServiceWorkerRegistration;
 open Js.Promise;
-open Belt;
 open Clients;
 
 self->importScripts("1.js");
@@ -29,7 +28,7 @@ self->addEventListener(
 
     expectToEqualAny(e->ports, [||]);
     switch (e->ports->Belt.Array.get(0)) {
-    | Some(port) => port->SW_MessagePort.postMessage("response via port")
+    | Some(port) => port->PWA_MessagePort.postMessage("response via port")
     | _ => Js.log("no port")
     };
 
@@ -41,7 +40,7 @@ self->addEventListener(
 
     let reg = self->registration;
 
-    reg->SW_ServiceWorkerRegistration.getNotifications()
+    reg->PWA_ServiceWorkerRegistration.getNotifications()
     |> then_(ns => {
          Js.log2("notifications", ns);
          resolve();
@@ -50,26 +49,26 @@ self->addEventListener(
 
     Js.log2(
       "active",
-      reg->SW_ServiceWorkerRegistration.active->Belt.Option.isSome,
+      reg->PWA_ServiceWorkerRegistration.active->Belt.Option.isSome,
     );
     Js.log2(
       "installing",
-      reg->SW_ServiceWorkerRegistration.installing->Belt.Option.isSome,
+      reg->PWA_ServiceWorkerRegistration.installing->Belt.Option.isSome,
     );
     Js.log2(
       "waiting",
-      reg->SW_ServiceWorkerRegistration.waiting->Belt.Option.isSome,
+      reg->PWA_ServiceWorkerRegistration.waiting->Belt.Option.isSome,
     );
 
     let clients = self->clients;
     clients->matchAll()
     |> then_(arr => {
          arr
-         |> Js.Array.forEachi((c, i) => {
-              c->SW_Client.postMessage("message for client");
-              Js.log2("client id", c->SW_Client.id);
-              Js.log2("client type_", c->SW_Client.type_);
-              Js.log2("client url", c->SW_Client.url);
+         |> Js.Array.forEach(c => {
+              c->PWA_Client.postMessage("message for client");
+              Js.log2("client id", c->PWA_Client.id);
+              Js.log2("client type_", c->PWA_Client.type_);
+              Js.log2("client url", c->PWA_Client.url);
             });
 
          Js.log2("clients", arr);
@@ -132,7 +131,7 @@ self->addEventListener(
       self->clients->openWindow("/")
       |> then_(wc => {
            Js.log2("wc", wc);
-           wc->Belt.Option.getExn->SW_WindowClient.navigate("/elsewhere");
+           wc->Belt.Option.getExn->PWA_WindowClient.navigate("/elsewhere");
          })
       |> then_(wc => {
            Js.log2("navigated", wc);

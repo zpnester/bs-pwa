@@ -25,6 +25,7 @@ lib/bs
 .merlin
 .bsb.lock
 .idea
+
 node_modules
 *.bs.js
-*.wp.js
+/test_dist
