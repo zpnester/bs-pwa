@@ -2,10 +2,7 @@ type t;
 
 module Action = PWA_Notification_Action;
 
-type permission = [
-  `granted | `denied | `default
-];
-
+type permission = [ | `granted | `denied | `default];
 
 let permission: permission;
 let requestPermission: unit => Js.Promise.t(permission);

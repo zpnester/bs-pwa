@@ -6,7 +6,6 @@ module ClientType = PWA_ClientType;
 module Clients = PWA_Clients;
 module Notification = PWA_Notification;
 module NotificationEvent = PWA_NotificationEvent;
-module Notification_Permission = PWA_Notification_Permission;
 module Notification_Action = PWA_Notification_Action;
 module WindowClient = PWA_WindowClient;
 module PushMessageData = PWA_PushMessageData;

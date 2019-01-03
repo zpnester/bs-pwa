@@ -17,7 +17,8 @@ let getRegistration = self =>
        Js.Promise.resolve(maybeReg->Js.Nullable.toOption)
      );
 
-
 /* scope omitted */
 [@bs.send]
-external register: (t, string) => Js.Promise.t(PWA_ServiceWorkerRegistration.t) = "register";
+external register:
+  (t, string) => Js.Promise.t(PWA_ServiceWorkerRegistration.t) =
+  "register";

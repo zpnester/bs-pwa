@@ -16,7 +16,8 @@ let getNotifications = (self: t, ~tag: option(string)=?, ()) => {
   self->getNotifications_(opts);
 };
 
-[@bs.get] external active_: t => Js.Nullable.t(PWA_ServiceWorker.t) = "active";
+[@bs.get]
+external active_: t => Js.Nullable.t(PWA_ServiceWorker.t) = "active";
 
 let active = self => self->active_->Js.Nullable.toOption;
 
@@ -29,7 +30,6 @@ let installing = self => self->installing_->Js.Nullable.toOption;
 external waiting_: t => Js.Nullable.t(PWA_ServiceWorker.t) = "waiting";
 
 let waiting = self => self->waiting_->Js.Nullable.toOption;
-
 
 /* same as in Notification */
 type show_notification_options('a, 'b) = {
@@ -107,6 +107,7 @@ let showNotification =
   self->showNotification_(title, opts);
 };
 
-[@bs.get] external pushManager_: t => Js.Nullable.t(PWA_PushManager.t) = "pushManager";
+[@bs.get]
+external pushManager_: t => Js.Nullable.t(PWA_PushManager.t) = "pushManager";
 
-let pushManager = self => pushManager_(self)->Js.Nullable.toOption; 
+let pushManager = self => pushManager_(self)->Js.Nullable.toOption;
