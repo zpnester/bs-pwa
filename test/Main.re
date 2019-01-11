@@ -9,6 +9,45 @@ open Expect;
 
 [@bs.val] external alert: string => unit = "";
 
+let isArrayBuffer: Js.Typed_array.ArrayBuffer.t => bool = [%raw
+  {|
+function(ab) {
+  return ab instanceof ArrayBuffer;
+}
+|}
+];
+
+/* test when push subscribed */
+
+/* window
+->navigator
+->Navigator.serviceWorkerExn
+->ServiceWorkerContainer.getRegistration
+|> then_(reg => {
+     let reg = reg->Option.getExn;
+     reg
+     ->ServiceWorkerRegistration.pushManager
+     ->Option.getExn
+     ->PushManager.getSubscription;
+   })
+|> then_(sub => {
+     let sub = sub->Option.getExn;
+
+     expectToEqual(sub->PushSubscription.endpoint->Js.typeof, "string");
+     /* expectToEqual(sub->PushSubscription.expirationTime->Js.typeof, "number"); */
+     expectToEqual(sub->PushSubscription.expirationTime->Option.isNone, true);
+     expectToEqual(
+       sub->PushSubscription.getKey("auth")->isArrayBuffer,
+       true,
+     );
+     expectToEqual(sub->PushSubscription.options->Js.typeof, "object");
+     Js.log2("options", sub->PushSubscription.options);
+
+     Js.log2("toJSON", sub->PushSubscription.toJSON);
+     expectToEqual(sub->PushSubscription.toJSON->Js.typeof, "object");
+     resolve();
+   }); */
+
 Notification.requestPermission()
 |> then_(p => {
      expectToEqual(p, `granted);
@@ -29,10 +68,14 @@ switch (window->navigator->serviceWorker) {
   |> then_(reg => {
        Js.log2("window registration", reg);
        Js.log("register OK");
-       expectToEqual(reg->ServiceWorkerRegistration.scope, "http://localhost:8081/");
-       reg->ServiceWorkerRegistration.addEventListener(ServiceWorkerRegistration.updatefound, () => {
-         Js.log("updatefound event");
-       });
+       expectToEqual(
+         reg->ServiceWorkerRegistration.scope,
+         "http://localhost:8081/",
+       );
+       reg->ServiceWorkerRegistration.addEventListener(
+         ServiceWorkerRegistration.updatefound, () =>
+         Js.log("updatefound event")
+       );
        resolve();
      })
   |> catch(e => {
