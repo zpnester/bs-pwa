@@ -1,5 +1,12 @@
 type t;
 
+include PWA_EventTarget.Make({ type nonrec t = t; });
+
+
+[@bs.get] external scope: t => string = "scope";
+
+/* navigationPreload */
+
 [@bs.send]
 external getNotifications_:
   (t, Js.Nullable.t({. "tag": string})) =>
@@ -111,3 +118,6 @@ let showNotification =
 external pushManager_: t => Js.Nullable.t(PWA_PushManager.t) = "pushManager";
 
 let pushManager = self => pushManager_(self)->Js.Nullable.toOption;
+
+
+let updatefound: PWA_EventType.t(t, unit) = PWA_EventType.unsafe("updatefound");

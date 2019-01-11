@@ -7,6 +7,8 @@ open ServiceWorker;
 open Js.Promise;
 open Expect;
 
+[@bs.val] external alert: string => unit = "";
+
 Notification.requestPermission()
 |> then_(p => {
      expectToEqual(p, `granted);
@@ -27,6 +29,10 @@ switch (window->navigator->serviceWorker) {
   |> then_(reg => {
        Js.log2("window registration", reg);
        Js.log("register OK");
+       expectToEqual(reg->ServiceWorkerRegistration.scope, "http://localhost:8081/");
+       reg->ServiceWorkerRegistration.addEventListener(ServiceWorkerRegistration.updatefound, () => {
+         Js.log("updatefound event");
+       });
        resolve();
      })
   |> catch(e => {

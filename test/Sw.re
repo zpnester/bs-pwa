@@ -4,14 +4,15 @@ Js.log("hello sw");
 
 open PWA;
 open ServiceWorkerGlobalScope;
-open ServiceWorkerRegistration;
 open Js.Promise;
 open Clients;
+
+expectToEqual(self->registration->ServiceWorkerRegistration.scope, "http://localhost:8081/");
 
 self->importScripts("1.js");
 
 Js.log2("sw registration", self->registration);
-Js.log2("push manager", self->registration->pushManager);
+Js.log2("push manager", self->registration->ServiceWorkerRegistration.pushManager);
 
 self->addEventListener(install, _ => Js.log("on install"));
 
@@ -87,7 +88,7 @@ self->addEventListener(
 
     self
     ->registration
-    ->showNotification(
+    ->ServiceWorkerRegistration.showNotification(
         "Test Notification",
         ~body="Hello there",
         ~icon="https://image.flaticon.com/icons/png/512/1374/1374680.png",
