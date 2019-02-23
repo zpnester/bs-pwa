@@ -1,15 +1,9 @@
 type t;
 
-let src: t => string;
-let setSrc: (t, string) => unit;
+include (module type of PWA_HTMLMediaElement.Make({ type nonrec t = t; }));
 
-let srcObject: t => option(PWA_MediaStream.t);
-let setSrcObject: (t, option(PWA_MediaStream.t)) => unit;
 
-let play: t => Js.Promise.t(unit);
-let pause: t => unit;
-
-let videoWidth: t => float;
-let videoHeight: t => float;
+let videoWidth: t => int;
+let videoHeight: t => int;
 
 let asVideoElement: Dom.element => option(t);

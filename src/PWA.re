@@ -28,6 +28,7 @@ module MediaDevices = PWA_MediaDevices;
 module MediaStream = PWA_MediaStream;
 module MediaStreamTrack = PWA_MediaStreamTrack;
 module HTMLVideoElement = PWA_HTMLVideoElement;
+module HTMLAudioElement = PWA_HTMLAudioElement;
 module HTMLCanvasElement = PWA_HTMLCanvasElement;
 module CanvasRenderingContext2D = PWA_CanvasRenderingContext2D;
 module HTMLInputElement = PWA_HTMLInputElement;

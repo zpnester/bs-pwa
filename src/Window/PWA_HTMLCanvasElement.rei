@@ -2,11 +2,11 @@ exception CanvasError;
 
 type t;
 
-let width: t => float;
-let height: t => float;
+let width: t => int;
+let height: t => int;
 
-let setWidth: (t, float) => unit;
-let setHeight: (t, float) => unit;
+let setWidth: (t, int) => unit;
+let setHeight: (t, int) => unit;
 
 let getContext2d: t => PWA_CanvasRenderingContext2D.t;
 

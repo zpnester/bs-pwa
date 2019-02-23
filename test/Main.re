@@ -360,3 +360,31 @@ peer->getStats()
 });
 
 
+
+let audio: HTMLAudioElement.t = [%bs.raw {|
+(document.querySelector("audio"))
+|}];
+
+/*audio->HTMLAudioElement.setPlaybackRate(5.0);*/
+expectToEqual(audio->HTMLAudioElement.playbackRate, 1.0);
+
+
+expectToEqual(audio->HTMLAudioElement.loop, false);
+expectToEqual(audio->HTMLAudioElement.autoplay, false);
+expectToEqual(audio->HTMLAudioElement.canPlayType("audio/mp3"), "probably");
+
+expectToEqual(audio->HTMLAudioElement.asDomElement->
+  HTMLAudioElement.asAudioElement->Option.isSome, true);
+expectToEqual(audio->HTMLAudioElement.asDomElement->
+  HTMLVideoElement.asVideoElement->Option.isSome, false);
+
+/* do not remove */
+/*let audioStream = audio->HTMLAudioElement.captureStream;*/
+
+
+
+
+
+
+
+Js.log("sync OK, wait for async");

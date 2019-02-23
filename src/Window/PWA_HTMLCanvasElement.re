@@ -2,11 +2,11 @@ exception CanvasError;
 
 type t;
 
-[@bs.get] external width: t => float = "width";
-[@bs.get] external height: t => float = "height";
+[@bs.get] external width: t => int = "width";
+[@bs.get] external height: t => int = "height";
 
-[@bs.set] external setWidth: (t, float) => unit = "width";
-[@bs.set] external setHeight: (t, float) => unit = "height";
+[@bs.set] external setWidth: (t, int) => unit = "width";
+[@bs.set] external setHeight: (t, int) => unit = "height";
 
 let getContext2d: t => PWA_CanvasRenderingContext2D.t = [%raw
   {|
