@@ -1,3 +1,5 @@
-type t('target, 'event);
+type t('target, 'a);
+external unsafe: string => t('target, 'a) = "%identity";
 
-external unsafe: string => t('a, 'b) = "%identity";
+/*type t2('target, 'a, 'b);*/
+/*external unsafe2: string => t2('target, 'a, 'b) = "%identity";*/

@@ -20,6 +20,6 @@ let message: PWA_EventType.t(t, PWA_MessageEvent.t);
 
 let clients: t => PWA_Clients.t;
 
-let pushsubscriptionchange: PWA_EventType.t(t, PWA_ExtendableEvent.t);
+let pushsubscriptionchange: PWA_EventType.t(t, PWA_PushSubscriptionChangeEvent.t);
 
 let skipWaiting: t => Js.Promise.t(unit);

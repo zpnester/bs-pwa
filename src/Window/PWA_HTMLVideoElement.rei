@@ -1,6 +1,10 @@
 type t;
 
-let setSrcObject: (t, PWA_MediaStream.t) => unit;
+let src: t => string;
+let setSrc: (t, string) => unit;
+
+let srcObject: t => option(PWA_MediaStream.t);
+let setSrcObject: (t, option(PWA_MediaStream.t)) => unit;
 
 let play: t => Js.Promise.t(unit);
 let pause: t => unit;

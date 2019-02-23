@@ -62,6 +62,10 @@ Notification.requestPermission()
    })
 |> ignore;
 
+let onUpdateFound = () =>
+   Js.log("updatefound event");
+ 
+
 switch (window->navigator->serviceWorker) {
 | Some(c) =>
   c->register("/sw.js")
@@ -72,10 +76,12 @@ switch (window->navigator->serviceWorker) {
          reg->ServiceWorkerRegistration.scope,
          "http://localhost:8081/",
        );
+
        reg->ServiceWorkerRegistration.addEventListener(
-         ServiceWorkerRegistration.updatefound, () =>
-         Js.log("updatefound event")
-       );
+        ServiceWorkerRegistration.updatefound, onUpdateFound);
+
+      /* reg->ServiceWorkerRegistration.removeEventListener(ServiceWorkerRegistration.updatefound,
+          onUpdateFound);*/
        resolve();
      })
   |> catch(e => {
@@ -177,8 +183,17 @@ function(blob) {
 |}
 ];
 
-[@bs.set] external videoSrc: (HTMLVideoElement.t, string) => unit = "src";
+     
+/* do not remove */
 /* let dataUrl = createObjectURL(blob) */
+
+
+let stopCamera = () => {
+  let ts = (stream^)->Option.getExn->MediaStream.getTracks;
+  ts->Array.forEach(MediaStreamTrack.stop);
+  /* stream := None; */
+}
+
 
 window
 ->navigator
@@ -192,21 +207,26 @@ window
   })
 |> then_(media => {
      stream := Some(media);
+
+     /* do not remove */
      /* let clone = media->MediaStream.clone;
         Js.log2("clone", clone); */
 
      expectToEqual(media->MediaStream.id->Js.typeof, "string");
      expectToEqual(media->MediaStream.active, true);
 
-     Js.log2("setting stream", media);
-     video->HTMLVideoElement.setSrcObject(media);
+     Js.log2("setting stream", media); 
+     video->HTMLVideoElement.setSrcObject(Some(media));
 
-     /* fetchBlob("/1.mp4")
+     stopCamera();
+
+     /* do not remove */
+      /*fetchBlob("/1.mp4")
         |> then_(blob => {
           blob->FileReader.toDataURL
         })
         |> then_(dataUrl => {
-          video->videoSrc(dataUrl);
+          video->HTMLVideoElement.setSrc(dataUrl);
           resolve();
         })
          |> ignore; */
@@ -214,10 +234,9 @@ window
      resolve();
    });
 
+
 stop->onclick(() => {
-  let ts = (stream^)->Option.getExn->MediaStream.getTracks;
-  ts->Array.forEach(MediaStreamTrack.stop);
-  /* stream := None; */
+  stopCamera();
 });
 
 tracks->onclick(() => {
@@ -292,3 +311,52 @@ date->onchange(_ => {
   expectToEqual(date->value->Js.String.length, 10);
   expectToEqual(date->files, None);
 });
+
+
+
+open RTCPeerConnection;
+let peer = RTCPeerConnection.make_(Js.Nullable.return(
+  Configuration.make(~iceCandidatePoolSize=2, ())
+));
+
+expectToEqual(peer->canTrickleIceCandidates, None);
+expectToEqual(peer->connectionState, "new");
+expectToEqual(peer->currentLocalDescription, None);
+expectToEqual(peer->currentRemoteDescription, None);
+expectToEqual(peer->iceConnectionState->Js.typeof, "string");
+expectToEqual(peer->iceGatheringState->Js.typeof, "string");
+expectToEqual(peer->localDescription, None);
+expectToEqual(peer->pendingLocalDescription, None);
+expectToEqual(peer->remoteDescription, None);
+expectToEqual(peer->pendingRemoteDescription, None);
+
+generateCertificate(`Object({
+  "name": "RSASSA-PKCS1-v1_5",
+    "hash": "SHA-256",
+    "modulusLength": 2048,
+    "publicExponent": Js.Typed_array.Uint8Array.make([| 1, 0, 1 |])
+}))
+|> then_(cert => {
+  expectToEqual(cert->PWA_RTCCertificate.expires->Js.typeof, "number");
+
+  resolve();
+})
+|> catch(err => {
+  Js.log(err);
+  resolve();
+})
+
+expectToEqual(peer->getConfiguration->Configuration.iceCandidatePoolSize, Some(2));
+peer->setConfiguration(Configuration.make(~iceCandidatePoolSize=3, ()));
+expectToEqual(peer->getConfiguration->Configuration.iceCandidatePoolSize, Some(3));
+
+expectToEqual(peer->getReceivers, [||]);
+expectToEqual(peer->getSenders, [||]);
+
+peer->getStats()
+|> then_(stats => {
+  Js.log2("stats", stats);
+  resolve();
+});
+
+

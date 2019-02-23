@@ -1,4 +1,6 @@
-include PWA_ExtendableEvent;
+type t;
+
+include PWA_ExtendableEvent.Make({ type nonrec t = t; });
 
 [@bs.get] external notification: t => PWA_Notification.t = "notification";
 [@bs.get] external action_: t => Js.Nullable.t(string) = "action";
