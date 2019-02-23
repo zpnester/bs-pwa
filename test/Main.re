@@ -17,6 +17,10 @@ function(ab) {
 |}
 ];
 
+module URL = PWA.URL;
+
+let u1 = URL.make("http://a.b");
+
 /* test when push subscribed */
 
 /* window
@@ -47,6 +51,8 @@ function(ab) {
      expectToEqual(sub->PushSubscription.toJSON->Js.typeof, "object");
      resolve();
    }); */
+
+module Notification = PWA.Notification;
 
 Notification.requestPermission()
 |> then_(p => {
@@ -181,18 +187,8 @@ function(url) {
 |}
 ];
 
-let createObjectURL: FileReader.Blob.t => string = [%raw
-  {|
-function(blob) {
-  return URL.createObjectURL(blob);
-}
-|}
-];
 
      
-/* do not remove */
-/* let dataUrl = createObjectURL(blob) */
-
 
 let stopCamera = () => {
   let ts = (stream^)->Option.getExn->MediaStream.getTracks;
@@ -227,15 +223,19 @@ window
      stopCamera();
 
      /* do not remove */
-      /*fetchBlob("/1.mp4")
+      fetchBlob("/1.mp4")
         |> then_(blob => {
           blob->FileReader.toDataURL
+
+          /*let dataUrl = URL.createObjectURL(`Blob(blob));
+          expectToEqual(dataUrl->Js.typeof, "string");
+          resolve(dataUrl)*/
         })
         |> then_(dataUrl => {
           video->HTMLVideoElement.setSrc(dataUrl);
           resolve();
         })
-         |> ignore; */
+         |> ignore; 
 
      resolve();
    });

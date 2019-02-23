@@ -32,6 +32,7 @@ module HTMLAudioElement = PWA_HTMLAudioElement;
 module HTMLCanvasElement = PWA_HTMLCanvasElement;
 module CanvasRenderingContext2D = PWA_CanvasRenderingContext2D;
 module HTMLInputElement = PWA_HTMLInputElement;
+module URL = PWA_URL;
 
 module RTCPeerConnection = PWA_RTCPeerConnection;
 module RTCDataChannel = PWA_RTCDataChannel;
