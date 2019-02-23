@@ -10,3 +10,11 @@ function(element) {
 |}
 ];
 let asAudioElement = elem => elem->asAudioElement_->Js.Nullable.toOption;
+
+let createElement: PWA_WindowGlobalScope.t => t = [%raw
+  {|
+    function(window) {
+        return window.document.createElement("audio");
+    }
+|}
+];

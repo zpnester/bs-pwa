@@ -12,8 +12,7 @@ module Make = (M : { type t;}) => {
 
 
 	include PWA_EventTarget.Make(M);
-
-	external asDomElement: M.t => Dom.element = "%identity";
+	include PWA_DomElementLike.Make(M);
 
 /* setSrcObject: As of November 2017, browsers only support MediaStream */
 

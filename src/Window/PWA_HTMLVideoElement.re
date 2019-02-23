@@ -15,3 +15,11 @@ function(element) {
 |}
 ];
 let asVideoElement = elem => elem->asVideoElement_->Js.Nullable.toOption;
+
+let createElement: PWA_WindowGlobalScope.t => t = [%raw
+  {|
+    function(window) {
+        return window.document.createElement("video");
+    }
+|}
+];

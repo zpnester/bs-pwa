@@ -34,7 +34,7 @@ function(ab) {
      let sub = sub->Option.getExn;
 
      expectToEqual(sub->PushSubscription.endpoint->Js.typeof, "string");
-     /* expectToEqual(sub->PushSubscription.expirationTime->Js.typeof, "number"); */
+      expectToEqual(sub->PushSubscription.expirationTime->Js.typeof, "number"); 
      expectToEqual(sub->PushSubscription.expirationTime->Option.isNone, true);
      expectToEqual(
        sub->PushSubscription.getKey("auth")->isArrayBuffer,
@@ -123,7 +123,13 @@ type button;
 [@bs.set] external onclick: (button, unit => unit) => unit = "onclick";
 
 let video = getVideoUnsafe();
-let canvas = HTMLCanvasElement.create(window);
+let canvas = HTMLCanvasElement.createElement(window);
+
+expectToEqual(canvas->HTMLCanvasElement.asDomElement
+  ->HTMLCanvasElement.asCanvasElement->Option.isSome, true);
+
+/*let canvasStream = canvas->HTMLCanvasElement.captureStream(~frameRate=60.0, ());*/
+/*[%debugger];*/
 
 let getElementById: string => option(Dom.element) = [%raw
   {|
@@ -158,7 +164,7 @@ take->onclick(() => {
     ~dy=0.0,
   );
   /* image->src(canvas->toDataURL); */
-  canvas->toBlob
+  canvas->toBlob(~type_="image/jpeg", ~quality=0.1, ())
   |> then_(blob => blob->FileReader.toDataURL)
   |> then_(dataUrl => {
        image->src(dataUrl);
