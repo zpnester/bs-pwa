@@ -1,6 +1,6 @@
 type t;
 
-type ice_candidate_init = {
+type iceCandidateInit = {
 	.
 	"candidate": Js.Nullable.t(string),
 	"sdpMid": Js.Nullable.t(string),
@@ -8,17 +8,26 @@ type ice_candidate_init = {
 	"usernameFragment": Js.Nullable.t(string),
 };
 
-type ice_candidate_init_stringifiable = {
+/*type iceCandidateInitStringifiable = {
 	.
 	"candidate": Js.Nullable.t(string),
 	"sdpMid": Js.Nullable.t(string),
 	"sdpMLineIndex": Js.Nullable.t(int),
 	"usernameFragment": Js.Nullable.t(string),
 	[@bs.meth] "stringify": unit => string
-};
+};*/
+/* TODO remove */
+/*
+[@bs.send] external stringify: iceCandidateInit => string = "stringify";*/
 
-/* TODO wrap make */
-[@bs.new] external make: Js.Nullable.t(ice_candidate_init) => t = "RTCIceCandidate";
+
+/* reserve make for function w/o Js.Nullable */
+/* TODO not important */
+[@bs.new] external make_: Js.Nullable.t(iceCandidateInit) => t = "RTCIceCandidate";
+
+let make = (~init=?, ()) => {
+	make_(init->Js.Nullable.fromOption);
+};
 
 /* TODO test all */
 
@@ -64,7 +73,8 @@ let tcpType = self => tcpType_(self)->Js.Null.toOption;
 
 
 
-[@bs.send] external toJSON: t => ice_candidate_init_stringifiable = "toJSON"
+/*[@bs.send] external toJSON: t => iceCandidateInitStringifiable = "toJSON"*/
+[@bs.send] external toJSON: t => iceCandidateInit = "toJSON"
 
 
 

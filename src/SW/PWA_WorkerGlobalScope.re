@@ -1,6 +1,7 @@
 type t;
 
-include PWA_EventTarget.Make({ type nonrec t = t});
+/* TODO remove */
+/*include PWA_EventTarget.Make({ type nonrec t = t});*/
 
 [@bs.send] external importScripts: (t, string) => unit = "importScripts";
 

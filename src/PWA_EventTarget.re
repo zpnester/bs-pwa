@@ -1,5 +1,5 @@
 
-module Make = (M: { type t; }) => {
+/*module Make = (M: { type t; }) => {
   [@bs.send]
   external addEventListener: (M.t, PWA_EventType.t(M.t, 'a), 'a => unit) => unit =
     "addEventListener";
@@ -17,4 +17,4 @@ module Make = (M: { type t; }) => {
   external removeEventListener2: (M.t, PWA_EventType.t2(M.t, 'a, 'b), ('a, 'b) => unit) => unit =
     "removeEventListener";*/
 };
-
+*/

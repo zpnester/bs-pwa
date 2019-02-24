@@ -4,4 +4,4 @@ type t;
 	 ~credential: string=?,
 	~credentialType: string=?,
 	~urls: array(string),
-	unit) => _ = "";
+	unit) => t = "";

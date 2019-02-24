@@ -83,7 +83,7 @@ switch (window->navigator->serviceWorker) {
          "http://localhost:8081/",
        );
 
-       reg->ServiceWorkerRegistration.addEventListener(
+       reg->addEventListener(
         ServiceWorkerRegistration.updatefound, onUpdateFound);
 
       /* reg->ServiceWorkerRegistration.removeEventListener(ServiceWorkerRegistration.updatefound,
@@ -199,8 +199,9 @@ let stopCamera = () => {
 
 window
 ->navigator
-->Navigator.mediaDevicesExn
-->MediaDevices.getUserMediaUnsafe({
+->Navigator.mediaDevices
+->Option.getExn
+->MediaDevices.getUserMedia({
     "video": {
       "width": 320,
       "height": 240,
@@ -321,9 +322,8 @@ date->onchange(_ => {
 
 
 open RTCPeerConnection;
-let peer = RTCPeerConnection.make_(Js.Nullable.return(
-  Configuration.make(~iceCandidatePoolSize=2, ())
-));
+let config = Configuration.make(~iceCandidatePoolSize=2, ());
+let peer = RTCPeerConnection.make(~config, ());
 
 expectToEqual(peer->canTrickleIceCandidates, None);
 expectToEqual(peer->connectionState, "new");

@@ -2,10 +2,11 @@
 type t;
 
 
-include PWA_EventTarget.Make({
+/* TODO remove */
+/*include PWA_EventTarget.Make({
 	type nonrec t = t;
 });
-
+*/
 
 module Configuration = {
 	type t;
@@ -46,8 +47,11 @@ module Configuration = {
 };
 
 
-/* TODO wrap make */
 [@bs.new] external make_: Js.Nullable.t(Configuration.t) => t = "RTCPeerConnection";
+
+let make = (~config=?, ()) => {
+	make_(config->Js.Nullable.fromOption)
+};
 
 
 /*let make = (~config: option())*/
@@ -59,40 +63,27 @@ let canTrickleIceCandidates = self => canTrickleIceCandidates_(self)->Js.Undefin
  
 [@bs.get] external connectionState: t => string = "connectionState";
 
-type session_description_init = {
-	.
-	"type_": string,
-	"sdp": string
-};
-
-/* TODO type_ == type? */
-type session_description = {
-	.
-	"type_": string,
-	"sdp": string,
-	[@bs.meth] "toJSON": unit => string,
-};
 
 /* TODO test */
-[@bs.get] external currentLocalDescription_: t => Js.Null.t(session_description) = "currentLocalDescription";
+[@bs.get] external currentLocalDescription_: t => Js.Null.t(PWA_RTCSessionDescription.t) = "currentLocalDescription";
 let currentLocalDescription = self => currentLocalDescription_(self)->Js.Null.toOption;
 
-[@bs.get] external currentRemoteDescription_: t => Js.Null.t(session_description) = "currentRemoteDescription";
+[@bs.get] external currentRemoteDescription_: t => Js.Null.t(PWA_RTCSessionDescription.t) = "currentRemoteDescription";
 let currentRemoteDescription = self => currentRemoteDescription_(self)->Js.Null.toOption;
 
 [@bs.get] external iceConnectionState: t => string = "iceConnectionState";
 [@bs.get] external iceGatheringState: t => string = "iceGatheringState";
 
-[@bs.get] external localDescription_: t => Js.Null.t(session_description) = "localDescription";
+[@bs.get] external localDescription_: t => Js.Null.t(PWA_RTCSessionDescription.t) = "localDescription";
 let localDescription = self => localDescription_(self)->Js.Null.toOption;
 
-[@bs.get] external pendingLocalDescription_: t => Js.Null.t(session_description) = "pendingLocalDescription";
+[@bs.get] external pendingLocalDescription_: t => Js.Null.t(PWA_RTCSessionDescription.t) = "pendingLocalDescription";
 let pendingLocalDescription = self => pendingLocalDescription_(self)->Js.Null.toOption;
 
-[@bs.get] external remoteDescription_: t => Js.Null.t(session_description) = "remoteDescription";
+[@bs.get] external remoteDescription_: t => Js.Null.t(PWA_RTCSessionDescription.t) = "remoteDescription";
 let remoteDescription = self => remoteDescription_(self)->Js.Null.toOption;
 
-[@bs.get] external pendingRemoteDescription_: t => Js.Null.t(session_description) = "pendingRemoteDescription";
+[@bs.get] external pendingRemoteDescription_: t => Js.Null.t(PWA_RTCSessionDescription.t) = "pendingRemoteDescription";
 let pendingRemoteDescription = self => pendingRemoteDescription_(self)->Js.Null.toOption;
    
 [@bs.get] external signalingState: t => string= "signalingState";
@@ -119,7 +110,8 @@ let datachannel: PWA_EventType.t(t, {
 /* TODO test*/
 let icecandidate: PWA_EventType.t(t, {
 	.
-	"candidate": Js.Nullable.t(PWA_RTCIceCandidate.t)
+	"candidate": Js.Nullable.t(PWA_RTCIceCandidate.t),
+	"url": Js.Nullable.t(string),  /* TODO test */
 }) = PWA_EventType.unsafe("icecandidate");
 
 let iceconnectionstatechange: PWA_EventType.t(t, PWA_Event.t) = 
@@ -172,15 +164,15 @@ let track: PWA_EventType.t(t, {
 
 
 
-/* duplicated input type */
-/* TODO wrap */
-[@bs.send] external addIceCandidate_: (t, Js.Nullable.t({
-	.
+[@bs.send] external addIceCandidate: 
+(t, {
+	..
 	"candidate": Js.Nullable.t(string),
 	"sdpMid": Js.Nullable.t(string),
 	"sdpMLineIndex": Js.Nullable.t(int),
 	"usernameFragment": Js.Nullable.t(string),
-})) => Js.Promise.t(unit) = "addIceCandidate";
+}) => Js.Promise.t(unit) = "addIceCandidate";
+
 
 
 [@bs.send] external addStream: (t, PWA_MediaStream.t) => unit = "addStream";
@@ -193,27 +185,50 @@ PWA_RTCRtpSender.t = "addTrack";
 
 [@bs.send] external close: t => unit = "close";
 
-/* TODO wrap */
 [@bs.send] external createAnswer_: (t, Js.Nullable.t({
 	.
 	"voiceActivityDetection": Js.Nullable.t(bool)
-})) => Js.Promise.t(session_description_init) = "createAnswer";
+})) => Js.Promise.t(PWA_RTCSessionDescription.init) = "createAnswer";
 
-/* TODO wrap */
-[@bs.send] external createDataChannel: (t, Js.Nullable.t({
-	.
-	"label": string,
-	"options": Js.Nullable.t(PWA_RTCDataChannel.Init.t)
-})) => PWA_RTCDataChannel.t = "createDataChannel";
+let createAnswer = (self, ~voiceActivityDetection=?, ()) => {
+	let options = if (voiceActivityDetection->Belt.Option.isNone) {
+		Js.Nullable.undefined
+	} else {
+		Js.Nullable.return({
+			"voiceActivityDetection": voiceActivityDetection->Js.Nullable.fromOption
+		})
+	};
 
+	createAnswer_(self, options);
+};
+
+[@bs.send] external createDataChannel_: (t, string, Js.Nullable.t(PWA_RTCDataChannel.Init.t)) => 
+	PWA_RTCDataChannel.t = "createDataChannel";
+
+
+let createDataChannel = (self, ~label, ~init=?, ()) => {
+	createDataChannel_(self, label, init->Js.Nullable.fromOption);
+};
  
- /* TODO wrap */
-[@bs.send] external createOffer: (t, Js.Nullable.t({
+[@bs.send] external createOffer_: (t, Js.Nullable.t({
 	.
 	"iceRestart": Js.Nullable.t(bool),
 	"voiceActivityDetection": Js.Nullable.t(bool)
-})) => Js.Promise.t(session_description_init) = "createOffer"; 
+})) => Js.Promise.t(PWA_RTCSessionDescription.init) = "createOffer"; 
 
+
+let createOffer = (self, ~iceRestart=?, ~voiceActivityDetection=?, ()) => {
+	let options = if (iceRestart->Belt.Option.isNone && voiceActivityDetection->Belt.Option.isNone) {
+		Js.Nullable.undefined
+	} else {
+		Js.Nullable.return({
+			"iceRestart": iceRestart->Js.Nullable.fromOption,
+			"voiceActivityDetection": voiceActivityDetection->Js.Nullable.fromOption
+		})
+	};
+
+	createOffer_(self, options);
+};
 
 
 [@bs.val] [@bs.scope "RTCPeerConnection"] external generateCertificate: 
@@ -234,21 +249,11 @@ PWA_RTCRtpSender.t = "addTrack";
 
 [@bs.send] external setConfiguration: (t, Configuration.t) => unit= "setConfiguration";
 
-/* setLocalDescription/setRemoteDescription input:
-session description OR session description init */
 
-[@bs.send] external setLocalDescription: (t, {
-	..
-	"type_": string,
-	"sdp": string
-}) => Js.Promise.t(unit) = "setLocalDescription";
+[@bs.send] external setLocalDescription: (t, PWA_RTCSessionDescription.init) => Js.Promise.t(unit) = "setLocalDescription";
 
 
-[@bs.send] external setRemoteDescription: (t, {
-	..
-	"type_": string,
-	"sdp": string
-}) => Js.Promise.t(unit) = "setRemoteDescription";
+[@bs.send] external setRemoteDescription: (t, PWA_RTCSessionDescription.init) => Js.Promise.t(unit) = "setRemoteDescription";
 
 
 

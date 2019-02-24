@@ -1,7 +1,7 @@
 type t;
 
-/* TODO */
+
 [@bs.send]
-external getUserMediaUnsafe:
+external getUserMedia:
   (t, Js.t({..})) => Js.Promise.t(PWA_MediaStream.t) =
   "getUserMedia";
