@@ -4,3 +4,4 @@ type t;
 [@bs.val] external window: t = "window";
 
 let navigator: t => PWA_Navigator.t;
+let document: t => PWA_Document.t;

@@ -21,7 +21,8 @@ module ActivateEvent = PWA_ActivateEvent;
 module PushManager = PWA_PushManager;
 module PushSubscription = PWA_PushSubscription;
 
-module WindowGlobalScope = PWA_WindowGlobalScope;
+module Window = PWA_Window;
+module Document = PWA_Document;
 module ServiceWorkerContainer = PWA_ServiceWorkerContainer;
 module Navigator = PWA_Navigator;
 module MediaDevices = PWA_MediaDevices;

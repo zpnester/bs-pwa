@@ -4,24 +4,14 @@
 open PWA;
 open Belt;
 open Js.Promise;
-open WindowGlobalScope;
+open Window;
 open HTMLVideoElement;
 open Expect;
-
+open Document;
 
 let p = RTCPeerConnection.make();
 
 
-
-let qs: string => HTMLVideoElement.t = [%bs.raw {|
-function(s) {
-	var el = document.querySelector(s);
-	if (!el) {
-		throw "el not found";
-	}
-	return el;
-}
-|}];
 
 let getMedia = () => window->navigator
 	->Navigator.mediaDevices
@@ -29,10 +19,10 @@ let getMedia = () => window->navigator
 	->MediaDevices.getUserMedia({"video": true});
  
 
-let alice1 = qs("#alice1");
-let alice2 = qs("#alice2");	
-let bob1 = qs("#bob1");
-let bob2 = qs("#bob2");
+let alice1 = window->document->querySelector("#alice1")->Option.getExn->HTMLVideoElement.asVideoElement->Option.getExn;
+let alice2 = window->document->querySelector("#alice2")->Option.getExn->HTMLVideoElement.asVideoElement->Option.getExn;	
+let bob1 = window->document->querySelector("#bob1")->Option.getExn->HTMLVideoElement.asVideoElement->Option.getExn;
+let bob2 = window->document->querySelector("#bob2")->Option.getExn->HTMLVideoElement.asVideoElement->Option.getExn;
 
 
 

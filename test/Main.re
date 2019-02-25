@@ -1,5 +1,5 @@
 open PWA;
-open WindowGlobalScope;
+open Window;
 open Navigator;
 open Belt;
 open ServiceWorkerContainer;
@@ -129,7 +129,7 @@ type button;
 [@bs.set] external onclick: (button, unit => unit) => unit = "onclick";
 
 let video = getVideoUnsafe();
-let canvas = HTMLCanvasElement.createElement(window);
+let canvas = window->document->HTMLCanvasElement.createElement;
 
 expectToEqual(canvas->HTMLCanvasElement.asDomElement
   ->HTMLCanvasElement.asCanvasElement->Option.isSome, true);
@@ -367,9 +367,10 @@ peer->getStats()
 
 
 
-let audio: HTMLAudioElement.t = [%bs.raw {|
-(document.querySelector("audio"))
-|}];
+let audio = window->document->Document.querySelector("audio")
+->Option.getExn
+->HTMLAudioElement.asAudioElement
+->Option.getExn;
 
 /*audio->HTMLAudioElement.setPlaybackRate(5.0);*/
 expectToEqual(audio->HTMLAudioElement.playbackRate, 1.0);
@@ -388,8 +389,12 @@ expectToEqual(audio->HTMLAudioElement.asDomElement->
 /*let audioStream = audio->HTMLAudioElement.captureStream;*/
 
 
-
-
+expectToEqual(window->document->Document.querySelectorAll("smth"), [||]);
+expectToEqual(window->document->Document.querySelectorAll("video")->Js.Array.length, 1);
+expectToEqual(window->document->Document.getElementById("take")->Option.isSome, true);
+expectToEqual(window->document->Document.getElementById("take1")->Option.isSome, false);
+expectToEqual(window->document->Document.querySelector("#take")->Option.isSome, true);
+expectToEqual(window->document->Document.querySelector("#take1")->Option.isSome, false);
 
 
 

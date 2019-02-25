@@ -7,3 +7,5 @@ let videoWidth: t => int;
 let videoHeight: t => int;
 
 let asVideoElement: Dom.element => option(t);
+
+let createElement: PWA_Document.t => t;
