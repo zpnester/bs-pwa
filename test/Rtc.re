@@ -53,7 +53,7 @@ let signalChannel = () => {
 
 
 
-let make = (~caller, name, localVideo, remoteVideo, myChannel, otherChannel) => {
+let make = (name, localVideo, remoteVideo, myChannel, otherChannel) => {
 	open RTCPeerConnection;
 	let iceServers =  [|RTCIceServer.make(~urls=[|"stun://stun3.l.google.com:19302"|], ())|];
 	let config = Configuration.make(~iceServers, ());
@@ -71,22 +71,6 @@ let make = (~caller, name, localVideo, remoteVideo, myChannel, otherChannel) => 
 		}
 		
 	});
-
-	if (caller) {
-		pc->addEventListener(negotiationneeded, _ => {
-			Js.log("negotiationneeded " ++ name);
-			pc->createOffer()
-			|> then_(descr => {
-				pc->setLocalDescription(descr)
-			})
-			|> then_(descr => {
-				otherChannel#send(`offer(pc->localDescription->Option.getExn->PWA_RTCSessionDescription.toJSON));
-				resolve();
-			}) 
-			|> ignore;
-		});
-	};
-
 
 	pc->addEventListener(track, e => {
 		Js.log(name ++ " ontrack");
@@ -144,7 +128,15 @@ let make = (~caller, name, localVideo, remoteVideo, myChannel, otherChannel) => 
 			stream->MediaStream.getTracks->Array.forEach(track => {
 				pc->addTrack(track, stream) |> ignore;
 			})
-			resolve();
+
+			pc->createOffer()
+			|> then_(descr => {
+				pc->setLocalDescription(descr)
+			})
+			|> then_(descr => {
+				otherChannel#send(`offer(pc->localDescription->Option.getExn->PWA_RTCSessionDescription.toJSON));
+				resolve();
+			})
 		}) |> ignore;
 	};
 
@@ -157,8 +149,8 @@ let make = (~caller, name, localVideo, remoteVideo, myChannel, otherChannel) => 
 let aliceChannel = signalChannel();
 let bobChannel = signalChannel();
 
-let alice = make(~caller=true, "Alice", alice1, alice2, aliceChannel, bobChannel);
-let bob = make(~caller=false, "Bob", bob1, bob2, bobChannel, aliceChannel);
+let alice = make("Alice", alice1, alice2, aliceChannel, bobChannel);
+let bob = make("Bob", bob1, bob2, bobChannel, aliceChannel);
 
 
 alice#start();
