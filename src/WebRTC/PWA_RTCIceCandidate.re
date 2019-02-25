@@ -1,6 +1,7 @@
 type t;
 
-type iceCandidateInit = {
+/* TODO rename to init */
+type init = {
 	.
 	"candidate": Js.Nullable.t(string),
 	"sdpMid": Js.Nullable.t(string),
@@ -23,7 +24,7 @@ type iceCandidateInit = {
 
 /* reserve make for function w/o Js.Nullable */
 /* TODO not important */
-[@bs.new] external make_: Js.Nullable.t(iceCandidateInit) => t = "RTCIceCandidate";
+[@bs.new] external make_: Js.Nullable.t(init) => t = "RTCIceCandidate";
 
 let make = (~init=?, ()) => {
 	make_(init->Js.Nullable.fromOption);
@@ -74,7 +75,7 @@ let tcpType = self => tcpType_(self)->Js.Null.toOption;
 
 
 /*[@bs.send] external toJSON: t => iceCandidateInitStringifiable = "toJSON"*/
-[@bs.send] external toJSON: t => iceCandidateInit = "toJSON"
+[@bs.send] external toJSON: t => init = "toJSON"
 
 
 

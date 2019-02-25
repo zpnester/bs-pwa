@@ -1,6 +1,6 @@
 {
   "name": "@zpnester/bs-pwa",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "author": {
     "name": "Andriy Nesterenko",
     "email": "zpnester@gmail.com",
@@ -21,8 +21,10 @@
   },
   "keywords": [
     "BuckleScript",
+    "browser",
     "PWA",
-    "ServiceWorker"
+    "ServiceWorker",
+    "WebRTC"
   ],
   "devDependencies": {
     "@zpnester/bs-filereader": "0.2.0",

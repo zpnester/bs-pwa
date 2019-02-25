@@ -80,7 +80,7 @@ let track:
                      "track": PWA_MediaStreamTrack.t,
                      "transceiver": PWA_RTCRtpTransceiver.t});
 let addIceCandidate:
-  (t, PWA_RTCIceCandidate.iceCandidateInit) => Js.Promise.t(unit);
+  (t, PWA_RTCIceCandidate.init) => Js.Promise.t(unit);
 
 let addStream: (t, PWA_MediaStream.t) => unit;
 

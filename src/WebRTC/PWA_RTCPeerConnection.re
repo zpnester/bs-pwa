@@ -165,13 +165,7 @@ let track: PWA_EventType.t(t, {
 
 
 [@bs.send] external addIceCandidate: 
-(t, {
-	..
-	"candidate": Js.Nullable.t(string),
-	"sdpMid": Js.Nullable.t(string),
-	"sdpMLineIndex": Js.Nullable.t(int),
-	"usernameFragment": Js.Nullable.t(string),
-}) => Js.Promise.t(unit) = "addIceCandidate";
+(t, PWA_RTCIceCandidate.init) => Js.Promise.t(unit) = "addIceCandidate";
 
 
 
