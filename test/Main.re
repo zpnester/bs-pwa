@@ -1,3 +1,5 @@
+[%%debugger.chrome];
+
 open PWA;
 open Window;
 open Navigator;
@@ -54,19 +56,24 @@ let u1 = URL.make("http://a.b");
 
 module Notification = PWA.Notification;
 
-Notification.requestPermission()
-|> then_(p => {
-     expectToEqual(p, `granted);
-     let n = Notification.make("hi", ~body="hello", ());
-     n->Notification.onclick(_ => Js.log("clicked"));
+switch (Notification.ctor) {
+  | None => Js.Console.error("Notifications not supported");
+  | Some(notification) =>
+    notification->Notification.requestPermission
+    |> then_(p => {
+         expectToEqual(p, `granted);
+         let n = notification->Notification.make("hi", ~body="hello", ());
+         n->Notification.onclick(_ => Js.log("clicked"));
 
-     expectToEqual(n->Notification.icon, Some(""));
-     expectToEqual(n->Notification.title, Some("hi"));
-     expectToEqual(n->Notification.body, Some("hello"));
-     expectToEqual(n->Notification.actions, Some([||]));
-     resolve();
-   })
-|> ignore;
+         expectToEqual(n->Notification.icon, Some(""));
+         expectToEqual(n->Notification.title, Some("hi"));
+         expectToEqual(n->Notification.body, Some("hello"));
+         expectToEqual(n->Notification.actions, Some([||]));
+         resolve();
+       })
+    |> ignore;
+}
+
 
 let onUpdateFound = () =>
    Js.log("updatefound event");

@@ -1,11 +1,12 @@
 type t;
+type ctor;
 
 module Action = PWA_Notification_Action;
 
-type permission = [ | `granted | `denied | `default];
+let ctor: option(ctor);
 
-let permission: permission;
-let requestPermission: unit => Js.Promise.t(permission);
+let permission: ctor => [ | `granted | `denied | `default];
+let requestPermission: ctor => Js.Promise.t([ | `granted | `denied | `default]);
 
 let actions: t => option(array(PWA_Notification_Action.t));
 let badge: t => option(string);
@@ -26,6 +27,7 @@ let onclick: (t, PWA_Event.t => unit) => unit;
 
 let make:
   (
+    ctor,
     string,
     ~actions: array(PWA_Notification_Action.t)=?,
     ~badge: string=?,

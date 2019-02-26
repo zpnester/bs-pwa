@@ -1,29 +1,40 @@
 type t;
+type ctor;
 
 module Action = PWA_Notification_Action;
 
-type permission = [ | `granted | `denied | `default];
+
 
 let toPermission_ =
-  fun
-  | "granted" => `granted
-  | "denied" => `denied
-  | "default" => `default
-  | _ => failwith("unexpected permision");
+fun
+| "granted" => `granted
+| "denied" => `denied
+| "default" => `default
+| _ => failwith("unexpected permision");
 
-/* static */
-[@bs.val] [@bs.scope "Notification"]
-external permission_: string = "permission";
 
-let permission = permission_->toPermission_;
+[@bs.get]
+external permission_: ctor => string = "permission";
 
-[@bs.val] [@bs.scope "Notification"]
-external requestPermission_: unit => Js.Promise.t(string) =
-  "requestPermission";
+let permission = ctor => permission_(ctor)->toPermission_;
 
-let requestPermission = () =>
-  requestPermission_()
-  |> Js.Promise.then_(s => Js.Promise.resolve(s->toPermission_));
+
+[@bs.send] 
+external requestPermission_: ctor => Js.Promise.t(string) =
+"requestPermission";
+
+let requestPermission = ctor =>
+requestPermission_(ctor)
+|> Js.Promise.then_(s => Js.Promise.resolve(s->toPermission_));
+
+
+
+let ctor_: Js.Nullable.t(ctor) = [%raw {|
+( (typeof Notification === "function") ? Notification : null)
+|}];
+
+let ctor = ctor_->Js.Nullable.toOption;
+
 
 [@bs.get]
 external actions_: t => Js.Nullable.t(array(PWA_Notification_Action.t)) =
@@ -79,12 +90,15 @@ type show_notification_options = {
   "data": Js.Nullable.t(Js.Json.t),
 };
 
-[@bs.new]
-external make_: (string, Js.Nullable.t(show_notification_options)) => t =
-  "Notification";
+let make_: (ctor, string, Js.Nullable.t(show_notification_options)) => t = [%raw {|
+function(ctor, title, options) {
+  return new ctor(title, options);
+}
+|}];
+
 
 let make =
-    (
+    (self: ctor,
       title: string,
       ~actions: option(array(PWA_Notification_Action.t))=?,
       ~badge: option(string)=?,
@@ -131,5 +145,5 @@ let make =
         "data": Js.Nullable.fromOption(data),
       });
     };
-  make_(title, opts);
+  make_(self, title, opts);
 };
