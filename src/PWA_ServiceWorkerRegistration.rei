@@ -1,10 +1,5 @@
 type t;
 
-/* TODO remove */
-
-/*include (module type of PWA_EventTarget.Make({ type nonrec t = t; }));*/
-
-
 let scope: t => string;
 
 let getNotifications:
@@ -37,5 +32,5 @@ let showNotification:
 
 let pushManager: t => option(PWA_PushManager.t);
 
-/* experimental technology */
+/* "experimental technology" */
 let updatefound: PWA_EventType.t(t, unit);

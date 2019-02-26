@@ -1,11 +1,18 @@
+open FileReader;
+
 type t;
 
-[@bs.get] [@bs.return nullable] external files_: t => option(PWA_FileList.t) = "files";
-let files = self => self->files_ ->Belt.Option.map(PWA_FileList.toArray);
+include PWA_DomElementLike.Make({
+	type nonrec t = t;
+});
+
+[@bs.get] [@bs.return nullable] external files_: t => option(Js.Array.array_like(File.t)) = "files";
+let files = self => self->files_ ->Belt.Option.map(Js.Array.from);
 
 [@bs.get] external value: t => string = "value";
 
-[@bs.set] external onchange: (t, Dom.event => unit) => unit = "onchange";
+let change: PWA_EventType.t(t, Dom.event) = PWA_EventType.unsafe("change");
+
 
 let asInputElement_: Dom.element => Js.Nullable.t(t) = [%raw {|
 function(element) {
@@ -13,3 +20,12 @@ function(element) {
 }
 |}];
 let asInputElement = elem => elem->asInputElement_ ->Js.Nullable.toOption;
+
+
+let createElement: PWA_Document.t => t = [%raw
+  {|
+    function(document) {
+        return document.createElement("input");
+    }
+|}
+];

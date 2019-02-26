@@ -33,12 +33,11 @@ self->addEventListener(
     | _ => Js.log("no port")
     };
 
-    /* TODO expect */
-    Js.log2("data", e->data);
-    Js.log2("origin", e->origin);
-    Js.log2("lastEventId", e->lastEventId);
-    Js.log2("source", e->source);
-    Js.log2("ports", e->ports);
+    expectToEqual(e->data->Js.typeof, "string");
+    expectToEqual(e->origin->Js.typeof, "string");
+    expectToEqual(e->lastEventId->Js.typeof, "string");
+    expectToEqual(e->source->Js.typeof, "object");
+    expectToEqual(e->ports, [||]);
 
     let reg = self->registration;
 
@@ -63,29 +62,30 @@ self->addEventListener(
     );
 
     let clients = self->clients;
+
     clients->matchAll()
     |> then_(arr => {
+        expectToEqual(arr->Array.length, 1);
+
          arr
          |> Js.Array.forEach(c => {
               c->PWA_Client.postMessage("message for client");
-              Js.log2("client id", c->PWA_Client.id);
-              Js.log2("client type_", c->PWA_Client.type_);
-              Js.log2("client url", c->PWA_Client.url);
+              expectToEqual(c->PWA_Client.id->Js.typeof, "string");
+              expectToEqual(c->PWA_Client.type_->Js.typeof, "string");
+              expectToEqual(c->PWA_Client.url->Js.typeof, "string");
             });
 
-         Js.log2("clients", arr);
          resolve();
        })
     |> ignore;
 
     clients->get("/")
     |> then_(cl => {
-         Js.log2("client", cl);
+         expectToEqual(cl, None);
          resolve();
        })
     |> ignore;
 
-    Js.log2("clients", clients);
 
     self
     ->registration
@@ -99,7 +99,7 @@ self->addEventListener(
         /* ~requireInteraction=true, */
         ~actions=[|
           Notification.Action.make(~title="Open window", ~action="left", ()),
-          Notification.Action.make(~title="Do nothing", ~action="right", ()),
+          /*Notification.Action.make(~title="Do nothing", ~action="right", ()),*/
           Notification.Action.make(
             ~action="a1",
             ~title="Click",
@@ -125,15 +125,17 @@ self->addEventListener(
     open Notification;
     Js.log("on notification click");
 
-    Js.log2("action", event->action);
-    Js.log2("tag", event->notification->tag);
-    Js.log2("timestamp", event->notification->timestamp);
+    /* expect smiley face click */
+    /*expectToEqual(event->action, Some("a1")); */
+    /*expectToEqual(event->notification->tag, Some("tag1")); */
+    /*expectToEqual(event->notification->timestamp->Js.typeof, "number");*/
 
     if (event->action == Some("left")) {
       self->clients->openWindow("/")
       |> then_(wc => {
-           Js.log2("wc", wc);
-           wc->Belt.Option.getExn->PWA_WindowClient.navigate("/elsewhere");
+          /* validate type */
+          wc->Belt.Option.getExn->WindowClient.asClient->WindowClient.asWindowClient->Belt.Option.getExn;
+          wc->Belt.Option.getExn->PWA_WindowClient.navigate("/elsewhere");
          })
       |> then_(wc => {
            Js.log2("navigated", wc);

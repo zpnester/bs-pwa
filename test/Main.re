@@ -293,7 +293,7 @@ let file: HTMLInputElement.t =
 
 expectToEqual(file->value, "");
 
-file->HTMLInputElement.onchange(_ => {
+file->addEventListener(change, _ => {
   expectToEqual(
     file->files->Option.getExn->Array.length->Js.typeof,
     "number",
@@ -321,10 +321,10 @@ let date: HTMLInputElement.t =
 expectToEqual(date->files, None);
 expectToEqual(date->value, "");
 
-date->onchange(_ => {
+date->addEventListener(change, _ => {
   expectToEqual(date->value->Js.String.length, 10);
   expectToEqual(date->files, None);
-});
+}); 
 
 
 
@@ -404,5 +404,13 @@ expectToEqual(window->document->Document.querySelector("#take")->Option.isSome, 
 expectToEqual(window->document->Document.querySelector("#take1")->Option.isSome, false);
 
 
+let input = window->document->HTMLInputElement.createElement
+->HTMLInputElement.asDomElement
+->HTMLInputElement.asInputElement
+->Option.getExn;
+
+let elem = window->document->Document.createElement("input")
+->HTMLInputElement.asInputElement
+->Option.getExn;
 
 Js.log("sync OK, wait for async");

@@ -34,3 +34,5 @@ let asWindowClient = client =>
   } else {
     None;
   };
+
+external asClient: t => PWA_Client.t = "%identity";

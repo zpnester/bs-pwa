@@ -24,3 +24,4 @@ let toDataURL: (t, ~type_: string=?, ~quality: float=?, unit) => string;
 let toBlob: (t, ~type_: string=?, ~quality: float=?, unit) => Js.Promise.t(FileReader.Blob.t);
 
 let createElement: PWA_Document.t => t;
+ 

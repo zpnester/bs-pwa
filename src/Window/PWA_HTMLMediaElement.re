@@ -11,11 +11,9 @@ type audioTrack = {
 module Make = (M : { type t;}) => {
 
 
-/* TODO remove */
-	/*include PWA_EventTarget.Make(M);*/
 	include PWA_DomElementLike.Make(M);
 
-/* setSrcObject: As of November 2017, browsers only support MediaStream */
+	/* setSrcObject: As of November 2017, browsers only support MediaStream */
 
 
 	[@bs.get] external srcObject_: M.t => Js.Null.t(PWA_MediaStream.t) = "srcObject";

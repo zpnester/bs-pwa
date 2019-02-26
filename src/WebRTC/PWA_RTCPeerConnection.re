@@ -1,13 +1,6 @@
 
 type t;
 
-
-/* TODO remove */
-/*include PWA_EventTarget.Make({
-	type nonrec t = t;
-});
-*/
-
 module Configuration = {
 	type t;
 
@@ -168,8 +161,8 @@ let track: PWA_EventType.t(t, {
 (t, PWA_RTCIceCandidate.init) => Js.Promise.t(unit) = "addIceCandidate";
 
 
-
-[@bs.send] external addStream: (t, PWA_MediaStream.t) => unit = "addStream";
+/* addStream deprecated */
+/*[@bs.send] external addStream: (t, PWA_MediaStream.t) => unit = "addStream";*/
 
 [@bs.send] external addTrack: (t, PWA_MediaStreamTrack.t, PWA_MediaStream.t) => 
 PWA_RTCRtpSender.t = "addTrack";

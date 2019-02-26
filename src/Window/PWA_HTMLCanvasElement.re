@@ -34,12 +34,6 @@ function(self) {
 
 [@bs.send] external toDataURL: (t, ~type_: string=?, ~quality: float=?, unit) => string = "toDataURL";
 
-let asCanvasElement_: Dom.element => Js.Nullable.t(t) = [%raw {|
-    function(element) {
-      return (element instanceof HTMLCanvasElement) ? element : null;
-    }
-|}];
-let asCanvasElement = elem => elem->asCanvasElement_ ->Js.Nullable.toOption;
 
 
 [@bs.send]

@@ -7,4 +7,4 @@ let querySelector: (t, string) => option(Dom.element);
 
 let getElementById: (t, string) => option(Dom.element);
 
- 
+let createElement: (t, string) => Dom.element;

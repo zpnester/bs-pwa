@@ -8,3 +8,5 @@ let querySelectorAll = (self, selectors) => querySelectorAll_(self, selectors)->
 
 [@bs.send] [@bs.return nullable] external getElementById: (t, string) => option(Dom.element) = "getElementById";
 
+[@bs.send] external createElement: (t, string) => Dom.element = "createElement";
+

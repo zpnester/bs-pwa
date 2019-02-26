@@ -14,7 +14,7 @@ let mid = self => mid_(self)->Js.Nullable.toOption;
 
 [@bs.get] external stopped: t => bool = "stopped";
 
-/* TODO */
+
 [@bs.send] external setCodecPreferences: (t, Js.t({..})) => unit = "setCodecPreferences";
 
 [@bs.send] external stop: t => unit = "stop";

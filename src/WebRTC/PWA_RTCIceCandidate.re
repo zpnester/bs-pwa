@@ -1,6 +1,5 @@
 type t;
 
-/* TODO rename to init */
 type init = {
 	.
 	"candidate": Js.Nullable.t(string),
@@ -9,21 +8,7 @@ type init = {
 	"usernameFragment": Js.Nullable.t(string),
 };
 
-/*type iceCandidateInitStringifiable = {
-	.
-	"candidate": Js.Nullable.t(string),
-	"sdpMid": Js.Nullable.t(string),
-	"sdpMLineIndex": Js.Nullable.t(int),
-	"usernameFragment": Js.Nullable.t(string),
-	[@bs.meth] "stringify": unit => string
-};*/
-/* TODO remove */
-/*
-[@bs.send] external stringify: iceCandidateInit => string = "stringify";*/
 
-
-/* reserve make for function w/o Js.Nullable */
-/* TODO not important */
 [@bs.new] external make_: Js.Nullable.t(init) => t = "RTCIceCandidate";
 
 let make = (~init=?, ()) => {
@@ -74,7 +59,6 @@ let tcpType = self => tcpType_(self)->Js.Null.toOption;
 
 
 
-/*[@bs.send] external toJSON: t => iceCandidateInitStringifiable = "toJSON"*/
 [@bs.send] external toJSON: t => init = "toJSON"
 
 
