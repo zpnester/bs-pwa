@@ -16,10 +16,5 @@ function(element) {
 ];
 let asVideoElement = elem => elem->asVideoElement_->Js.Nullable.toOption;
 
-let createElement: PWA_Document.t => t = [%raw
-  {|
-    function(document) {
-        return document.createElement("video");
-    }
-|}
-];
+let createElement = doc => doc->PWA_Document.createElement("video")
+	->asVideoElement->Belt.Option.getExn;

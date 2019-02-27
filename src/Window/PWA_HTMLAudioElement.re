@@ -11,10 +11,6 @@ function(element) {
 ];
 let asAudioElement = elem => elem->asAudioElement_->Js.Nullable.toOption;
 
-let createElement: PWA_Document.t => t = [%raw
-  {|
-    function(document) {
-        return document.createElement("audio");
-    }
-|}
-];
+let createElement = doc => doc->PWA_Document.createElement("audio")
+	->asAudioElement->Belt.Option.getExn;
+

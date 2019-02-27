@@ -60,10 +60,6 @@ function(element) {
 ];
 let asCanvasElement = elem => elem->asCanvasElement_->Js.Nullable.toOption;
 
-let createElement: PWA_Document.t => t = [%raw
-  {|
-    function(document) {
-        return document.createElement("canvas");
-    }
-|}
-];
+
+let createElement = doc => doc->PWA_Document.createElement("canvas")
+  ->asCanvasElement->Belt.Option.getExn;

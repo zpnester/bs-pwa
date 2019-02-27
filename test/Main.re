@@ -40,7 +40,7 @@ let u1 = URL.make("http://a.b");
      let sub = sub->Option.getExn;
 
      expectToEqual(sub->PushSubscription.endpoint->Js.typeof, "string");
-      expectToEqual(sub->PushSubscription.expirationTime->Js.typeof, "number"); 
+     expectToEqual(sub->PushSubscription.expirationTime->Js.typeof, "number"); 
      expectToEqual(sub->PushSubscription.expirationTime->Option.isNone, true);
      expectToEqual(
        sub->PushSubscription.getKey("auth")->isArrayBuffer,
@@ -111,19 +111,6 @@ switch (window->navigator->serviceWorker->Option.flatMap(controller)) {
 | None => Js.log("no sw")
 };
 
-let getVideoUnsafe: unit => PWA_HTMLVideoElement.t = [%raw
-  {|
-function(unit) {
-  return document.getElementById("video");
-}
-|}
-];
-
-/* let getCanvasUnsafe: unit => PWA_HTMLCanvasElement.t = [%raw {|
-   function(unit) {
-     return document.getElementById("canvas");
-   }
-   |}]; */
 
 type img;
 [@bs.set] external src: (img, string) => unit = "src";
@@ -135,22 +122,15 @@ let image = [%bs.raw {|
 type button;
 [@bs.set] external onclick: (button, unit => unit) => unit = "onclick";
 
-let video = getVideoUnsafe();
+let video = window->document->Document.getElementById("video")
+  ->Option.flatMap(HTMLVideoElement.asVideoElement)->Option.getExn;
+
 let canvas = window->document->HTMLCanvasElement.createElement;
 
 expectToEqual(canvas->HTMLCanvasElement.asDomElement
   ->HTMLCanvasElement.asCanvasElement->Option.isSome, true);
 
 /*let canvasStream = canvas->HTMLCanvasElement.captureStream(~frameRate=60.0, ());*/
-/*[%debugger];*/
-
-let getElementById: string => option(Dom.element) = [%raw
-  {|
-  function(id) {
-    return document.getElementById(id);
-  }
-|}
-];
 
 let take: button = [%raw {|
 (document.getElementById("take"))
@@ -286,8 +266,7 @@ tracks->onclick(() => {
 
 open HTMLInputElement;
 
-let file: HTMLInputElement.t =
-  getElementById("file")
+let file = window->document->Document.getElementById("file")
   ->Option.flatMap(HTMLInputElement.asInputElement)
   ->Option.getExn;
 
@@ -314,10 +293,10 @@ file->addEventListener(change, _ => {
 
 expectToEqual(file->HTMLInputElement.files, Some([||]));
 
-let date: HTMLInputElement.t =
-  getElementById("date")
+let date = window->document->Document.getElementById("date") 
   ->Option.flatMap(HTMLInputElement.asInputElement)
   ->Option.getExn;
+
 expectToEqual(date->files, None);
 expectToEqual(date->value, "");
 
@@ -345,9 +324,9 @@ expectToEqual(peer->pendingRemoteDescription, None);
 
 generateCertificate(`Object({
   "name": "RSASSA-PKCS1-v1_5",
-    "hash": "SHA-256",
-    "modulusLength": 2048,
-    "publicExponent": Js.Typed_array.Uint8Array.make([| 1, 0, 1 |])
+  "hash": "SHA-256",
+  "modulusLength": 2048,
+  "publicExponent": Js.Typed_array.Uint8Array.make([| 1, 0, 1 |])
 }))
 |> then_(cert => {
   expectToEqual(cert->PWA_RTCCertificate.expires->Js.typeof, "number");

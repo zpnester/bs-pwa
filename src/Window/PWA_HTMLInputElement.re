@@ -21,11 +21,5 @@ function(element) {
 |}];
 let asInputElement = elem => elem->asInputElement_ ->Js.Nullable.toOption;
 
-
-let createElement: PWA_Document.t => t = [%raw
-  {|
-    function(document) {
-        return document.createElement("input");
-    }
-|}
-];
+let createElement = doc => doc->PWA_Document.createElement("input")
+  ->asInputElement->Belt.Option.getExn;
