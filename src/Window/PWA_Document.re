@@ -1,5 +1,6 @@
 type t = Dom.document;
 
+include PWA_EventTarget.Make({ type nonrec t = t; });
 
 [@bs.send] external querySelectorAll_: (t, string) => Js.Array.array_like(Dom.element) = "querySelectorAll";
 let querySelectorAll = (self, selectors) => querySelectorAll_(self, selectors)->Js.Array.from;

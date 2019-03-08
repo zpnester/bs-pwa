@@ -12,6 +12,7 @@ module Make = (M : { type t;}) => {
 
 
 	include PWA_DomElementLike.Make(M);
+	include PWA_HTMLElement.Make(M);
 
 	/* setSrcObject: As of November 2017, browsers only support MediaStream */
 

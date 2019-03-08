@@ -2,6 +2,9 @@
 
 type t;
 
+include PWA_EventTarget.Make({ type nonrec t = t; });
+
+
 
 module Init = {
 	type t;

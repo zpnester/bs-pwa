@@ -90,7 +90,7 @@ switch (window->navigator->serviceWorker) {
          "http://localhost:8081/",
        );
 
-       reg->addEventListener(
+       reg->ServiceWorkerRegistration.addEventListener(
         ServiceWorkerRegistration.updatefound, onUpdateFound);
 
       /* reg->ServiceWorkerRegistration.removeEventListener(ServiceWorkerRegistration.updatefound,
@@ -272,7 +272,7 @@ let file = window->document->Document.getElementById("file")
 
 expectToEqual(file->value, "");
 
-file->addEventListener(change, _ => {
+file->addEventListener_("change", _ => {
   expectToEqual(
     file->files->Option.getExn->Array.length->Js.typeof,
     "number",
@@ -300,7 +300,7 @@ let date = window->document->Document.getElementById("date")
 expectToEqual(date->files, None);
 expectToEqual(date->value, "");
 
-date->addEventListener(change, _ => {
+date->addEventListener_("change", _ => {
   expectToEqual(date->value->Js.String.length, 10);
   expectToEqual(date->files, None);
 }); 

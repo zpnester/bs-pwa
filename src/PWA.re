@@ -33,6 +33,9 @@ module HTMLAudioElement = PWA_HTMLAudioElement;
 module HTMLCanvasElement = PWA_HTMLCanvasElement;
 module CanvasRenderingContext2D = PWA_CanvasRenderingContext2D;
 module HTMLInputElement = PWA_HTMLInputElement;
+module HTMLButtonElement = PWA_HTMLButtonElement;
+module HTMLSelectElement = PWA_HTMLSelectElement; 
+module HTMLOptionElement = PWA_HTMLOptionElement;
 module URL = PWA_URL;
 
 module RTCPeerConnection = PWA_RTCPeerConnection;
@@ -45,15 +48,17 @@ module RTCRtpReceiver = PWA_RTCRtpReceiver;
 module RTCRtpSender = PWA_RTCRtpSender;
 module RTCRtpTransceiver = PWA_RTCRtpTransceiver;
 module RTCSessionDescription = PWA_RTCSessionDescription;
+module RTCPeerConnectionIceEvent = PWA_RTCPeerConnectionIceEvent;
 
 
- [@bs.send]
+ /*[@bs.send]
   external addEventListener: ('t, PWA_EventType.t('t, 'a), 'a => unit) => unit =
     "addEventListener";
 
   [@bs.send]
   external removeEventListener: ('t, PWA_EventType.t('t, 'a), 'a => unit) => unit =
-    "removeEventListener";
+    "removeEventListener";*/
+
 
  /*    [@bs.send]
   external addEventListener2: ('t, PWA_EventType.t2('t, 'a, 'b), ('a, 'b) => unit) => unit =

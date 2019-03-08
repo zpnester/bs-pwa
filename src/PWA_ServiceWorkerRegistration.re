@@ -1,6 +1,9 @@
 type t;
 
 
+include PWA_EventTarget.Make({ type nonrec t = t; });
+  
+
 [@bs.get] external scope: t => string = "scope";
 
 /* navigationPreload */
