@@ -36,6 +36,7 @@ module HTMLInputElement = PWA_HTMLInputElement;
 module HTMLButtonElement = PWA_HTMLButtonElement;
 module HTMLSelectElement = PWA_HTMLSelectElement; 
 module HTMLOptionElement = PWA_HTMLOptionElement;
+module HTMLTextAreaElement = PWA_HTMLTextAreaElement;
 module URL = PWA_URL;
 
 module RTCPeerConnection = PWA_RTCPeerConnection;

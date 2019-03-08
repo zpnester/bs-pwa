@@ -4,7 +4,6 @@ open PWA;
 open Belt;
 open Js.Promise;
 open Expect;
-open Document;
 
 let window = Window.window;
 let document = window->Window.document;
@@ -18,23 +17,27 @@ let getMedia = () =>
   ->Option.getExn
   ->MediaDevices.getUserMedia({"video": true});
 
-let alice1 = document
-  ->querySelector("#alice1")
+let alice1 =
+  document
+  ->Document.querySelector("#alice1")
   ->Option.getExn
   ->HTMLVideoElement.asVideoElement
   ->Option.getExn;
-let alice2 = document
-  ->querySelector("#alice2")
+let alice2 =
+  document
+  ->Document.querySelector("#alice2")
   ->Option.getExn
   ->HTMLVideoElement.asVideoElement
   ->Option.getExn;
-let bob1 = document
-  ->querySelector("#bob1")
+let bob1 =
+  document
+  ->Document.querySelector("#bob1")
   ->Option.getExn
   ->HTMLVideoElement.asVideoElement
   ->Option.getExn;
-let bob2 = document
-  ->querySelector("#bob2")
+let bob2 =
+  document
+  ->Document.querySelector("#bob2")
   ->Option.getExn
   ->HTMLVideoElement.asVideoElement
   ->Option.getExn;
@@ -43,6 +46,7 @@ let signalChannel = () => {
   let handler = ref(None);
 
   {
+    as _;
     pub on = h => {
       handler := Some(h);
     };
@@ -138,7 +142,7 @@ let make = (name, localVideo, remoteVideo, myChannel, otherChannel) => {
 
          pc->createOffer()
          |> then_(descr => pc->setLocalDescription(descr))
-         |> then_(descr => {
+         |> then_(_ => {
               otherChannel#send(
                 `offer(
                   pc
@@ -153,7 +157,7 @@ let make = (name, localVideo, remoteVideo, myChannel, otherChannel) => {
     |> ignore;
   };
 
-  {pub start = start};
+  {as _; pub start = start};
 };
 
 let aliceChannel = signalChannel();

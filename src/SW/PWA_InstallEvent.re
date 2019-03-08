@@ -1,2 +1,4 @@
 type t;
-include PWA_ExtendableEvent.Make({ type nonrec t = t; });
+include PWA_ExtendableEvent.Make({
+  type nonrec t = t;
+});

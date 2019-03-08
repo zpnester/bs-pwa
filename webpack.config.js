@@ -9,6 +9,7 @@ module.exports = {
         main: "./test/Main.bs.js",
         rtc: "./test/Rtc.bs.js",
         "rtc-peer-band": "./test/RtcPeerBand.bs.js",
+        "rtc-dc-basic": "./test/RtcDcBasic.bs.js"
     },
     output: {
         path: path.resolve(__dirname, "test_dist"),

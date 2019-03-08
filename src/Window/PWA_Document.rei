@@ -1,6 +1,9 @@
 type t = Dom.document;
 
-include (module type of PWA_EventTarget.Make({ type nonrec t = t; }));
+include (module type of
+  PWA_EventTarget.Make({
+    type nonrec t = t;
+  }));
 
 let querySelectorAll: (t, string) => array(Dom.element);
 

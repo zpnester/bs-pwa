@@ -1,6 +1,7 @@
 type t;
 
-[@bs.get] external currentDirection_: t => Js.Nullable.t(string) = "currentDirection";
+[@bs.get]
+external currentDirection_: t => Js.Nullable.t(string) = "currentDirection";
 let currentDirection = self => currentDirection_(self)->Js.Nullable.toOption;
 
 [@bs.get] external direction: t => string = "direction";
@@ -14,12 +15,7 @@ let mid = self => mid_(self)->Js.Nullable.toOption;
 
 [@bs.get] external stopped: t => bool = "stopped";
 
-
-[@bs.send] external setCodecPreferences: (t, Js.t({..})) => unit = "setCodecPreferences";
+[@bs.send]
+external setCodecPreferences: (t, Js.t({..})) => unit = "setCodecPreferences";
 
 [@bs.send] external stop: t => unit = "stop";
-
-
-
-
-

@@ -3,16 +3,18 @@ type t;
 /* TODO test name clash */
 /*[@bs.new] external make: string => t = "URL";*/
 let make: string => t = [%raw {|
-function(url) { 
+function(url) {
 	return new URL(url);
 }
 |}];
 /*[@bs.new] external makeWithBase: (string, string) => t = "URL";*/
-let makeWithBase: (string, string) => t = [%raw {|
+let makeWithBase: (string, string) => t = [%raw
+  {|
 function(url, base) {
 	return new URL(url, base);
 }
-|}];
+|}
+];
 
 [@bs.get] external hash: t => string = "hash";
 [@bs.set] external setHash: (t, string) => unit = "hash";
@@ -52,11 +54,18 @@ function(url, base) {
 
 /* searchParams */
 
+[@bs.val] [@bs.scope "URL"]
+external createObjectURL:
+  (
+  [@bs.unwrap]
+  [
+    | `File(FileReader.File.t)
+    | `Blob(FileReader.Blob.t)
+    | `MediaSource(PWA_MediaSource.t)
+  ]
+  ) =>
+  string =
+  "createObjectURL";
 
-[@bs.val] [@bs.scope "URL"] external createObjectURL: ([@bs.unwrap] [
-	| `File(FileReader.File.t)
-	| `Blob(FileReader.Blob.t)
-	| `MediaSource(PWA_MediaSource.t)
-]) => string = "createObjectURL";
-
-[@bs.val] [@bs.scope "URL"] external revokeObjectURL : string => unit = "revokeObjectURL";
+[@bs.val] [@bs.scope "URL"]
+external revokeObjectURL: string => unit = "revokeObjectURL";

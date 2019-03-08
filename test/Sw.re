@@ -7,12 +7,18 @@ open ServiceWorkerGlobalScope;
 open Js.Promise;
 open Clients;
 
-expectToEqual(self->registration->ServiceWorkerRegistration.scope, "http://localhost:8081/");
+expectToEqual(
+  self->registration->ServiceWorkerRegistration.scope,
+  "http://localhost:8081/",
+);
 
 self->importScripts("1.js");
 
 Js.log2("sw registration", self->registration);
-Js.log2("push manager", self->registration->ServiceWorkerRegistration.pushManager);
+Js.log2(
+  "push manager",
+  self->registration->ServiceWorkerRegistration.pushManager,
+);
 
 self->addEventListener(install, _ => Js.log("on install"));
 
@@ -65,7 +71,7 @@ self->addEventListener(
 
     clients->matchAll()
     |> then_(arr => {
-        expectToEqual(arr->Array.length, 1);
+         expectToEqual(arr->Array.length, 1);
 
          arr
          |> Js.Array.forEach(c => {
@@ -85,7 +91,6 @@ self->addEventListener(
          resolve();
        })
     |> ignore;
-
 
     self
     ->registration
@@ -133,9 +138,13 @@ self->addEventListener(
     if (event->action == Some("left")) {
       self->clients->openWindow("/")
       |> then_(wc => {
-          /* validate type */
-          wc->Belt.Option.getExn->WindowClient.asClient->WindowClient.asWindowClient->Belt.Option.getExn;
-          wc->Belt.Option.getExn->PWA_WindowClient.navigate("/elsewhere");
+           /* validate type */
+           wc
+           ->Belt.Option.getExn
+           ->WindowClient.asClient
+           ->WindowClient.asWindowClient
+           ->Belt.Option.getExn;
+           wc->Belt.Option.getExn->PWA_WindowClient.navigate("/elsewhere");
          })
       |> then_(wc => {
            Js.log2("navigated", wc);

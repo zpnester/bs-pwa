@@ -1,5 +1,4 @@
 module Make = (M: {type t;}) => {
-
   include PWA_EventTarget.Make(M);
 
   [@bs.send] external click: M.t => unit = "click";
@@ -21,7 +20,6 @@ module Make = (M: {type t;}) => {
       };
     focus_(self, opts);
   };
-
   /* let clickEvent: PWA_EventType.t(M.t, Dom.mouseEvent) = PWA_EventType.unsafe("click"); */
   /* forceSpellCheck */
 };

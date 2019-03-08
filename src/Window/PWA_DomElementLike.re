@@ -1,6 +1,3 @@
-
-
-module Make = (M: { type t; }) => {
-	external asDomElement: M.t => Dom.element = "%identity";
-
+module Make = (M: {type t;}) => {
+  external asDomElement: M.t => Dom.element = "%identity";
 };

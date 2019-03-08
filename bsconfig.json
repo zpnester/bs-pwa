@@ -1,6 +1,6 @@
 {
   "name": "@zpnester/bs-pwa",
-  "version": "0.0.10",
+  "version": "0.0.11",
   "sources": [
     {
       "dir": "src",
@@ -17,11 +17,13 @@
   },
   "suffix": ".bs.js",
   "bs-dependencies": [
-     "@zpnester/bs-filereader"
+    "@zpnester/bs-filereader"
   ],
   "warnings": {
-    "error" : "+101"
+    "error": "+101"
   },
   "refmt": 3,
-  "bsc-flags": ["-bs-g"]
+  "bsc-flags": [
+    "-bs-g"
+  ]
 }

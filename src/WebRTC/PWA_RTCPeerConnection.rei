@@ -128,11 +128,16 @@ let createOffer:
   (t, ~iceRestart: bool=?, ~voiceActivityDetection: bool=?, unit) =>
   Js.Promise.t(PWA_RTCSessionDescription.init);
 
-[@bs.val] [@bs.scope "RTCPeerConnection"]
-external generateCertificate:
-  ([@bs.unwrap] [ | `String(string) | `Object(Js.t({..}))]) =>
-  Js.Promise.t(PWA_RTCCertificate.t) =
-  "generateCertificate";
+/* both seems to work */
+// [@bs.val] [@bs.scope "RTCPeerConnection"]
+// external generateCertificate:
+//   ([@bs.unwrap] [ | `String(string) | `Object(Js.t({..}))]) =>
+//   Js.Promise.t(PWA_RTCCertificate.t) =
+//   "generateCertificate";
+
+let generateCertificate:
+  [ | `String(string) | `Object(Js.t({..}))] =>
+  Js.Promise.t(PWA_RTCCertificate.t);
 
 let getConfiguration: t => Configuration.t;
 

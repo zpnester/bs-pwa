@@ -1,7 +1,9 @@
 type t;
 
-include (module type of PWA_HTMLMediaElement.Make({ type nonrec t = t; }));
-
+include (module type of
+  PWA_HTMLMediaElement.Make({
+    type nonrec t = t;
+  }));
 
 let videoWidth: t => int;
 let videoHeight: t => int;

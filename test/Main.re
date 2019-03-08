@@ -393,3 +393,4 @@ let elem = window->document->Document.createElement("input")
 ->Option.getExn;
 
 Js.log("sync OK, wait for async");
+/* window->Window.alertAny(true); */
