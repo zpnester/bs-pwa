@@ -1,7 +1,10 @@
 type t;
 
-include (module type of  PWA_ExtendableEvent.Make({ type nonrec t = t; }));
+include (module type of
+  PWA_ExtendableEvent.Make({
+    type nonrec t = t;
+  }));
 
-
-let notification: t => PWA_Notification.t;
-let action: t => option(string);
+[@bs.get] external notification: t => PWA_Notification.t = "notification";
+[@bs.get] [@bs.return nullable]
+external action: t => option(string) = "action";

@@ -4,6 +4,7 @@ include PWA_HTMLMediaElement.Make({
   type nonrec t = t;
 });
 
+// int
 [@bs.get] external videoWidth: t => int = "videoWidth";
 [@bs.get] external videoHeight: t => int = "videoHeight";
 

@@ -22,39 +22,27 @@ module Configuration = {
     t =
     "";
 
-  [@bs.get]
-  external bundlePolicy_: t => Js.Nullable.t(string) = "bundlePolicy";
-  let bundlePolicy = self => bundlePolicy_(self)->Js.Nullable.toOption;
+  [@bs.get] [@bs.return nullable]
+  external bundlePolicy: t => option(string) = "bundlePolicy";
 
-  [@bs.get]
-  external certificates_: t => Js.Nullable.t(array(PWA_RTCCertificate.t)) =
+  [@bs.get] [@bs.return nullable]
+  external certificates: t => option(array(PWA_RTCCertificate.t)) =
     "certificates";
-  let certificates = self => certificates_(self)->Js.Nullable.toOption;
 
-  [@bs.get]
-  external iceCandidatePoolSize_: t => Js.Nullable.t(int) =
-    "iceCandidatePoolSize";
-  let iceCandidatePoolSize = self =>
-    iceCandidatePoolSize_(self)->Js.Nullable.toOption;
+  [@bs.get] [@bs.return nullable]
+  external iceCandidatePoolSize: t => option(int) = "iceCandidatePoolSize";
 
-  [@bs.get]
-  external iceServers_: t => Js.Nullable.t(array(PWA_RTCIceServer.t)) =
-    "iceServers";
-  let iceServers = self => iceServers_(self)->Js.Nullable.toOption;
+  [@bs.get] [@bs.return nullable]
+  external iceServers: t => option(array(PWA_RTCIceServer.t)) = "iceServers";
 
-  [@bs.get]
-  external iceTransportPolicy_: t => Js.Nullable.t(string) =
-    "iceTransportPolicy";
-  let iceTransportPolicy = self =>
-    iceTransportPolicy_(self)->Js.Nullable.toOption;
+  [@bs.get] [@bs.return nullable]
+  external iceTransportPolicy: t => option(string) = "iceTransportPolicy";
 
-  [@bs.get]
-  external peerIdentity_: t => Js.Nullable.t(string) = "peerIdentity";
-  let peerIdentity = self => peerIdentity_(self)->Js.Nullable.toOption;
+  [@bs.get] [@bs.return nullable]
+  external peerIdentity_: t => option(string) = "peerIdentity";
 
-  [@bs.get]
-  external rtcpMuxPolicy_: t => Js.Nullable.t(string) = "rtcpMuxPolicy";
-  let rtcpMuxPolicy = self => rtcpMuxPolicy_(self)->Js.Nullable.toOption;
+  [@bs.get] [@bs.return nullable]
+  external rtcpMuxPolicy: t => option(string) = "rtcpMuxPolicy";
 };
 
 [@bs.new]
@@ -67,53 +55,39 @@ let make = (~config=?, ()) => {
 /*let make = (~config: option())*/
 
 /* TODO test */
-[@bs.get]
-external canTrickleIceCandidates_: t => Js.Undefined.t(bool) =
+[@bs.get] [@bs.return nullable]
+external canTrickleIceCandidates: t => option(bool) =
   "canTrickleIceCandidates";
-let canTrickleIceCandidates = self =>
-  canTrickleIceCandidates_(self)->Js.Undefined.toOption;
 
 [@bs.get] external connectionState: t => string = "connectionState";
 
 /* TODO test */
-[@bs.get]
-external currentLocalDescription_: t => Js.Null.t(PWA_RTCSessionDescription.t) =
+[@bs.get] [@bs.return nullable]
+external currentLocalDescription: t => option(PWA_RTCSessionDescription.t) =
   "currentLocalDescription";
-let currentLocalDescription = self =>
-  currentLocalDescription_(self)->Js.Null.toOption;
 
-[@bs.get]
-external currentRemoteDescription_:
-  t => Js.Null.t(PWA_RTCSessionDescription.t) =
+[@bs.get] [@bs.return nullable]
+external currentRemoteDescription: t => option(PWA_RTCSessionDescription.t) =
   "currentRemoteDescription";
-let currentRemoteDescription = self =>
-  currentRemoteDescription_(self)->Js.Null.toOption;
 
 [@bs.get] external iceConnectionState: t => string = "iceConnectionState";
 [@bs.get] external iceGatheringState: t => string = "iceGatheringState";
 
-[@bs.get]
-external localDescription_: t => Js.Null.t(PWA_RTCSessionDescription.t) =
+[@bs.get] [@bs.return nullable]
+external localDescription: t => option(PWA_RTCSessionDescription.t) =
   "localDescription";
-let localDescription = self => localDescription_(self)->Js.Null.toOption;
 
-[@bs.get]
-external pendingLocalDescription_: t => Js.Null.t(PWA_RTCSessionDescription.t) =
+[@bs.get] [@bs.return nullable]
+external pendingLocalDescription: t => option(PWA_RTCSessionDescription.t) =
   "pendingLocalDescription";
-let pendingLocalDescription = self =>
-  pendingLocalDescription_(self)->Js.Null.toOption;
 
-[@bs.get]
-external remoteDescription_: t => Js.Null.t(PWA_RTCSessionDescription.t) =
+[@bs.get] [@bs.return nullable]
+external remoteDescription: t => option(PWA_RTCSessionDescription.t) =
   "remoteDescription";
-let remoteDescription = self => remoteDescription_(self)->Js.Null.toOption;
 
-[@bs.get]
-external pendingRemoteDescription_:
-  t => Js.Null.t(PWA_RTCSessionDescription.t) =
+[@bs.get]  [@bs.return nullable]
+external pendingRemoteDescription: t => option(PWA_RTCSessionDescription.t) =
   "pendingRemoteDescription";
-let pendingRemoteDescription = self =>
-  pendingRemoteDescription_(self)->Js.Null.toOption;
 
 [@bs.get] external signalingState: t => string = "signalingState";
 
@@ -183,7 +157,8 @@ let track:
   PWA_EventType.unsafe("track");
 
 [@bs.send]
-external addIceCandidate: (t, PWA_RTCIceCandidate.init) => Js.Promise.t(unit) =
+external addIceCandidate:
+  (t, PWA_RTCIceCandidate.Init.t) => Js.Promise.t(unit) =
   "addIceCandidate";
 
 /* addStream deprecated */
@@ -205,7 +180,7 @@ external addTrack2:
 [@bs.send]
 external createAnswer_:
   (t, Js.Nullable.t({. "voiceActivityDetection": Js.Nullable.t(bool)})) =>
-  Js.Promise.t(PWA_RTCSessionDescription.init) =
+  Js.Promise.t(PWA_RTCSessionDescription.Init.t) =
   "createAnswer";
 
 let createAnswer = (self, ~voiceActivityDetection=?, ()) => {
@@ -242,7 +217,7 @@ external createOffer_:
       "voiceActivityDetection": Js.Nullable.t(bool),
     })
   ) =>
-  Js.Promise.t(PWA_RTCSessionDescription.init) =
+  Js.Promise.t(PWA_RTCSessionDescription.Init.t) =
   "createOffer";
 
 let createOffer = (self, ~iceRestart=?, ~voiceActivityDetection=?, ()) => {
@@ -288,12 +263,12 @@ external setConfiguration: (t, Configuration.t) => unit = "setConfiguration";
 
 [@bs.send]
 external setLocalDescription:
-  (t, PWA_RTCSessionDescription.init) => Js.Promise.t(unit) =
+  (t, PWA_RTCSessionDescription.Init.t) => Js.Promise.t(unit) =
   "setLocalDescription";
 
 [@bs.send]
 external setRemoteDescription:
-  (t, PWA_RTCSessionDescription.init) => Js.Promise.t(unit) =
+  (t, PWA_RTCSessionDescription.Init.t) => Js.Promise.t(unit) =
   "setRemoteDescription";
 
 /* getIdentityAssertion */

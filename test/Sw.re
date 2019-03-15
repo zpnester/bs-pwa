@@ -2,10 +2,15 @@ open Expect;
 
 Js.log("hello sw");
 
+let self= "";
+Js.log(self)
+
 open PWA;
 open ServiceWorkerGlobalScope;
 open Js.Promise;
 open Clients;
+open Belt;
+
 
 expectToEqual(
   self->registration->ServiceWorkerRegistration.scope,
@@ -131,19 +136,20 @@ self->addEventListener(
     Js.log("on notification click");
 
     /* expect smiley face click */
-    /*expectToEqual(event->action, Some("a1")); */
-    /*expectToEqual(event->notification->tag, Some("tag1")); */
-    /*expectToEqual(event->notification->timestamp->Js.typeof, "number");*/
+    expectToEqual(event->action, Some("a1"));
+    expectToEqual(event->notification->tag, Some("tag1"));
+    expectToEqual(event->notification->timestamp->Js.typeof, "number");
 
     if (event->action == Some("left")) {
       self->clients->openWindow("/")
       |> then_(wc => {
            /* validate type */
            wc
-           ->Belt.Option.getExn
+           ->Option.getExn
            ->WindowClient.asClient
            ->WindowClient.asWindowClient
-           ->Belt.Option.getExn;
+           ->Option.getExn
+           ->ignore;
            wc->Belt.Option.getExn->PWA_WindowClient.navigate("/elsewhere");
          })
       |> then_(wc => {

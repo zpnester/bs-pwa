@@ -1,6 +1,8 @@
 type t;
 
-include PWA_HTMLMediaElement.Make({ type nonrec t = t; });
+include PWA_HTMLMediaElement.Make({
+  type nonrec t = t;
+});
 
 let asAudioElement_: Dom.element => Js.Nullable.t(t) = [%raw
   {|
@@ -11,6 +13,8 @@ function(element) {
 ];
 let asAudioElement = elem => elem->asAudioElement_->Js.Nullable.toOption;
 
-let createElement = doc => doc->PWA_Document.createElement("audio")
-	->asAudioElement->Belt.Option.getExn;
-
+let createElement = doc =>
+  doc
+  ->PWA_Document.createElement("audio")
+  ->asAudioElement
+  ->Belt.Option.getExn;

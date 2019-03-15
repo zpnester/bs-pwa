@@ -24,20 +24,14 @@ let getNotifications = (self: t, ~tag: option(string)=?, ()) => {
   self->getNotifications_(opts);
 };
 
-[@bs.get]
-external active_: t => Js.Nullable.t(PWA_ServiceWorker.t) = "active";
+[@bs.get] [@bs.return nullable]
+external active: t => option(PWA_ServiceWorker.t) = "active";
 
-let active = self => self->active_->Js.Nullable.toOption;
+[@bs.get] [@bs.return nullable]
+external installing: t => option(PWA_ServiceWorker.t) = "installing";
 
-[@bs.get]
-external installing_: t => Js.Nullable.t(PWA_ServiceWorker.t) = "installing";
-
-let installing = self => self->installing_->Js.Nullable.toOption;
-
-[@bs.get]
-external waiting_: t => Js.Nullable.t(PWA_ServiceWorker.t) = "waiting";
-
-let waiting = self => self->waiting_->Js.Nullable.toOption;
+[@bs.get] [@bs.return nullable]
+external waiting: t => option(PWA_ServiceWorker.t) = "waiting";
 
 /* same as in Notification */
 type show_notification_options('a, 'b) = {
@@ -115,10 +109,8 @@ let showNotification =
   self->showNotification_(title, opts);
 };
 
-[@bs.get]
-external pushManager_: t => Js.Nullable.t(PWA_PushManager.t) = "pushManager";
-
-let pushManager = self => pushManager_(self)->Js.Nullable.toOption;
+[@bs.get] [@bs.return nullable]
+external pushManager: t => option(PWA_PushManager.t) = "pushManager";
 
 let updatefound: PWA_EventType.t(t, unit) =
   PWA_EventType.unsafe("updatefound");

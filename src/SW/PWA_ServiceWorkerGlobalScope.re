@@ -13,7 +13,8 @@ let notificationclose: PWA_EventType.t(t, PWA_NotificationEvent.t) =
 
 let install: PWA_EventType.t(t, PWA_InstallEvent.t) =
   PWA_EventType.unsafe("install");
-let fetch: PWA_EventType.t(t, PWA_FetchEvent.t) = PWA_EventType.unsafe("fetch");
+let fetch: PWA_EventType.t(t, PWA_FetchEvent.t) =
+  PWA_EventType.unsafe("fetch");
 
 let push: PWA_EventType.t(t, PWA_PushEvent.t) = PWA_EventType.unsafe("push");
 
@@ -24,15 +25,8 @@ let message: PWA_EventType.t(t, PWA_MessageEvent.t) =
 
 [@bs.get] external clients: t => PWA_Clients.t = "clients";
 
-let pushsubscriptionchange: PWA_EventType.t(t, PWA_PushSubscriptionChangeEvent.t) =
+let pushsubscriptionchange:
+  PWA_EventType.t(t, PWA_PushSubscriptionChangeEvent.t) =
   PWA_EventType.unsafe("pushsubscriptionchange");
 
 [@bs.send] external skipWaiting: t => Js.Promise.t(unit) = "skipWaiting";
-
-
-
-
-
-
-
-

@@ -1,6 +1,7 @@
 include (module type of PWA_WorkerGlobalScope);
 
-let registration: t => PWA_ServiceWorkerRegistration.t;
+[@bs.get]
+external registration: t => PWA_ServiceWorkerRegistration.t = "registration";
 
 let notificationclick: PWA_EventType.t(t, PWA_NotificationEvent.t);
 
@@ -18,8 +19,9 @@ let sync: PWA_EventType.t(t, PWA_SyncEvent.t);
 
 let message: PWA_EventType.t(t, PWA_MessageEvent.t);
 
-let clients: t => PWA_Clients.t;
+[@bs.get] external clients: t => PWA_Clients.t = "clients";
 
-let pushsubscriptionchange: PWA_EventType.t(t, PWA_PushSubscriptionChangeEvent.t);
+let pushsubscriptionchange:
+  PWA_EventType.t(t, PWA_PushSubscriptionChangeEvent.t);
 
-let skipWaiting: t => Js.Promise.t(unit);
+[@bs.send] external skipWaiting: t => Js.Promise.t(unit) = "skipWaiting";

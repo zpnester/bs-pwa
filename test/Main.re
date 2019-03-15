@@ -25,59 +25,57 @@ let u1 = URL.make("http://a.b");
 
 /* test when push subscribed */
 
-/* window
-->navigator
-->Navigator.serviceWorkerExn
-->ServiceWorkerContainer.getRegistration
-|> then_(reg => {
-     let reg = reg->Option.getExn;
-     reg
-     ->ServiceWorkerRegistration.pushManager
-     ->Option.getExn
-     ->PushManager.getSubscription;
-   })
-|> then_(sub => {
-     let sub = sub->Option.getExn;
+// window
+// ->navigator
+// ->Navigator.serviceWorker
+// ->Option.getExn
+// ->ServiceWorkerContainer.getRegistration
+// |> then_(reg => {
+//      let reg = reg->Option.getExn;
+//      reg
+//      ->ServiceWorkerRegistration.pushManager
+//      ->Option.getExn
+//      ->PushManager.getSubscription;
+//    })
+// |> then_(sub => {
+//      let sub = sub->Option.getExn;
 
-     expectToEqual(sub->PushSubscription.endpoint->Js.typeof, "string");
-     expectToEqual(sub->PushSubscription.expirationTime->Js.typeof, "number"); 
-     expectToEqual(sub->PushSubscription.expirationTime->Option.isNone, true);
-     expectToEqual(
-       sub->PushSubscription.getKey("auth")->isArrayBuffer,
-       true,
-     );
-     expectToEqual(sub->PushSubscription.options->Js.typeof, "object");
-     Js.log2("options", sub->PushSubscription.options);
+//      expectToEqual(sub->PushSubscription.endpoint->Js.typeof, "string");
+//      expectToEqual(sub->PushSubscription.expirationTime->Js.typeof, "number");
+//      expectToEqual(sub->PushSubscription.expirationTime->Option.isNone, true);
+//      expectToEqual(
+//        sub->PushSubscription.getKey("auth")->isArrayBuffer,
+//        true,
+//      );
+//      expectToEqual(sub->PushSubscription.options->Js.typeof, "object");
+//      Js.log2("options", sub->PushSubscription.options);
 
-     Js.log2("toJSON", sub->PushSubscription.toJSON);
-     expectToEqual(sub->PushSubscription.toJSON->Js.typeof, "object");
-     resolve();
-   }); */
+//      Js.log2("toJSON", sub->PushSubscription.toJSON);
+//      expectToEqual(sub->PushSubscription.toJSON->Js.typeof, "object");
+//      resolve();
+//    });
 
 module Notification = PWA.Notification;
 
 switch (Notification.ctor) {
-  | None => Js.Console.error("Notifications not supported");
-  | Some(notification) =>
-    notification->Notification.requestPermission
-    |> then_(p => {
-         expectToEqual(p, `granted);
-         let n = notification->Notification.make("hi", ~body="hello", ());
-         n->Notification.onclick(_ => Js.log("clicked"));
+| None => Js.Console.error("Notifications not supported")
+| Some(notification) =>
+  notification->Notification.requestPermission
+  |> then_(p => {
+       expectToEqual(p, `granted);
+       let n = notification->Notification.make("hi", ~body="hello", ());
+       n->Notification.onclick(_ => Js.log("clicked"));
 
-         expectToEqual(n->Notification.icon, Some(""));
-         expectToEqual(n->Notification.title, Some("hi"));
-         expectToEqual(n->Notification.body, Some("hello"));
-         expectToEqual(n->Notification.actions, Some([||]));
-         resolve();
-       })
-    |> ignore;
-}
+       expectToEqual(n->Notification.icon, Some(""));
+       expectToEqual(n->Notification.title, Some("hi"));
+       expectToEqual(n->Notification.body, Some("hello"));
+       expectToEqual(n->Notification.actions, Some([||]));
+       resolve();
+     })
+  |> ignore
+};
 
-
-let onUpdateFound = () =>
-   Js.log("updatefound event");
- 
+let onUpdateFound = () => Js.log("updatefound event");
 
 switch (window->navigator->serviceWorker) {
 | Some(c) =>
@@ -91,10 +89,9 @@ switch (window->navigator->serviceWorker) {
        );
 
        reg->ServiceWorkerRegistration.addEventListener(
-        ServiceWorkerRegistration.updatefound, onUpdateFound);
-
-      /* reg->ServiceWorkerRegistration.removeEventListener(ServiceWorkerRegistration.updatefound,
-          onUpdateFound);*/
+         ServiceWorkerRegistration.updatefound,
+         onUpdateFound,
+       );
        resolve();
      })
   |> catch(e => {
@@ -111,7 +108,6 @@ switch (window->navigator->serviceWorker->Option.flatMap(controller)) {
 | None => Js.log("no sw")
 };
 
-
 type img;
 [@bs.set] external src: (img, string) => unit = "src";
 
@@ -119,34 +115,49 @@ let image = [%bs.raw {|
 (document.getElementById("image"))
 |}];
 
-type button;
-[@bs.set] external onclick: (button, unit => unit) => unit = "onclick";
-
-let video = window->document->Document.getElementById("video")
-  ->Option.flatMap(HTMLVideoElement.asVideoElement)->Option.getExn;
+let video =
+  self
+  ->document
+  ->Document.getElementById("video")
+  ->Option.flatMap(HTMLVideoElement.asVideoElement)
+  ->Option.getExn;
 
 let canvas = window->document->HTMLCanvasElement.createElement;
 
-expectToEqual(canvas->HTMLCanvasElement.asDomElement
-  ->HTMLCanvasElement.asCanvasElement->Option.isSome, true);
+expectToEqual(
+  canvas
+  ->HTMLCanvasElement.asDomElement
+  ->HTMLCanvasElement.asCanvasElement
+  ->Option.isSome,
+  true,
+);
 
 /*let canvasStream = canvas->HTMLCanvasElement.captureStream(~frameRate=60.0, ());*/
 
-let take: button = [%raw {|
-(document.getElementById("take"))
-|}];
+let take =
+  window
+  ->Window.document
+  ->Document.getElementById("take")
+  ->Option.flatMap(HTMLButtonElement.asButtonElement)
+  ->Option.getExn;
 
-let tracks: button = [%raw {|
-(document.getElementById("tracks"))
-|}];
+let tracks =
+  window
+  ->Window.document
+  ->Document.getElementById("tracks")
+  ->Option.flatMap(HTMLButtonElement.asButtonElement)
+  ->Option.getExn;
 
-let stop: button = [%raw {|
-(document.getElementById("stop"))
-|}];
+let stop =
+  window
+  ->Window.document
+  ->Document.getElementById("stop")
+  ->Option.flatMap(HTMLButtonElement.asButtonElement)
+  ->Option.getExn;
 
 let stream = ref(None);
 
-take->onclick(() => {
+take->HTMLButtonElement.addEventListener_("click", _ => {
   open HTMLCanvasElement;
   canvas->setWidth(video->HTMLVideoElement.videoWidth);
   canvas->setHeight(video->HTMLVideoElement.videoHeight);
@@ -174,15 +185,11 @@ function(url) {
 |}
 ];
 
-
-     
-
 let stopCamera = () => {
   let ts = (stream^)->Option.getExn->MediaStream.getTracks;
   ts->Array.forEach(MediaStreamTrack.stop);
   /* stream := None; */
-}
-
+};
 
 window
 ->navigator
@@ -205,35 +212,29 @@ window
      expectToEqual(media->MediaStream.id->Js.typeof, "string");
      expectToEqual(media->MediaStream.active, true);
 
-     Js.log2("setting stream", media); 
+     Js.log2("setting stream", media);
      video->HTMLVideoElement.setSrcObject(Some(media));
 
      stopCamera();
 
      /* do not remove */
-      fetchBlob("/1.mp4")
-        |> then_(blob => {
-          blob->FileReader.toDataURL
-
-          /*let dataUrl = URL.createObjectURL(`Blob(blob));
-          expectToEqual(dataUrl->Js.typeof, "string");
-          resolve(dataUrl)*/
-        })
-        |> then_(dataUrl => {
+     fetchBlob("/1.mp4")
+     |> then_(blob => blob->FileReader.toDataURL)
+     /*let dataUrl = URL.createObjectURL(`Blob(blob));
+       expectToEqual(dataUrl->Js.typeof, "string");
+       resolve(dataUrl)*/
+     |> then_(dataUrl => {
           video->HTMLVideoElement.setSrc(dataUrl);
           resolve();
         })
-         |> ignore; 
+     |> ignore;
 
      resolve();
    });
 
+stop->HTMLButtonElement.addEventListener_("click", _ => stopCamera());
 
-stop->onclick(() => {
-  stopCamera();
-});
-
-tracks->onclick(() => {
+tracks->HTMLButtonElement.addEventListener_("click", _ => {
   Js.log("tracks");
   let stream = (stream^)->Option.getExn;
   let ts = stream->MediaStream.getTracks;
@@ -266,7 +267,10 @@ tracks->onclick(() => {
 
 open HTMLInputElement;
 
-let file = window->document->Document.getElementById("file")
+let file =
+  window
+  ->document
+  ->Document.getElementById("file")
   ->Option.flatMap(HTMLInputElement.asInputElement)
   ->Option.getExn;
 
@@ -293,7 +297,10 @@ file->addEventListener_("change", _ => {
 
 expectToEqual(file->HTMLInputElement.files, Some([||]));
 
-let date = window->document->Document.getElementById("date") 
+let date =
+  window
+  ->document
+  ->Document.getElementById("date")
   ->Option.flatMap(HTMLInputElement.asInputElement)
   ->Option.getExn;
 
@@ -303,9 +310,7 @@ expectToEqual(date->value, "");
 date->addEventListener_("change", _ => {
   expectToEqual(date->value->Js.String.length, 10);
   expectToEqual(date->files, None);
-}); 
-
-
+});
 
 open RTCPeerConnection;
 let config = Configuration.make(~iceCandidatePoolSize=2, ());
@@ -322,75 +327,126 @@ expectToEqual(peer->pendingLocalDescription, None);
 expectToEqual(peer->remoteDescription, None);
 expectToEqual(peer->pendingRemoteDescription, None);
 
-generateCertificate(`Object({
-  "name": "RSASSA-PKCS1-v1_5",
-  "hash": "SHA-256",
-  "modulusLength": 2048,
-  "publicExponent": Js.Typed_array.Uint8Array.make([| 1, 0, 1 |])
-}))
+generateCertificate(
+  `Object({
+    "name": "RSASSA-PKCS1-v1_5",
+    "hash": "SHA-256",
+    "modulusLength": 2048,
+    "publicExponent": Js.Typed_array.Uint8Array.make([|1, 0, 1|]),
+  }),
+)
 |> then_(cert => {
-  expectToEqual(cert->PWA_RTCCertificate.expires->Js.typeof, "number");
+     expectToEqual(cert->PWA_RTCCertificate.expires->Js.typeof, "number");
 
-  resolve();
-})
+     resolve();
+   })
 |> catch(err => {
-  Js.log(err);
-  resolve();
-})
+     Js.log(err);
+     resolve();
+   });
 
-expectToEqual(peer->getConfiguration->Configuration.iceCandidatePoolSize, Some(2));
+expectToEqual(
+  peer->getConfiguration->Configuration.iceCandidatePoolSize,
+  Some(2),
+);
 peer->setConfiguration(Configuration.make(~iceCandidatePoolSize=3, ()));
-expectToEqual(peer->getConfiguration->Configuration.iceCandidatePoolSize, Some(3));
+expectToEqual(
+  peer->getConfiguration->Configuration.iceCandidatePoolSize,
+  Some(3),
+);
 
 expectToEqual(peer->getReceivers, [||]);
 expectToEqual(peer->getSenders, [||]);
 
 peer->getStats()
 |> then_(stats => {
-  Js.log2("stats", stats);
-  resolve();
-});
+     Js.log2("stats", stats);
+     resolve();
+   });
 
-
-
-let audio = window->document->Document.querySelector("audio")
-->Option.getExn
-->HTMLAudioElement.asAudioElement
-->Option.getExn;
+let audio =
+  window
+  ->document
+  ->Document.querySelector("audio")
+  ->Option.getExn
+  ->HTMLAudioElement.asAudioElement
+  ->Option.getExn;
 
 /*audio->HTMLAudioElement.setPlaybackRate(5.0);*/
 expectToEqual(audio->HTMLAudioElement.playbackRate, 1.0);
-
 
 expectToEqual(audio->HTMLAudioElement.loop, false);
 expectToEqual(audio->HTMLAudioElement.autoplay, false);
 expectToEqual(audio->HTMLAudioElement.canPlayType("audio/mp3"), "probably");
 
-expectToEqual(audio->HTMLAudioElement.asDomElement->
-  HTMLAudioElement.asAudioElement->Option.isSome, true);
-expectToEqual(audio->HTMLAudioElement.asDomElement->
-  HTMLVideoElement.asVideoElement->Option.isSome, false);
+expectToEqual(
+  audio
+  ->HTMLAudioElement.asDomElement
+  ->HTMLAudioElement.asAudioElement
+  ->Option.isSome,
+  true,
+);
+expectToEqual(
+  audio
+  ->HTMLAudioElement.asDomElement
+  ->HTMLVideoElement.asVideoElement
+  ->Option.isSome,
+  false,
+);
 
 /* do not remove */
 /*let audioStream = audio->HTMLAudioElement.captureStream;*/
 
-
 expectToEqual(window->document->Document.querySelectorAll("smth"), [||]);
-expectToEqual(window->document->Document.querySelectorAll("video")->Js.Array.length, 1);
-expectToEqual(window->document->Document.getElementById("take")->Option.isSome, true);
-expectToEqual(window->document->Document.getElementById("take1")->Option.isSome, false);
-expectToEqual(window->document->Document.querySelector("#take")->Option.isSome, true);
-expectToEqual(window->document->Document.querySelector("#take1")->Option.isSome, false);
+expectToEqual(
+  window->document->Document.querySelectorAll("video")->Js.Array.length,
+  1,
+);
+expectToEqual(
+  window->document->Document.getElementById("take")->Option.isSome,
+  true,
+);
+expectToEqual(
+  window->document->Document.getElementById("take1")->Option.isSome,
+  false,
+);
+expectToEqual(
+  window->document->Document.querySelector("#take")->Option.isSome,
+  true,
+);
+expectToEqual(
+  window->document->Document.querySelector("#take1")->Option.isSome,
+  false,
+);
 
+let input =
+  window
+  ->document
+  ->HTMLInputElement.createElement
+  ->HTMLInputElement.asDomElement
+  ->HTMLInputElement.asInputElement
+  ->Option.getExn;
 
-let input = window->document->HTMLInputElement.createElement
-->HTMLInputElement.asDomElement
-->HTMLInputElement.asInputElement
-->Option.getExn;
-
-let elem = window->document->Document.createElement("input")
-->HTMLInputElement.asInputElement
-->Option.getExn;
+let elem =
+  window
+  ->document
+  ->Document.createElement("input")
+  ->HTMLInputElement.asInputElement
+  ->Option.getExn;
 
 Js.log("sync OK, wait for async");
 /* window->Window.alertAny(true); */
+
+// name clash test
+let self = "";
+Js.log(self);
+
+let window = "";
+Js.log(window);
+
+// Window.self->Window.alert("test");
+// Window.window->Window.alert("test");
+
+let blob = FileReader.Blob.make([||], ());
+let objectUrl = URL.createObjectURL(`Blob(blob));
+Js.log(objectUrl);

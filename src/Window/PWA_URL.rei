@@ -1,8 +1,8 @@
 type t;
 
-[@bs.new] external make: string => t = "URL";
-
-[@bs.new] external makeWithBase: (string, string) => t = "URL";
+// constructors, avoid external
+let make: string => t;
+let makeWithBase: (string, string) => t;
 
 [@bs.get] external hash: t => string = "hash";
 [@bs.set] external setHash: (t, string) => unit = "hash";
@@ -40,20 +40,14 @@ type t;
 
 [@bs.get] external toString: t => string = "toString";
 
-/* searchParams */
+// globals, avoid external
 
-[@bs.val] [@bs.scope "URL"]
-external createObjectURL:
-  (
-  [@bs.unwrap]
+let createObjectURL:
   [
     | `File(FileReader.File.t)
     | `Blob(FileReader.Blob.t)
     | `MediaSource(PWA_MediaSource.t)
-  ]
-  ) =>
-  string =
-  "createObjectURL";
+  ] =>
+  string;
 
-[@bs.val] [@bs.scope "URL"]
-external revokeObjectURL: string => unit = "revokeObjectURL";
+let revokeObjectURL: string => unit;

@@ -5,8 +5,9 @@ include (module type of
     type nonrec t = t;
   }));
 
-let videoWidth: t => int;
-let videoHeight: t => int;
+[@bs.get] external videoWidth: t => int = "videoWidth";
+[@bs.get] external videoHeight: t => int = "videoHeight";
+
 
 let asVideoElement: Dom.element => option(t);
 

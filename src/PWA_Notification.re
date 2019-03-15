@@ -3,72 +3,53 @@ type ctor;
 
 module Action = PWA_Notification_Action;
 
-
-
 let toPermission_ =
-fun
-| "granted" => `granted
-| "denied" => `denied
-| "default" => `default
-| _ => failwith("unexpected permision");
+  fun
+  | "granted" => `granted
+  | "denied" => `denied
+  | "default" => `default
+  | _ => failwith("unexpected permision");
 
-
-[@bs.get]
-external permission_: ctor => string = "permission";
+[@bs.get] external permission_: ctor => string = "permission";
 
 let permission = ctor => permission_(ctor)->toPermission_;
 
-
-[@bs.send] 
+[@bs.send]
 external requestPermission_: ctor => Js.Promise.t(string) =
-"requestPermission";
+  "requestPermission";
 
 let requestPermission = ctor =>
-requestPermission_(ctor)
-|> Js.Promise.then_(s => Js.Promise.resolve(s->toPermission_));
+  requestPermission_(ctor)
+  |> Js.Promise.then_(s => Js.Promise.resolve(s->toPermission_));
 
-
-
-let ctor_: Js.Nullable.t(ctor) = [%raw {|
+let ctor_: Js.Nullable.t(ctor) = [%raw
+  {|
 ( (typeof Notification === "function") ? Notification : null)
-|}];
+|}
+];
 
 let ctor = ctor_->Js.Nullable.toOption;
 
+[@bs.get] [@bs.return nullable]
+external actions: t => option(array(PWA_Notification_Action.t)) = "actions";
+[@bs.get] [@bs.return nullable] external badge: t => option(string) = "badge";
+[@bs.get] [@bs.return nullable] external body: t => option(string) = "body";
+[@bs.get] [@bs.return nullable]
+external data: t => option(Js.Json.t) = "data";
+[@bs.get] [@bs.return nullable] external dir: t => option(string) = "dir";
+[@bs.get] [@bs.return nullable] external tag: t => option(string) = "tag";
+[@bs.get] [@bs.return nullable] external icon: t => option(string) = "icon";
+[@bs.get] [@bs.return nullable] external image: t => option(string) = "image";
+[@bs.get] [@bs.return nullable]
+external renotify: t => option(bool) = "renotify";
+[@bs.get] [@bs.return nullable] external silent: t => option(bool) = "silent";
 
-[@bs.get]
-external actions_: t => Js.Nullable.t(array(PWA_Notification_Action.t)) =
-  "actions";
-[@bs.get] external badge_: t => Js.Nullable.t(string) = "badge";
-[@bs.get] external body_: t => Js.Nullable.t(string) = "body";
-[@bs.get] external data_: t => Js.Nullable.t(Js.Json.t) = "data";
-[@bs.get] external dir_: t => Js.Nullable.t(string) = "dir";
-[@bs.get] external tag_: t => Js.Nullable.t(string) = "tag";
-[@bs.get] external icon_: t => Js.Nullable.t(string) = "icon";
-[@bs.get] external image_: t => Js.Nullable.t(string) = "image";
-[@bs.get] external renotify_: t => Js.Nullable.t(bool) = "renotify";
-[@bs.get] external silent_: t => Js.Nullable.t(bool) = "silent";
+[@bs.get] [@bs.return nullable]
+external timestamp: t => option(float) = "timestamp";
+[@bs.get] [@bs.return nullable] external title: t => option(string) = "title";
 
-[@bs.get] external timestamp_: t => Js.Nullable.t(float) = "timestamp";
-[@bs.get] external title_: t => Js.Nullable.t(string) = "title";
-
-[@bs.get] external vibrate_: t => Js.Nullable.t(Js.Json.t) = "vibrate";
-
-let actions = (self: t) => self->actions_->Js.Nullable.toOption;
-let badge = (self: t) => self->badge_->Js.Nullable.toOption;
-let body = (self: t) => self->body_->Js.Nullable.toOption;
-let data = (self: t) => self->data_->Js.Nullable.toOption;
-let dir = (self: t) => self->dir_->Js.Nullable.toOption;
-let tag = (self: t) => self->tag_->Js.Nullable.toOption;
-let icon = (self: t) => self->icon_->Js.Nullable.toOption;
-let image = (self: t) => self->image_->Js.Nullable.toOption;
-let renotify = (self: t) => self->renotify_->Js.Nullable.toOption;
-let silent = (self: t) => self->silent_->Js.Nullable.toOption;
-
-let timestamp = (self: t) => self->timestamp_->Js.Nullable.toOption;
-let title = (self: t) => self->title_->Js.Nullable.toOption;
-
-let vibrate = (self: t) => self->vibrate_->Js.Nullable.toOption;
+[@bs.get] [@bs.return nullable]
+external vibrate: t => option(Js.Json.t) = "vibrate";
 
 [@bs.send] external close: t => unit = "close";
 
@@ -90,15 +71,17 @@ type show_notification_options = {
   "data": Js.Nullable.t(Js.Json.t),
 };
 
-let make_: (ctor, string, Js.Nullable.t(show_notification_options)) => t = [%raw {|
+let make_: (ctor, string, Js.Nullable.t(show_notification_options)) => t = [%raw
+  {|
 function(ctor, title, options) {
   return new ctor(title, options);
 }
-|}];
-
+|}
+];
 
 let make =
-    (self: ctor,
+    (
+      self: ctor,
       title: string,
       ~actions: option(array(PWA_Notification_Action.t))=?,
       ~badge: option(string)=?,

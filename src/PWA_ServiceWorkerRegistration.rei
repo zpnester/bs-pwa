@@ -5,14 +5,19 @@ include (module type of
     type nonrec t = t;
   }));
 
-let scope: t => string;
+[@bs.get] external scope: t => string = "scope";
 
 let getNotifications:
   (t, ~tag: string=?, unit) => Js.Promise.t(array(PWA_Notification.t));
 
-let active: t => option(PWA_ServiceWorker.t);
-let installing: t => option(PWA_ServiceWorker.t);
-let waiting: t => option(PWA_ServiceWorker.t);
+[@bs.get] [@bs.return nullable]
+external active: t => option(PWA_ServiceWorker.t) = "active";
+
+[@bs.get] [@bs.return nullable]
+external installing: t => option(PWA_ServiceWorker.t) = "installing";
+
+[@bs.get] [@bs.return nullable]
+external waiting: t => option(PWA_ServiceWorker.t) = "waiting";
 
 /* docs says it returns promise of message event, got promise of undefined when tested */
 let showNotification:
@@ -35,7 +40,8 @@ let showNotification:
   ) =>
   Js.Promise.t(unit);
 
-let pushManager: t => option(PWA_PushManager.t);
+[@bs.get] [@bs.return nullable]
+external pushManager: t => option(PWA_PushManager.t) = "pushManager";
 
 /* "experimental technology" */
 let updatefound: PWA_EventType.t(t, unit);

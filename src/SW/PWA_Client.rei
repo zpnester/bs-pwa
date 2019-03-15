@@ -1,9 +1,9 @@
 type t;
 
 
-let id: t => string;
-let type_: t => string;
-let url: t => string;
+[@bs.get] external id: t => string = "id";
+[@bs.get] external type_: t => PWA_ClientType.t = "type";
+[@bs.get] external url: t => string = "url";
 
-
-let postMessage: (t, 'a) => unit;
+/* transferable omitted */
+[@bs.send] external postMessage: (t, 'a) => unit = "postMessage";

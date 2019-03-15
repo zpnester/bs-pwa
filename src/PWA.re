@@ -51,20 +51,3 @@ module RTCRtpTransceiver = PWA_RTCRtpTransceiver;
 module RTCSessionDescription = PWA_RTCSessionDescription;
 module RTCPeerConnectionIceEvent = PWA_RTCPeerConnectionIceEvent;
 
-
- /*[@bs.send]
-  external addEventListener: ('t, PWA_EventType.t('t, 'a), 'a => unit) => unit =
-    "addEventListener";
-
-  [@bs.send]
-  external removeEventListener: ('t, PWA_EventType.t('t, 'a), 'a => unit) => unit =
-    "removeEventListener";*/
-
-
- /*    [@bs.send]
-  external addEventListener2: ('t, PWA_EventType.t2('t, 'a, 'b), ('a, 'b) => unit) => unit =
-    "addEventListener";
-
-  [@bs.send]
-  external removeEventListener2: ('a, PWA_EventType.t2('t, 'a, 'b), ('a, 'b) => unit) => unit =
-    "removeEventListener";*/

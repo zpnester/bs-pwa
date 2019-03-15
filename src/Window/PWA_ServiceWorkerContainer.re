@@ -1,9 +1,7 @@
 type t;
 
-[@bs.get]
-external controller_: t => Js.Nullable.t(PWA_ServiceWorker.t) = "controller";
-
-let controller = self => controller_(self)->Js.Nullable.toOption;
+[@bs.get] [@bs.return nullable]
+external controller: t => option(PWA_ServiceWorker.t) = "controller";
 
 /* scope omitted */
 [@bs.send]

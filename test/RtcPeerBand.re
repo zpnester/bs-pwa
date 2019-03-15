@@ -250,11 +250,11 @@ function(sender) {
     }
     return sender.setParameters(parameters);
   }
-}
+} 
 |}
 ];
 
-let fallbackDescr: (RTCPeerConnection.t, string) => RTCSessionDescription.init = [%raw
+let fallbackDescr: (RTCPeerConnection.t, string) => RTCSessionDescription.Init.t = [%raw
   {|
 function(pc1, bandwidth) {
 

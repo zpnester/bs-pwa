@@ -16,10 +16,6 @@ let files = self => self->files_->Belt.Option.map(Js.Array.from);
 [@bs.get] external value: t => string = "value";
 [@bs.set] external setValue: (t, string) => unit = "value";
 
-[@bs.get] external placeholder: t => string = "placeholder";
-[@bs.set] external setPlaceholder: (t, string) => unit = "placeholder";
-
-// let change: PWA_EventType.t(t, Dom.event) = PWA_EventType.unsafe("change");
 
 let asInputElement_: Dom.element => Js.Nullable.t(t) = [%raw
   {|

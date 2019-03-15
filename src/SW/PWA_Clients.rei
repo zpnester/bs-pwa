@@ -10,4 +10,5 @@ let matchAll:
 
 let openWindow: (t, string) => Js.Promise.t(option(PWA_WindowClient.t));
 
-let claim: t => Js.Promise.t(unit);
+
+[@bs.send] external claim: t => Js.Promise.t(unit) = "claim";

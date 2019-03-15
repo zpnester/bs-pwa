@@ -1,28 +1,49 @@
 type t;
 
-/* sort of abstract type, passed from icecandidate event to addIceCandidate */
-type init = {
-  .
-  "candidate": Js.Nullable.t(string),
-  "sdpMLineIndex": Js.Nullable.t(int),
-  "sdpMid": Js.Nullable.t(string),
-  "usernameFragment": Js.Nullable.t(string),
+module Init: {
+  type t = {
+    .
+    "candidate": Js.Nullable.t(string),
+    "sdpMLineIndex": Js.Nullable.t(int),
+    "sdpMid": Js.Nullable.t(string),
+    "usernameFragment": Js.Nullable.t(string),
+  };
 };
 
-let make: (~init: init=?, unit) => t;
+// constructor, avoid external
+let make: (~init: Init.t=?, unit) => t;
 
-let candidate: t => string;
-let component: t => string;
-let foundation: t => string;
-let ip: t => string;
-let port: t => int;
-let priority: t => float;
-let protocol: t => string;
-let relatedAddress: t => option(string);
-let relatedPort: t => option(int);
-let sdpMid: t => option(string);
-let sdpMLineIndex: t => option(int);
-let tcpType: t => option(string);
-let type_: t => string;
-let usernameFragment: t => string;
-let toJSON: t => init;
+[@bs.get] external candidate: t => string = "candidate";
+
+[@bs.get] external component: t => string = "component";
+
+[@bs.get] external foundation: t => string = "foundation";
+
+[@bs.get] external ip: t => string = "ip";
+
+[@bs.get] external port: t => int = "port";
+
+[@bs.get] external priority: t => float = "priority";
+
+[@bs.get] external protocol: t => string = "protocol";
+
+[@bs.get] [@bs.return nullable]
+external relatedAddress: t => option(string) = "relatedAddress";
+
+[@bs.get] [@bs.return nullable]
+external relatedPort: t => option(int) = "relatedPort";
+
+[@bs.get] [@bs.return nullable]
+external sdpMid: t => option(string) = "sdpMid";
+
+[@bs.get] [@bs.return nullable]
+external sdpMLineIndex: t => option(int) = "sdpMLineIndex";
+
+[@bs.get] [@bs.return nullable]
+external tcpType: t => option(string) = "tcpType";
+
+[@bs.get] external type_: t => string = "type";
+
+[@bs.get] external usernameFragment: t => string = "usernameFragment";
+
+[@bs.send] external toJSON: t => Init.t = "toJSON";

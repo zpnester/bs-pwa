@@ -7,20 +7,24 @@ include (module type of
     type nonrec t = t;
   }));
 
-let width: t => int;
-let height: t => int;
+[@bs.get] external width: t => int = "width";
+[@bs.get] external height: t => int = "height";
 
-let setWidth: (t, int) => unit;
-let setHeight: (t, int) => unit;
+[@bs.set] external setWidth: (t, int) => unit = "width";
+[@bs.set] external setHeight: (t, int) => unit = "height";
 
-let captureStream: (t, ~frameRate: float=?, unit) => PWA_MediaStream.t;
+[@bs.send]
+external captureStream: (t, ~frameRate: float=?, unit) => PWA_MediaStream.t =
+  "captureStream";
 
 let getContext2d: t => PWA_CanvasRenderingContext2D.t;
 let getContextWebgl: t => PWA_WebGLRenderingContext.t;
 
 let asCanvasElement: Dom.element => option(t);
 
-let toDataURL: (t, ~type_: string=?, ~quality: float=?, unit) => string;
+[@bs.send]
+external toDataURL: (t, ~type_: string=?, ~quality: float=?, unit) => string =
+  "toDataURL";
 
 let toBlob:
   (t, ~type_: string=?, ~quality: float=?, unit) =>

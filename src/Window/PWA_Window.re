@@ -1,11 +1,11 @@
-type t;
+type t = PWA_Window__.window;
 
 include PWA_EventTarget.Make({
   type nonrec t = t;
 });
 
-[@bs.val] external self: t = "self";
-[@bs.val] external window: t = "window";
+let window = PWA_Window__.window;
+let self = PWA_Window__.selfWindow;
 
 [@bs.get] external navigator: t => PWA_Navigator.t = "navigator";
 [@bs.get] external document: t => PWA_Document.t = "document";

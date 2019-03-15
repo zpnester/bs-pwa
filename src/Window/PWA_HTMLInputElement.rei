@@ -11,13 +11,8 @@ include (module type of
 
 let files: t => option(array(FileReader.File.t));
 
-let value: t => string;
-let setValue: (t, string) => unit;
-
-let placeholder: t => string;
-let setPlaceholder: (t, string) => unit;
-
-/* let change: PWA_EventType.t(t, Dom.event); */
+[@bs.get] external value: t => string = "value";
+[@bs.set] external setValue: (t, string) => unit = "value";
 
 let asInputElement: Dom.element => option(t);
 

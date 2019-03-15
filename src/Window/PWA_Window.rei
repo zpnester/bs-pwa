@@ -1,15 +1,16 @@
-type t;
+type t = PWA_Window__.window;
 
 include (module type of
   PWA_EventTarget.Make({
     type nonrec t = t;
   }));
 
-[@bs.val] external self: t = "self";
-[@bs.val] external window: t = "window";
+// globals, avoid external
+let self: t;
+let window: t;
 
-let navigator: t => PWA_Navigator.t;
-let document: t => PWA_Document.t;
+[@bs.get] external navigator: t => PWA_Navigator.t = "navigator";
+[@bs.get] external document: t => PWA_Document.t = "document";
 
-let alert: (t, string) => unit;
-let alertAny: (t, 'a) => unit;
+[@bs.send] external alert: (t, string) => unit = "alert";
+[@bs.send] external alertAny: (t, 'a) => unit = "alert";

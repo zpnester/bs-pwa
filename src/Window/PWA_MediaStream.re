@@ -6,9 +6,11 @@ type t;
 
 [@bs.send]
 external getTracks: t => array(PWA_MediaStreamTrack.t) = "getTracks";
+
 [@bs.send]
 external getAudioTracks: t => array(PWA_MediaStreamTrack.t) =
   "getAudioTracks";
+
 [@bs.send]
 external getVideoTracks: t => array(PWA_MediaStreamTrack.t) =
   "getVideoTracks";
@@ -19,5 +21,7 @@ external getTrackById: (t, string) => option(PWA_MediaStreamTrack.t) =
 
 [@bs.send] external clone: t => t = "clone";
 
-/* addTrack */
-/* removeTrack */
+[@bs.send] external addTrack: (t, PWA_MediaStreamTrack.t) => unit = "addTrack";
+
+[@bs.send]
+external removeTrack: (t, PWA_MediaStreamTrack.t) => unit = "removeTrack";

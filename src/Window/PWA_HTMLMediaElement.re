@@ -1,11 +1,3 @@
-type audioTrack = {
-  .
-  "id": string,
-  "kind": string,
-  "label": string,
-  "language": string,
-  "enabled": bool,
-};
 
 module Make = (M: {type t;}) => {
   include PWA_DomElementLike.Make(M);
@@ -15,20 +7,20 @@ module Make = (M: {type t;}) => {
 
   [@bs.get]
   external srcObject_: M.t => Js.Null.t(PWA_MediaStream.t) = "srcObject";
+
   let srcObject = self => srcObject_(self)->Js.Null.toOption;
 
   [@bs.set]
   external setSrcObject_: (M.t, Js.Null.t(PWA_MediaStream.t)) => unit =
     "srcObject";
+
   let setSrcObject = (self, stream) =>
     setSrcObject_(self, stream->Js.Null.fromOption);
 
   [@bs.get] external src: M.t => string = "src";
   [@bs.set] external setSrc: (M.t, string) => unit = "src";
 
-  /*[@bs.get] external audioTracks_: M.t => Js.Array.array_like(audioTrack) = "audioTracks";*/
-
-  /*let audioTracks = self => audioTracks_(self)->Js.Array.from;*/
+  // audioTracks
 
   [@bs.get] external playbackRate: M.t => float = "playbackRate";
   [@bs.set] external setPlaybackRate: (M.t, float) => unit = "playbackRate";

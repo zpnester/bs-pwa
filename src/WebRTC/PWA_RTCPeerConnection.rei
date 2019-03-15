@@ -21,36 +21,66 @@ module Configuration: {
     ) =>
     t;
 
-  let bundlePolicy: t => option(string);
+  [@bs.get] [@bs.return nullable]
+  external bundlePolicy: t => option(string) = "bundlePolicy";
 
-  let certificates: t => option(array(PWA_RTCCertificate.t));
+  [@bs.get] [@bs.return nullable]
+  external certificates: t => option(array(PWA_RTCCertificate.t)) =
+    "certificates";
 
-  let iceCandidatePoolSize: t => option(int);
+  [@bs.get] [@bs.return nullable]
+  external iceCandidatePoolSize: t => option(int) = "iceCandidatePoolSize";
 
-  let iceServers: t => option(array(PWA_RTCIceServer.t));
+  [@bs.get] [@bs.return nullable]
+  external iceServers: t => option(array(PWA_RTCIceServer.t)) = "iceServers";
 
-  let iceTransportPolicy: t => option(string);
+  [@bs.get] [@bs.return nullable]
+  external iceTransportPolicy: t => option(string) = "iceTransportPolicy";
 
-  let peerIdentity: t => option(string);
+  [@bs.get] [@bs.return nullable]
+  external peerIdentity_: t => option(string) = "peerIdentity";
 
-  let rtcpMuxPolicy: t => option(string);
+  [@bs.get] [@bs.return nullable]
+  external rtcpMuxPolicy: t => option(string) = "rtcpMuxPolicy";
 };
 
+// constructor, avoid external
 let make: (~config: Configuration.t=?, unit) => t;
 
-let canTrickleIceCandidates: t => option(bool);
+[@bs.get] [@bs.return nullable]
+external canTrickleIceCandidates: t => option(bool) =
+  "canTrickleIceCandidates";
 
 [@bs.get] external connectionState: t => string = "connectionState";
 
-let currentLocalDescription: t => option(PWA_RTCSessionDescription.t);
-let currentRemoteDescription: t => option(PWA_RTCSessionDescription.t);
-let iceConnectionState: t => string;
-let iceGatheringState: t => string;
-let localDescription: t => option(PWA_RTCSessionDescription.t);
-let pendingLocalDescription: t => option(PWA_RTCSessionDescription.t);
-let remoteDescription: t => option(PWA_RTCSessionDescription.t);
-let pendingRemoteDescription: t => option(PWA_RTCSessionDescription.t);
-let signalingState: t => string;
+[@bs.get] [@bs.return nullable]
+external currentLocalDescription: t => option(PWA_RTCSessionDescription.t) =
+  "currentLocalDescription";
+
+[@bs.get] [@bs.return nullable]
+external currentRemoteDescription: t => option(PWA_RTCSessionDescription.t) =
+  "currentRemoteDescription";
+
+[@bs.get] external iceConnectionState: t => string = "iceConnectionState";
+[@bs.get] external iceGatheringState: t => string = "iceGatheringState";
+
+[@bs.get] [@bs.return nullable]
+external localDescription: t => option(PWA_RTCSessionDescription.t) =
+  "localDescription";
+
+[@bs.get] [@bs.return nullable]
+external pendingLocalDescription: t => option(PWA_RTCSessionDescription.t) =
+  "pendingLocalDescription";
+ 
+[@bs.get] [@bs.return nullable]
+external remoteDescription: t => option(PWA_RTCSessionDescription.t) =
+  "remoteDescription";
+
+[@bs.get]  [@bs.return nullable]
+external pendingRemoteDescription: t => option(PWA_RTCSessionDescription.t) =
+  "pendingRemoteDescription";
+
+[@bs.get] external signalingState: t => string = "signalingState";
 
 let connectionstatechange: PWA_EventType.t(t, PWA_Event.t);
 
@@ -103,22 +133,30 @@ let track:
       "transceiver": PWA_RTCRtpTransceiver.t,
     },
   );
-let addIceCandidate: (t, PWA_RTCIceCandidate.init) => Js.Promise.t(unit);
+
+[@bs.send]
+external addIceCandidate:
+  (t, PWA_RTCIceCandidate.Init.t) => Js.Promise.t(unit) =
+  "addIceCandidate";
 
 /*let addStream: (t, PWA_MediaStream.t) => unit; */
 
-let addTrack:
-  (t, PWA_MediaStreamTrack.t, PWA_MediaStream.t) => PWA_RTCRtpSender.t;
+[@bs.send]
+external addTrack:
+  (t, PWA_MediaStreamTrack.t, PWA_MediaStream.t) => PWA_RTCRtpSender.t =
+  "addTrack";
 
-let addTrack2:
+[@bs.send]
+external addTrack2:
   (t, PWA_MediaStreamTrack.t, PWA_MediaStream.t, PWA_MediaStream.t) =>
-  PWA_RTCRtpSender.t;
+  PWA_RTCRtpSender.t =
+  "addTrack";
 
-let close: t => unit;
+[@bs.send] external close: t => unit = "close";
 
 let createAnswer:
   (t, ~voiceActivityDetection: bool=?, unit) =>
-  Js.Promise.t(PWA_RTCSessionDescription.init);
+  Js.Promise.t(PWA_RTCSessionDescription.Init.t);
 
 let createDataChannel:
   (t, ~label: string, ~init: PWA_RTCDataChannel.Init.t=?, unit) =>
@@ -126,34 +164,39 @@ let createDataChannel:
 
 let createOffer:
   (t, ~iceRestart: bool=?, ~voiceActivityDetection: bool=?, unit) =>
-  Js.Promise.t(PWA_RTCSessionDescription.init);
+  Js.Promise.t(PWA_RTCSessionDescription.Init.t);
 
-/* both seems to work */
-// [@bs.val] [@bs.scope "RTCPeerConnection"]
-// external generateCertificate:
-//   ([@bs.unwrap] [ | `String(string) | `Object(Js.t({..}))]) =>
-//   Js.Promise.t(PWA_RTCCertificate.t) =
-//   "generateCertificate";
+// global, avoid external
 
 let generateCertificate:
   [ | `String(string) | `Object(Js.t({..}))] =>
   Js.Promise.t(PWA_RTCCertificate.t);
 
-let getConfiguration: t => Configuration.t;
+[@bs.send]
+external getConfiguration: t => Configuration.t = "getConfiguration";
 
-let getReceivers: t => array(PWA_RTCRtpReceiver.t);
+[@bs.send]
+external getReceivers: t => array(PWA_RTCRtpReceiver.t) = "getReceivers";
 
-let getSenders: t => array(PWA_RTCRtpSender.t);
+[@bs.send] external getSenders: t => array(PWA_RTCRtpSender.t) = "getSenders";
 
-let getStats:
-  (t, ~selector: PWA_MediaStream.t=?, unit) => Js.Promise.t(Js.t({..}));
+[@bs.send]
+external getStats:
+  (t, ~selector: PWA_MediaStream.t=?, unit) => Js.Promise.t(Js.t({..})) =
+  "getStats";
 
-let removeTrack: (t, PWA_RTCRtpSender.t) => unit;
+[@bs.send]
+external removeTrack: (t, PWA_RTCRtpSender.t) => unit = "removeTrack";
 
-let setConfiguration: (t, Configuration.t) => unit;
+[@bs.send]
+external setConfiguration: (t, Configuration.t) => unit = "setConfiguration";
 
-let setLocalDescription:
-  (t, PWA_RTCSessionDescription.init) => Js.Promise.t(unit);
+[@bs.send]
+external setLocalDescription:
+  (t, PWA_RTCSessionDescription.Init.t) => Js.Promise.t(unit) =
+  "setLocalDescription";
 
-let setRemoteDescription:
-  (t, PWA_RTCSessionDescription.init) => Js.Promise.t(unit);
+[@bs.send]
+external setRemoteDescription:
+  (t, PWA_RTCSessionDescription.Init.t) => Js.Promise.t(unit) =
+  "setRemoteDescription";
