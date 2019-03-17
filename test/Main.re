@@ -109,7 +109,7 @@ switch (window->navigator->serviceWorker->Option.flatMap(controller)) {
 };
 
 type img;
-[@bs.set] external src: (img, string) => unit = "src";
+[@bs.set] external setSrc: (img, string) => unit = "src";
 
 let image = [%bs.raw {|
 (document.getElementById("image"))
@@ -167,11 +167,11 @@ take->HTMLButtonElement.addEventListener_("click", _ => {
     ~dx=0.0,
     ~dy=0.0,
   );
-  /* image->src(canvas->toDataURL); */
-  canvas->toBlob(~type_="image/jpeg", ~quality=0.1, ())
+  //  image->setSrc(canvas->toDataURL(~type_="image/jpeg", ~quality=0.1, ())); 
+  canvas->toBlob->Option.getExn(~type_="image/jpeg", ~quality=0.1, ())
   |> then_(blob => blob->FileReader.toDataURL)
   |> then_(dataUrl => {
-       image->src(dataUrl);
+       image->setSrc(dataUrl);
        resolve();
      })
   |> ignore;
@@ -215,7 +215,7 @@ window
      Js.log2("setting stream", media);
      video->HTMLVideoElement.setSrcObject(Some(media));
 
-     stopCamera();
+    //  stopCamera();
 
      /* do not remove */
      fetchBlob("/1.mp4")
@@ -265,7 +265,6 @@ tracks->HTMLButtonElement.addEventListener_("click", _ => {
   Js.log2("video tracks", stream->MediaStream.getVideoTracks);
 });
 
-open HTMLInputElement;
 
 let file =
   window
@@ -274,20 +273,20 @@ let file =
   ->Option.flatMap(HTMLInputElement.asInputElement)
   ->Option.getExn;
 
-expectToEqual(file->value, "");
+expectToEqual(file->HTMLInputElement.value, "");
 
-file->addEventListener_("change", _ => {
+file->HTMLInputElement.addEventListener_("change", _ => {
   expectToEqual(
-    file->files->Option.getExn->Array.length->Js.typeof,
+    file->HTMLInputElement.files->Option.getExn->Array.length->Js.typeof,
     "number",
   );
-  Js.log(file->files);
+  Js.log(file->HTMLInputElement.files);
 
-  switch (file->files->Option.getExn->Array.get(0)) {
+  switch (file->HTMLInputElement.files->Option.getExn->Array.get(0)) {
   | Some(file) =>
     file->FileReader.File.asBlob->FileReader.toDataURL
     |> then_(dataUrl => {
-         image->src(dataUrl);
+         image->setSrc(dataUrl);
          resolve();
        })
     |> ignore
@@ -304,12 +303,12 @@ let date =
   ->Option.flatMap(HTMLInputElement.asInputElement)
   ->Option.getExn;
 
-expectToEqual(date->files, None);
-expectToEqual(date->value, "");
+expectToEqual(date->HTMLInputElement.files, None);
+expectToEqual(date->HTMLInputElement.value, "");
 
-date->addEventListener_("change", _ => {
-  expectToEqual(date->value->Js.String.length, 10);
-  expectToEqual(date->files, None);
+date->HTMLInputElement.addEventListener_("change", _ => {
+  expectToEqual(date->HTMLInputElement.value->Js.String.length, 10);
+  expectToEqual(date->HTMLInputElement.files, None);
 });
 
 open RTCPeerConnection;

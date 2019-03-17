@@ -12,6 +12,8 @@ open Clients;
 open Belt;
 
 
+let self = ServiceWorkerGlobalScope.self;
+
 expectToEqual(
   self->registration->ServiceWorkerRegistration.scope,
   "http://localhost:8081/",

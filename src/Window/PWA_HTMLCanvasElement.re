@@ -37,8 +37,14 @@ external captureStream: (t, ~frameRate: float=?, unit) => PWA_MediaStream.t =
 external toDataURL: (t, ~type_: string=?, ~quality: float=?, unit) => string =
   "toDataURL";
 
+let hasToBlob_: t => bool = [%raw {|
+function(self) {
+  return !!self.toBlob;
+}
+|}];
+
 [@bs.send]
-external toBlob_:
+external toBlob__:
   (
     t,
     Js.Nullable.t(FileReader.Blob.t) => unit,
@@ -49,10 +55,9 @@ external toBlob_:
   unit =
   "toBlob";
 
-let toBlob = (self, ~type_=?, ~quality=?, ()) =>
+let toBlob_ = (self, ~type_=?, ~quality=?, ()) =>
   Js.Promise.make((~resolve, ~reject) =>
-    toBlob_(
-      self,
+    self->toBlob__(
       ~type_?,
       ~quality?,
       blob =>
@@ -63,6 +68,14 @@ let toBlob = (self, ~type_=?, ~quality=?, ()) =>
       (),
     )
   );
+
+let toBlob = self => {
+  if (self->hasToBlob_) {
+    Some(self->toBlob_)
+  } else {
+    None
+  }
+}
 
 let asCanvasElement_: Dom.element => Js.Nullable.t(t) = [%raw
   {|

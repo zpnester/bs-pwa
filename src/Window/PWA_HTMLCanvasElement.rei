@@ -26,8 +26,8 @@ let asCanvasElement: Dom.element => option(t);
 external toDataURL: (t, ~type_: string=?, ~quality: float=?, unit) => string =
   "toDataURL";
 
-let toBlob:
-  (t, ~type_: string=?, ~quality: float=?, unit) =>
-  Js.Promise.t(FileReader.Blob.t);
+let toBlob: t => option
+  (( ~type_: string=?, ~quality: float=?, unit) =>
+  Js.Promise.t(FileReader.Blob.t));
 
 let createElement: PWA_Document.t => t;
