@@ -1,6 +1,15 @@
 type t;
 type ctor;
 
+let ctor_: Js.Nullable.t(ctor) = [%raw
+  {|
+( (typeof Notification === "function") ? Notification : null)
+|}
+];
+
+let ctor = ctor_->Js.Nullable.toOption;
+exception NotificationError(Js.Promise.error);
+
 module Action = PWA_Notification_Action;
 
 let toPermission_ =
@@ -14,21 +23,35 @@ let toPermission_ =
 
 let permission = ctor => permission_(ctor)->toPermission_;
 
-[@bs.send]
-external requestPermission_: ctor => Js.Promise.t(string) =
+// safari uses callback
+
+[@bs.send] [@bs.return nullable]
+external requestPermission_:
+  (ctor, string => unit) => option(Js.Promise.t(string)) =
   "requestPermission";
 
 let requestPermission = ctor =>
-  requestPermission_(ctor)
-  |> Js.Promise.then_(s => Js.Promise.resolve(s->toPermission_));
+  Js.Promise.make((~resolve, ~reject) => {
+    // pass callback that resolves promise
+    let maybePromise =
+      requestPermission_(ctor, res => resolve(. res->toPermission_));
 
-let ctor_: Js.Nullable.t(ctor) = [%raw
-  {|
-( (typeof Notification === "function") ? Notification : null)
-|}
-];
-
-let ctor = ctor_->Js.Nullable.toOption;
+    // if promise returned - forward result
+    switch (maybePromise) {
+    | Some(promise) =>
+      promise
+      |> Js.Promise.then_(res => {
+           resolve(. res->toPermission_);
+           Js.Promise.resolve();
+         })
+      |> Js.Promise.catch(err => {
+           reject(. NotificationError(err));
+           Js.Promise.resolve();
+         })
+      |> ignore
+    | None => ()
+    };
+  });
 
 [@bs.get] [@bs.return nullable]
 external actions: t => option(array(PWA_Notification_Action.t)) = "actions";

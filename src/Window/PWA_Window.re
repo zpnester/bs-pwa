@@ -1,4 +1,4 @@
-type t = PWA_Window__.window;
+type t = Dom.window;
 
 include PWA_EventTarget.Make({
   type nonrec t = t;

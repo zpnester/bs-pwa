@@ -62,7 +62,8 @@ let make = (name, localVideo, remoteVideo, myChannel, otherChannel) => {
     RTCIceServer.make(~urls=[|"stun://stun3.l.google.com:19302"|], ()),
   |];
   let config = Configuration.make(~iceServers, ());
-  let pc = RTCPeerConnection.make(~config, ());
+  // let pc = RTCPeerConnection.make(~config, ());
+  let pc = RTCPeerConnection.make();
 
   pc->addEventListener(
     icecandidate,

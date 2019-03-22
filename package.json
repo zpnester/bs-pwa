@@ -1,6 +1,6 @@
 {
   "name": "@zpnester/bs-pwa",
-  "version": "0.0.13",
+  "version": "0.0.14",
   "author": {
     "name": "Andriy Nesterenko",
     "email": "zpnester@gmail.com",
@@ -27,8 +27,8 @@
     "WebRTC"
   ],
   "devDependencies": {
-    "@zpnester/bs-filereader": "0.2.0",
-    "bs-platform": "^4.0.18",
+    "@zpnester/bs-filereader": "0.2.5",
+    "bs-platform": "^5.0.0",
     "concurrently": "^4.1.0",
     "copy-webpack-plugin": "^4.6.0",
     "cross-env": "^5.2.0",

@@ -1,4 +1,4 @@
-type t = PWA_Window__.window;
+type t = Dom.window;
 
 include (module type of
   PWA_EventTarget.Make({
@@ -14,3 +14,5 @@ let window: t;
 
 [@bs.send] external alert: (t, string) => unit = "alert";
 [@bs.send] external alertAny: (t, 'a) => unit = "alert";
+
+

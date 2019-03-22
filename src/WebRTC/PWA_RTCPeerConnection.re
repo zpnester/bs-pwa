@@ -46,10 +46,17 @@ module Configuration = {
 };
 
 [@bs.new]
-external make_: Js.Nullable.t(Configuration.t) => t = "RTCPeerConnection";
+external make_: unit => t = "RTCPeerConnection";
+
+[@bs.new]
+external make__: Configuration.t => t = "RTCPeerConnection";
 
 let make = (~config=?, ()) => {
-  make_(config->Js.Nullable.fromOption);
+  switch config {
+  | Some(config) => make__(config);
+  | None => make_()
+  };
+  
 };
 
 /*let make = (~config: option())*/
@@ -59,7 +66,7 @@ let make = (~config=?, ()) => {
 external canTrickleIceCandidates: t => option(bool) =
   "canTrickleIceCandidates";
 
-[@bs.get] external connectionState: t => string = "connectionState";
+// [@bs.get] external connectionState: t => string = "connectionState";
 
 /* TODO test */
 [@bs.get] [@bs.return nullable]
@@ -258,8 +265,8 @@ external getStats:
 [@bs.send]
 external removeTrack: (t, PWA_RTCRtpSender.t) => unit = "removeTrack";
 
-[@bs.send]
-external setConfiguration: (t, Configuration.t) => unit = "setConfiguration";
+// [@bs.send]
+// external setConfiguration: (t, Configuration.t) => unit = "setConfiguration";
 
 [@bs.send]
 external setLocalDescription:

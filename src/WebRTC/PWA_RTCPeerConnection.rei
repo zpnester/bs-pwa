@@ -51,7 +51,8 @@ let make: (~config: Configuration.t=?, unit) => t;
 external canTrickleIceCandidates: t => option(bool) =
   "canTrickleIceCandidates";
 
-[@bs.get] external connectionState: t => string = "connectionState";
+// undefined in FF
+// [@bs.get] external connectionState: t => string = "connectionState";
 
 [@bs.get] [@bs.return nullable]
 external currentLocalDescription: t => option(PWA_RTCSessionDescription.t) =
@@ -175,10 +176,13 @@ let generateCertificate:
 [@bs.send]
 external getConfiguration: t => Configuration.t = "getConfiguration";
 
+// does not work in FF
 [@bs.send]
 external getReceivers: t => array(PWA_RTCRtpReceiver.t) = "getReceivers";
 
+// does not work in FF
 [@bs.send] external getSenders: t => array(PWA_RTCRtpSender.t) = "getSenders";
+
 
 [@bs.send]
 external getStats:
@@ -188,8 +192,9 @@ external getStats:
 [@bs.send]
 external removeTrack: (t, PWA_RTCRtpSender.t) => unit = "removeTrack";
 
-[@bs.send]
-external setConfiguration: (t, Configuration.t) => unit = "setConfiguration";
+// does not work in FF
+// [@bs.send]
+// external setConfiguration: (t, Configuration.t) => unit = "setConfiguration";
 
 [@bs.send]
 external setLocalDescription:

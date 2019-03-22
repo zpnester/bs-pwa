@@ -207,7 +207,8 @@ callButton->HTMLButtonElement.addEventListener_("click", _ => {
   ->Option.getExn
   ->MediaDevices.getUserMedia({"video": true})
   |> then_(s => gotStream(s))
-  |> catch(_ => {
+  |> catch(e => {
+       Js.log(e);
        window->Window.alert("getUserMedia() error");
        resolve();
      })
@@ -250,11 +251,12 @@ function(sender) {
     }
     return sender.setParameters(parameters);
   }
-} 
+}
 |}
 ];
 
-let fallbackDescr: (RTCPeerConnection.t, string) => RTCSessionDescription.Init.t = [%raw
+let fallbackDescr:
+  (RTCPeerConnection.t, string) => RTCSessionDescription.Init.t = [%raw
   {|
 function(pc1, bandwidth) {
 
