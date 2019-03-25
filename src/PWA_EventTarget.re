@@ -29,4 +29,4 @@ include Make_({
   type nonrec t = t;
 });
 
-// TODO ctor
+// ctor - bad browser support

@@ -1,13 +1,11 @@
 type t;
 
-[@bs.get]
-external currentDirection_: t => Js.Nullable.t(string) = "currentDirection";
-let currentDirection = self => currentDirection_(self)->Js.Nullable.toOption;
+[@bs.get] [@bs.return nullable]
+external currentDirection: t => option(string) = "currentDirection";
 
 [@bs.get] external direction: t => string = "direction";
 
-[@bs.get] external mid_: t => Js.Nullable.t(string) = "mid";
-let mid = self => mid_(self)->Js.Nullable.toOption;
+[@bs.get] [@bs.return nullable] external mid: t => option(string) = "mid";
 
 [@bs.get] external receiver: t => PWA_RTCRtpReceiver.t = "receiver";
 

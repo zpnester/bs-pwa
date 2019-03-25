@@ -65,6 +65,10 @@ let make = (name, localVideo, remoteVideo, myChannel, otherChannel) => {
   // let pc = RTCPeerConnection.make(~config, ());
   let pc = RTCPeerConnection.make();
 
+  pc->RTCPeerConnection.addEventListener(connectionstatechange, e =>
+    Js.log2("connectionstatechange", e)
+  );
+
   pc->addEventListener(
     icecandidate,
     e => {
@@ -103,7 +107,7 @@ let make = (name, localVideo, remoteVideo, myChannel, otherChannel) => {
       |> then_(stream => {
            stream
            ->MediaStream.getTracks
-           ->Array.forEach(track => pc->addTrack(track, stream) |> ignore);
+           ->Array.forEach(track => pc->addTrack_(track, [|stream|]) |> ignore);
            pc->createAnswer();
          })
       |> then_(answer => pc->setLocalDescription(answer))

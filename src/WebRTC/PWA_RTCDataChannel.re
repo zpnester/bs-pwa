@@ -22,47 +22,36 @@ module Init = {
     "";
 };
 
-/* TODO test */
 [@bs.get] external binaryType: t => string = "binaryType";
 [@bs.set] external setBinaryType: (t, string) => unit = "binaryType";
 
-/* TODO test */
 [@bs.get] external bufferedAmount: t => int = "bufferedAmount";
 
-/* TODO test */
+
 [@bs.get]
 external bufferedAmountLowThreshold: t => int = "bufferedAmountLowThreshold";
 [@bs.set]
 external setBufferedAmountLowThreshold: (t, int) => unit =
   "bufferedAmountLowThreshold";
 
-/* TODO test */
-[@bs.get] external id: t => int = "id";
+[@bs.get] [@bs.return nullable] external id: t => option(int) = "id";
 
-/* TODO test */
 [@bs.get] external label: t => string = "label";
 
-/* TODO test */
-[@bs.get]
-external maxPacketLifeTime_: t => Js.Null.t(int) = "maxPacketLifeTime";
-let maxPacketLifeTime = self => maxPacketLifeTime_(self)->Js.Null.toOption;
+// TODO delete if not implemented in browsers
+[@bs.get] [@bs.return nullable]
+external maxPacketLifeTime: t => option(int) = "maxPacketLifeTime";
 
-/* TODO test */
-[@bs.get] external maxRetransmits_: t => Js.Null.t(int) = "maxRetransmits";
-let maxRetransmits = self => maxRetransmits_(self)->Js.Null.toOption;
+[@bs.get] [@bs.return nullable] external maxRetransmits: t => option(int) = "maxRetransmits";
 
-/* TODO test */
-[@bs.get] external negotiated: t => bool = "negotiated";
+[@bs.get]  [@bs.return nullable]  external negotiated: t => option(bool) = "negotiated";
 
-/* TODO test */
 [@bs.get] external ordered: t => bool = "ordered";
 
-/* TODO test */
 [@bs.get] external protocol: t => string = "protocol";
 
 [@bs.get] external readyState: t => string = "readyState";
 
-/* TODO test all */
 let bufferedamountlow: PWA_EventType.t(t, PWA_Event.t) =
   PWA_EventType.unsafe("bufferedamountlow");
 

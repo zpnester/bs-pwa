@@ -329,7 +329,8 @@ Js.Global.setTimeout(
     let peer = RTCPeerConnection.make(~config, ());
 
     expectToEqual(peer->canTrickleIceCandidates, None);
-    // expectToEqual(peer->connectionState, "new");
+
+    expectToEqual(peer->connectionState, Some("new"));
     expectToEqual(peer->currentLocalDescription, None);
     expectToEqual(peer->currentRemoteDescription, None);
     expectToEqual(peer->iceConnectionState->Js.typeof, "string");
@@ -339,12 +340,42 @@ Js.Global.setTimeout(
     expectToEqual(peer->remoteDescription, None);
     expectToEqual(peer->pendingRemoteDescription, None);
 
+    // expectToEqual(peer->canTrickleIceCandidates->Js.typeof, "boolean");
+    expectToEqual(peer->iceConnectionState->Js.typeof, "string");
+    expectToEqual(peer->iceGatheringState->Js.typeof, "string");
+    expectToEqual(peer->signalingState->Js.typeof, "string");
+
+    
     peer->getStats()
     |> then_(stats => {
          Js.log2("stats", stats);
          resolve();
        })
     |> ignore;
+
+    if (!isEdge) {
+      // TODO remove, test better
+      // peer->RTCPeerConnection.addEventListener(datachannel, e => {
+      //   Js.log(e##channel);
+      //   expectToEqual(e##channel->Js.typeof, "object1");
+      // });
+
+      let dc = peer->createDataChannel(~label="dc1", ());
+
+      expectToEqual(dc->RTCDataChannel.binaryType->Js.typeof, "string");
+      expectToEqual(dc->RTCDataChannel.bufferedAmount->Js.typeof, "number");
+      expectToEqual(
+        dc->RTCDataChannel.bufferedAmountLowThreshold->Js.typeof,
+        "number",
+      );
+      // expectToEqual(dc->RTCDataChannel.id->Js.typeof, "number");
+      expectToEqual(dc->RTCDataChannel.label->Js.typeof, "string");
+      // expectToEqual(dc->RTCDataChannel.maxPacketLifeTime->Js.typeof, "number");
+      // expectToEqual(dc->RTCDataChannel.maxRetransmits->Js.typeof, "number");
+      // expectToEqual(dc->RTCDataChannel.negotiated->Js.typeof, "boolean");
+      expectToEqual(dc->RTCDataChannel.ordered->Js.typeof, "boolean");
+      expectToEqual(dc->RTCDataChannel.protocol->Js.typeof, "string");
+    };
 
     if (!isEdge && !isMacOs) {
       let _ =
@@ -369,6 +400,7 @@ Js.Global.setTimeout(
              resolve();
            })
         |> ignore;
+
       ();
     };
   },

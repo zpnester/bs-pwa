@@ -45,28 +45,26 @@ module Configuration = {
   external rtcpMuxPolicy: t => option(string) = "rtcpMuxPolicy";
 };
 
-[@bs.new]
-external make_: unit => t = "RTCPeerConnection";
+[@bs.new] external make_: unit => t = "RTCPeerConnection";
 
-[@bs.new]
-external make__: Configuration.t => t = "RTCPeerConnection";
+[@bs.new] external make__: Configuration.t => t = "RTCPeerConnection";
 
 let make = (~config=?, ()) => {
-  switch config {
-  | Some(config) => make__(config);
+  switch (config) {
+  | Some(config) => make__(config)
   | None => make_()
   };
-  
 };
 
 /*let make = (~config: option())*/
 
-/* TODO test */
+/* TODO delete if not implemented in browsers */
 [@bs.get] [@bs.return nullable]
 external canTrickleIceCandidates: t => option(bool) =
   "canTrickleIceCandidates";
 
-// [@bs.get] external connectionState: t => string = "connectionState";
+[@bs.get] [@bs.return nullable]
+external connectionState: t => option(string) = "connectionState";
 
 /* TODO test */
 [@bs.get] [@bs.return nullable]
@@ -80,7 +78,7 @@ external currentRemoteDescription: t => option(PWA_RTCSessionDescription.t) =
 [@bs.get] external iceConnectionState: t => string = "iceConnectionState";
 [@bs.get] external iceGatheringState: t => string = "iceGatheringState";
 
-[@bs.get] [@bs.return nullable]
+[@bs.get] [@bs.return nullable] 
 external localDescription: t => option(PWA_RTCSessionDescription.t) =
   "localDescription";
 
@@ -92,7 +90,7 @@ external pendingLocalDescription: t => option(PWA_RTCSessionDescription.t) =
 external remoteDescription: t => option(PWA_RTCSessionDescription.t) =
   "remoteDescription";
 
-[@bs.get]  [@bs.return nullable]
+[@bs.get] [@bs.return nullable]
 external pendingRemoteDescription: t => option(PWA_RTCSessionDescription.t) =
   "pendingRemoteDescription";
 
@@ -105,7 +103,6 @@ external pendingRemoteDescription: t => option(PWA_RTCSessionDescription.t) =
 
 /* onaddstream deprecated */
 
-/* TODO test */
 let connectionstatechange: PWA_EventType.t(t, PWA_Event.t) =
   PWA_EventType.unsafe("connectionstatechange");
 
@@ -113,7 +110,6 @@ let connectionstatechange: PWA_EventType.t(t, PWA_Event.t) =
 let datachannel: PWA_EventType.t(t, {. "channel": PWA_RTCDataChannel.t}) =
   PWA_EventType.unsafe("datachannel");
 
-/* TODO test*/
 let icecandidate: PWA_EventType.t(t, PWA_RTCPeerConnectionIceEvent.t) =
   PWA_EventType.unsafe("icecandidate");
 
@@ -171,14 +167,14 @@ external addIceCandidate:
 /* addStream deprecated */
 /*[@bs.send] external addStream: (t, PWA_MediaStream.t) => unit = "addStream";*/
 
-[@bs.send]
+[@bs.send] 
 external addTrack:
   (t, PWA_MediaStreamTrack.t, PWA_MediaStream.t) => PWA_RTCRtpSender.t =
   "addTrack";
 
-[@bs.send]
-external addTrack2:
-  (t, PWA_MediaStreamTrack.t, PWA_MediaStream.t, PWA_MediaStream.t) =>
+[@bs.send] [@bs.variadic]
+external addTrack_:
+  (t, PWA_MediaStreamTrack.t, array(PWA_MediaStream.t)) =>
   PWA_RTCRtpSender.t =
   "addTrack";
 

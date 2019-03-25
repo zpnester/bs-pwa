@@ -51,8 +51,8 @@ let make: (~config: Configuration.t=?, unit) => t;
 external canTrickleIceCandidates: t => option(bool) =
   "canTrickleIceCandidates";
 
-// undefined in FF
-// [@bs.get] external connectionState: t => string = "connectionState";
+[@bs.get] [@bs.return nullable] external connectionState: t => option(string) = "connectionState";
+
 
 [@bs.get] [@bs.return nullable]
 external currentLocalDescription: t => option(PWA_RTCSessionDescription.t) =
@@ -147,9 +147,9 @@ external addTrack:
   (t, PWA_MediaStreamTrack.t, PWA_MediaStream.t) => PWA_RTCRtpSender.t =
   "addTrack";
 
-[@bs.send]
-external addTrack2:
-  (t, PWA_MediaStreamTrack.t, PWA_MediaStream.t, PWA_MediaStream.t) =>
+[@bs.send] [@bs.variadic]
+external addTrack_:
+  (t, PWA_MediaStreamTrack.t, array(PWA_MediaStream.t)) =>
   PWA_RTCRtpSender.t =
   "addTrack";
 
