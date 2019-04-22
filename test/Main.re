@@ -89,7 +89,7 @@ switch (Notification.ctor) {
 
 let onUpdateFound = () => Js.log("updatefound event");
 
-switch (window->navigator->serviceWorker) {
+switch (window_->navigator->serviceWorker) {
 | Some(c) =>
   c->register("/sw.js")
   |> then_(reg => {
@@ -113,7 +113,7 @@ switch (window->navigator->serviceWorker) {
 | None => resolve()
 };
 
-switch (window->navigator->serviceWorker->Option.flatMap(controller)) {
+switch (window_->navigator->serviceWorker->Option.flatMap(controller)) {
 | Some(sw) =>
   Js.Global.setTimeout(() => sw->postMessage("hello"), 3000) |> ignore;
   Js.log("posted");
@@ -128,11 +128,13 @@ let image = [%bs.raw {|
 |}];
 
 let video =
-  self
+  self_
   ->document
   ->Document.getElementById("video")
   ->Option.flatMap(HTMLVideoElement.asVideoElement)
   ->Option.getExn;
+
+let window = window_;
 
 let canvas = window->document->HTMLCanvasElement.createElement;
 
@@ -500,14 +502,16 @@ Js.log("sync OK, wait for async");
 /* window->Window.alertAny(true); */
 
 // name clash test
-let self = "";
-Js.log(self);
+// actually it does crash but keep the way it is for now
+// let self = "";
+// Js.log(self);
 
+// does not crash, probably compiler exception for window
 let window = "";
 Js.log(window);
 
-// Window.self->Window.alert("test");
-// Window.window->Window.alert("test");
+Window.self_->Window.alert("test");
+Window.window_->Window.alert("test");
 
 let blob = FileReader.Blob.make([||], ());
 let objectUrl = URL.createObjectURL(`Blob(blob));

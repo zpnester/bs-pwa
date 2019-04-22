@@ -5,7 +5,7 @@ open Belt;
 open Js.Promise;
 open Expect;
 
-let window = Window.window;
+let window = Window.window_;
 let document = window->Window.document;
 
 let p = RTCPeerConnection.make();

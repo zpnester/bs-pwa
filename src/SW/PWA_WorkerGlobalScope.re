@@ -1,4 +1,4 @@
-type t = PWA_SW__.swGlobalScope;
+type t;
 
 include PWA_EventTarget.Make({
   type nonrec t = t;
@@ -6,4 +6,4 @@ include PWA_EventTarget.Make({
 
 [@bs.send] external importScripts: (t, string) => unit = "importScripts";
 
-let self = PWA_SW__.selfSw;
+[@bs.val] external self_: t = "self";

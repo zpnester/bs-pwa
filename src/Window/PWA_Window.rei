@@ -5,9 +5,8 @@ include (module type of
     type nonrec t = t;
   }));
 
-// globals, avoid external
-let self: t;
-let window: t;
+[@bs.val] external window_: t = "window";
+[@bs.val] external self_: t = "self";
 
 [@bs.get] external navigator: t => PWA_Navigator.t = "navigator";
 [@bs.get] external document: t => PWA_Document.t = "document";

@@ -2,7 +2,7 @@ open Expect;
 
 Js.log("hello sw");
 
-let self= "";
+let self = "A"->Js.String.toLowerCase;
 Js.log(self)
 
 open PWA;
@@ -12,7 +12,7 @@ open Clients;
 open Belt;
 
 
-let self = ServiceWorkerGlobalScope.self;
+let self = ServiceWorkerGlobalScope.self_;
 
 expectToEqual(
   self->registration->ServiceWorkerRegistration.scope,

@@ -4,6 +4,7 @@ include PWA_EventTarget.Make({
   type nonrec t = t;
 });
 
+// TODO public, rename?
 [@bs.send]
 external querySelectorAll_: (t, string) => Js.Array.array_like(Dom.element) =
   "querySelectorAll";

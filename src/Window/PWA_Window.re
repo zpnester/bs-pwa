@@ -4,8 +4,12 @@ include PWA_EventTarget.Make({
   type nonrec t = t;
 });
 
-let window = PWA_Window__.window;
-let self = PWA_Window__.selfWindow;
+
+[@bs.val] external window_: t = "window";
+
+// window usually does not get name clashes but self does
+
+[@bs.val] external self_: t = "self";
 
 [@bs.get] external navigator: t => PWA_Navigator.t = "navigator";
 [@bs.get] external document: t => PWA_Document.t = "document";
