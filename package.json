@@ -1,6 +1,6 @@
 {
   "name": "@zpnester/bs-pwa",
-  "version": "0.0.16-beta.0",
+  "version": "0.0.16",
   "author": {
     "name": "Andriy Nesterenko",
     "email": "zpnester@gmail.com",
@@ -17,7 +17,7 @@
     "watch": "bsb -make-world -w",
     "test:webpack": "webpack -w",
     "test:serve": "serve -p 8081 test_dist",
-    "start": "concurrently --raw \"npm:watch\" \"npm:test:webpack\" \"npm:test:serve\""
+    "dev": "concurrently --raw \"npm:watch\" \"npm:test:webpack\" \"npm:test:serve\""
   },
   "keywords": [
     "BuckleScript",
