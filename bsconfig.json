@@ -18,11 +18,17 @@
   "bs-dependencies": [
     "@zpnester/bs-filereader"
   ],
+  "bs-dev-dependencies": [
+    "reason-react"
+  ],
   "warnings": {
     "error": "+101"
   },
   "refmt": 3,
   "bsc-flags": [
     "-bs-g"
-  ]
+  ],
+  "reason": {
+    "react-jsx": 3
+  }
 }

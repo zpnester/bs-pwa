@@ -1,5 +1,8 @@
-type t;
+type t = PWA__.messagePort;
 
-// TODO transferList
+include PWA_WithPostMessage.Make({
+  type nonrec t = t;
+});
 
-[@bs.send] external postMessage: (t, 'a) => unit = "postMessage";
+[@bs.send] external close: t => unit = "close";
+[@bs.send] external start: t => unit = "start";

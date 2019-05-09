@@ -5,7 +5,7 @@ open Belt;
 open Js.Promise;
 open Expect;
 
-let window = Window.window_;
+let window = Window.window;
 let document = window->Window.document;
 
 let p = RTCPeerConnection.make();
@@ -107,7 +107,9 @@ let make = (name, localVideo, remoteVideo, myChannel, otherChannel) => {
       |> then_(stream => {
            stream
            ->MediaStream.getTracks
-           ->Array.forEach(track => pc->addTrack_(track, [|stream|]) |> ignore);
+           ->Array.forEach(track =>
+               pc->addTrack_(track, [|stream|]) |> ignore
+             );
            pc->createAnswer();
          })
       |> then_(answer => pc->setLocalDescription(answer))

@@ -1,4 +1,6 @@
 module ServiceWorkerGlobalScope = PWA_ServiceWorkerGlobalScope;
+module WorkerGlobalScope = PWA_WorkerGlobalScope;
+module DedicatedWorkerGlobalScope = PWA_DedicatedWorkerGlobalScope;
 module ServiceWorkerRegistration = PWA_ServiceWorkerRegistration;
 module ServiceWorker = PWA_ServiceWorker;
 module Client = PWA_Client;
@@ -34,10 +36,11 @@ module HTMLCanvasElement = PWA_HTMLCanvasElement;
 module CanvasRenderingContext2D = PWA_CanvasRenderingContext2D;
 module HTMLInputElement = PWA_HTMLInputElement;
 module HTMLButtonElement = PWA_HTMLButtonElement;
-module HTMLSelectElement = PWA_HTMLSelectElement; 
+module HTMLSelectElement = PWA_HTMLSelectElement;
 module HTMLOptionElement = PWA_HTMLOptionElement;
 module HTMLTextAreaElement = PWA_HTMLTextAreaElement;
 module URL = PWA_URL;
+module Worker = PWA_Worker;
 
 module RTCPeerConnection = PWA_RTCPeerConnection;
 module RTCDataChannel = PWA_RTCDataChannel;
@@ -51,3 +54,6 @@ module RTCRtpTransceiver = PWA_RTCRtpTransceiver;
 module RTCSessionDescription = PWA_RTCSessionDescription;
 module RTCPeerConnectionIceEvent = PWA_RTCPeerConnectionIceEvent;
 
+module Transferable = PWA_Transferable;
+module ArrayBufferView = PWA_ArrayBufferView;
+module TextDecoder = PWA_TextDecoder;

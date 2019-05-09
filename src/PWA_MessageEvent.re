@@ -1,4 +1,8 @@
-include PWA_Event;
+type t = PWA__.messageEvent;
+
+include PWA_Event.Make({
+  type nonrec t = t;
+});
 
 type message_source;
 
