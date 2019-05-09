@@ -1,6 +1,6 @@
 open PWA.Window;
 open PWA.Worker;
-open PWA_Helpers;
+open FileReader_Helpers;
 open Expect;
 
 Js.log("worker example html");

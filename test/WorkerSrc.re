@@ -16,12 +16,10 @@ self_->addEventListener(
     Js.log2("msg", e->data);
     expectMessageEvent(e);
 
-    let message =
-      switch (e->data->Js.Json.decodeString) {
-      | None => ()
-      | Some(s) => self_->postMessage(s ++ " world")
-      };
-    ();
+    switch (e->data->Js.Json.decodeString) {
+    | None => ()
+    | Some(s) => self_->postMessage(s ++ " world")
+    };
   },
 );
 

@@ -1,7 +1,7 @@
 type t;
 
 external int8Array: Js.Typed_array.Int8Array.t => t = "%identity";
-external unt8Array: Js.Typed_array.Uint8Array.t => t = "%identity";
+external uint8Array: Js.Typed_array.Uint8Array.t => t = "%identity";
 external uint8ClampedArray: Js.Typed_array.Uint8ClampedArray.t => t =
   "%identity";
 external int16Array: Js.Typed_array.Int16Array.t => t = "%identity";

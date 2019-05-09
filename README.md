@@ -5,7 +5,7 @@ Various browser APIs for BuckleScript
 ## Install
 
 ```
-npm i @zpnester/bs-filereader
+npm i @zpnester/bs-filereader@^0.3.0
 npm i @zpnester/bs-pwa
 ```
 

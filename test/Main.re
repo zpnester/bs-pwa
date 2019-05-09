@@ -20,7 +20,6 @@ let isMacOs: bool = [%raw
 
 let isSafari = isMacOs;
 
-
 let isArrayBuffer: Js.Typed_array.ArrayBuffer.t => bool = [%raw
   {|
 function(ab) {
@@ -132,7 +131,6 @@ let video =
   ->Document.getElementById("video")
   ->Option.flatMap(HTMLVideoElement.asVideoElement)
   ->Option.getExn;
-
 
 let canvas = window->document->HTMLCanvasElement.createElement;
 
@@ -345,7 +343,6 @@ Js.Global.setTimeout(
     expectToEqual(peer->iceGatheringState->Js.typeof, "string");
     expectToEqual(peer->signalingState->Js.typeof, "string");
 
-    
     peer->getStats()
     |> then_(stats => {
          Js.log2("stats", stats);
@@ -499,7 +496,6 @@ let elem =
 Js.log("sync OK, wait for async");
 /* window->Window.alertAny(true); */
 
-
 let window = "";
 Js.log(window);
 
@@ -507,7 +503,6 @@ Window.window->Window.alert("test");
 
 let window = 1;
 
-
-let blob = FileReader.Blob.make([||], ());
+let blob = FileReader.Blob.make([||]);
 let objectUrl = URL.createObjectURL(`Blob(blob));
 Js.log(objectUrl);
