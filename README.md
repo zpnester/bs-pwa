@@ -26,7 +26,7 @@ bsconfig.json
 * WindowClient
 * ServiceWorkerGlobalScope
 * DedicatedWorkerGlobalScope
-* PWA_PushManager
+* PushManager
 * RTCPeerConnection
 * RTCDataChannel
 * TextDecoder
