@@ -36,7 +36,7 @@ external vibrate: t => option(Js.Json.t) = "vibrate";
 
 [@bs.set] external setOnclick: (t, PWA_Event.t => unit) => unit = "onclick";
 
-module Options = PWA_NotificationOption;
+module Options = PWA_NotificationOptions;
 
 // new, avoid external
 
