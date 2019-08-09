@@ -1,12 +1,6 @@
 type t;
 type ctor;
 
-let ctor: option(ctor) = [%raw
-  {|
-  (typeof Notification === "function") ? Notification : undefined
-|}
-];
-
 exception NotificationError(Js.Promise.error);
 
 module Action = PWA_Notification_Action;
@@ -14,7 +8,8 @@ module Action = PWA_Notification_Action;
 [@bs.deriving jsConverter]
 type permission = [ | `granted | `denied | `default];
 
-[@bs.get] external permission_: ctor => string = "permission";
+[@bs.val] [@bs.scope "Notification"]
+external permission_: string = "permission";
 
 let unwrapPermission = (p: option(permission)): permission => {
   switch (p) {
@@ -23,21 +18,19 @@ let unwrapPermission = (p: option(permission)): permission => {
   };
 };
 
-let permission = ctor =>
-  permission_(ctor)->permissionFromJs->unwrapPermission;
+// () is required
 
-// safari uses callback
+let permission = () => permission_->permissionFromJs->unwrapPermission;
 
-[@bs.send] [@bs.return nullable]
-external requestPermission_:
-  (ctor, string => unit) => option(Js.Promise.t(string)) =
+[@bs.val] [@bs.scope "Notification"] [@bs.return nullable]
+external requestPermission_: (string => unit) => option(Js.Promise.t(string)) =
   "requestPermission";
 
-let requestPermission = ctor =>
+let requestPermission = () =>
   Js.Promise.make((~resolve, ~reject) => {
     // pass callback that resolves promise
     let maybePromise =
-      requestPermission_(ctor, res =>
+      requestPermission_(res =>
         resolve(. res->permissionFromJs->unwrapPermission)
       );
 
@@ -85,18 +78,5 @@ external vibrate: t => option(Js.Json.t) = "vibrate";
 
 module Options = PWA_NotificationOption;
 
-let make: (ctor, string) => t = [%raw
-  {|
-function(ctor, title) {
-  return new ctor(title);
-}
-|}
-];
-
-let makeWithOptions: (ctor, string, Options.t) => t = [%raw
-  {|
-function(ctor, title, options) {
-  return new ctor(title, options);
-}
-|}
-];
+[@bs.new] external make: string => t = "Notification";
+[@bs.new] external makeWithOptions: (string, Options.t) => t = "Notification";

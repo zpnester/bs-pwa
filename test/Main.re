@@ -67,25 +67,21 @@ let u1 = URL.make("http://a.b");
 
 module Notification = PWA.Notification;
 
-switch (Notification.ctor) {
-| None => Js.Console.error("Notifications not supported")
-| Some(notification) =>
-  notification->Notification.requestPermission
-  |> then_(p => {
-       expectToEqual(p, `granted);
-       let opts = Notification.Options.make(~body="hello", ());
-       let n = notification->Notification.makeWithOptions("hi", opts);
-       n->Notification.setOnclick(_ => Js.log("clicked"));
+Notification.requestPermission()
+|> then_(p => {
+     expectToEqual(p, `granted);
+     let opts = Notification.Options.make(~body="hello", ());
+     let n = Notification.makeWithOptions("hi", opts);
+     n->Notification.setOnclick(_ => Js.log("clicked"));
 
-       expectToEqual(n->Notification.icon, Some(""));
-       expectToEqual(n->Notification.title, Some("hi"));
-       expectToEqual(n->Notification.body, Some("hello"));
-       // undefined in FF
-       //  expectToEqual(n->Notification.actions, Some([||]));
-       resolve();
-     })
-  |> ignore
-};
+     expectToEqual(n->Notification.icon, Some(""));
+     expectToEqual(n->Notification.title, Some("hi"));
+     expectToEqual(n->Notification.body, Some("hello"));
+     // undefined in FF
+     //  expectToEqual(n->Notification.actions, Some([||]));
+     resolve();
+   })
+|> ignore;
 
 let onUpdateFound = () => Js.log("updatefound event");
 
