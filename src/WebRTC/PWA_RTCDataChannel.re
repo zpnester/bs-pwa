@@ -27,7 +27,6 @@ module Init = {
 
 [@bs.get] external bufferedAmount: t => int = "bufferedAmount";
 
-
 [@bs.get]
 external bufferedAmountLowThreshold: t => int = "bufferedAmountLowThreshold";
 [@bs.set]
@@ -42,9 +41,11 @@ external setBufferedAmountLowThreshold: (t, int) => unit =
 [@bs.get] [@bs.return nullable]
 external maxPacketLifeTime: t => option(int) = "maxPacketLifeTime";
 
-[@bs.get] [@bs.return nullable] external maxRetransmits: t => option(int) = "maxRetransmits";
+[@bs.get] [@bs.return nullable]
+external maxRetransmits: t => option(int) = "maxRetransmits";
 
-[@bs.get]  [@bs.return nullable]  external negotiated: t => option(bool) = "negotiated";
+[@bs.get] [@bs.return nullable]
+external negotiated: t => option(bool) = "negotiated";
 
 [@bs.get] external ordered: t => bool = "ordered";
 
@@ -68,25 +69,13 @@ let open_: PWA_EventType.t(t, PWA_Event.t) = PWA_EventType.unsafe("open");
 
 [@bs.send] external close: t => unit = "close";
 
-[@bs.send]
-external send:
-  (
-    t,
-    [@bs.unwrap] [
-      | `String(string)
-      | `Blob(FileReader.Blob.t)
-      | `ArrayBuffer(Js.Typed_array.ArrayBuffer.t)
-      | `Int8Array(Js.Typed_array.Int8Array.t)
-      | `Uint8Array(Js.Typed_array.Uint8Array.t)
-      | `Uint8ClampedArray(Js.Typed_array.Uint8ClampedArray.t)
-      | `Int16Array(Js.Typed_array.Int16Array.t)
-      | `Uint16Array(Js.Typed_array.Uint16Array.t)
-      | `Int32Array(Js.Typed_array.Int32Array.t)
-      | `Uint32Array(Js.Typed_array.Uint32Array.t)
-      | `Float32Array(Js.Typed_array.Float32Array.t)
-      | `Float64Array(Js.Typed_array.Float64Array.t)
-      | `DataView(Js.Typed_array.DataView.t)
-    ]
-  ) =>
-  unit =
-  "send";
+module Data = {
+  type t;
+
+  external string: string => t = "%identity";
+  external blob: FileReader.Blob.t => t = "%identity";
+  external arrayBuffer: Js.Typed_array.ArrayBuffer.t => t = "%identity";
+  external arrayBufferView: PWA_ArrayBufferView.t => t = "%identity";
+};
+
+[@bs.send] external send: (t, Data.t) => unit = "send";

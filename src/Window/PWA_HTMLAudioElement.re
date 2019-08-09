@@ -4,14 +4,13 @@ include PWA_HTMLMediaElement.Make({
   type nonrec t = t;
 });
 
-let asAudioElement_: Dom.element => Js.Nullable.t(t) = [%raw
+let asAudioElement: Dom.element => option(t) = [%raw
   {|
 function(element) {
-  return (element instanceof HTMLAudioElement) ? element : null;
+  return (element instanceof HTMLAudioElement) ? element : undefined;
 }
 |}
 ];
-let asAudioElement = elem => elem->asAudioElement_->Js.Nullable.toOption;
 
 let createElement = doc =>
   doc

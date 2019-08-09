@@ -1,38 +1,21 @@
-include PWA_Client;
+type t;
 
-[@bs.send] external focus_: t => Js.Promise.t(Js.Nullable.t(t)) = "focus";
+include PWA_Client.Make({
+  type nonrec t = t;
+});
 
-let focus = self =>
-  focus_(self)
-  |> Js.Promise.then_(maybe_window =>
-       Js.Promise.resolve(maybe_window->Js.Nullable.toOption)
-     );
+[@bs.send] external focus: t => Js.Promise.t(t) = "focus";
 
-[@bs.send]
-external navigate_: (t, string) => Js.Promise.t(Js.Nullable.t(t)) =
-  "navigate";
+[@bs.send] external navigate: (t, string) => Js.Promise.t(t) = "navigate";
 
-let navigate = (self, url) =>
-  navigate_(self, url)
-  |> Js.Promise.then_(maybe_window =>
-       Js.Promise.resolve(maybe_window->Js.Nullable.toOption)
-     );
-
-let isWindowClient_: PWA_Client.t => bool = [%raw
+let asWindowClient: PWA_Client.t => option(t) = [%raw
   {|
 function(client) {
-  return typeof client.focus === "function" && typeof client.navigate == "function";
+  if ((typeof client.focus === "function") && (typeof client.navigate == "function")) {
+    return client
+  }
 }
 |}
 ];
-
-external toWindowClient_: PWA_Client.t => t = "%identity";
-
-let asWindowClient = client =>
-  if (client->isWindowClient_) {
-    Some(client->toWindowClient_);
-  } else {
-    None;
-  };
 
 external asClient: t => PWA_Client.t = "%identity";

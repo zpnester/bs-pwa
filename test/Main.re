@@ -72,8 +72,9 @@ switch (Notification.ctor) {
   notification->Notification.requestPermission
   |> then_(p => {
        expectToEqual(p, `granted);
-       let n = notification->Notification.make("hi", ~body="hello", ());
-       n->Notification.onclick(_ => Js.log("clicked"));
+       let opts = Notification.Options.make(~body="hello", ());
+       let n = notification->Notification.makeWithOptions("hi", opts);
+       n->Notification.setOnclick(_ => Js.log("clicked"));
 
        expectToEqual(n->Notification.icon, Some(""));
        expectToEqual(n->Notification.title, Some("hi"));
@@ -178,7 +179,7 @@ take->HTMLButtonElement.addEventListener_("click", _ => {
     ~dy=0.0,
   );
   //  image->setSrc(canvas->toDataURL(~type_="image/jpeg", ~quality=0.1, ()));
-  canvas->toBlob->Option.getExn(~type_="image/jpeg", ~quality=0.1, ())
+  canvas->toBlob2(~type_="image/jpeg", ~quality=0.1)
   |> then_(blob => blob->FileReader.toDataURL)
   |> then_(dataUrl => {
        image->setSrc(dataUrl);
@@ -324,7 +325,7 @@ Js.Global.setTimeout(
   () => {
     open RTCPeerConnection;
     let config = Configuration.make(~iceCandidatePoolSize=2, ());
-    let peer = RTCPeerConnection.make(~config, ());
+    let peer = RTCPeerConnection.makeWithConfiguration(config);
 
     expectToEqual(peer->canTrickleIceCandidates, None);
 

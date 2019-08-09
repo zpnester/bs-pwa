@@ -1,14 +1,11 @@
-
 module Make = (M: {type t;}) => {
   include PWA_DomElementLike.Make(M);
   include PWA_HTMLElement.Make(M);
 
   /* setSrcObject: As of November 2017, browsers only support MediaStream */
 
-  [@bs.get]
-  external srcObject_: M.t => Js.Null.t(PWA_MediaStream.t) = "srcObject";
-
-  let srcObject = self => srcObject_(self)->Js.Null.toOption;
+  [@bs.get] [@bs.return nullable]
+  external srcObject: M.t => option(PWA_MediaStream.t) = "srcObject";
 
   [@bs.set]
   external setSrcObject_: (M.t, Js.Null.t(PWA_MediaStream.t)) => unit =

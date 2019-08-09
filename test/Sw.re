@@ -3,14 +3,13 @@ open Expect;
 Js.log("hello sw");
 
 let self = "A"->Js.String.toLowerCase;
-Js.log(self)
+Js.log(self);
 
 open PWA;
 open ServiceWorkerGlobalScope;
 open Js.Promise;
 open Clients;
 open Belt;
-
 
 let self = ServiceWorkerGlobalScope.self_;
 
@@ -47,14 +46,14 @@ self->addEventListener(
     };
 
     expectToEqual(e->data->Js.typeof, "string");
-    expectToEqual(e->origin->Js.typeof, "string");
+    expectToEqual(e->MessageEvent.origin->Js.typeof, "string");
     expectToEqual(e->lastEventId->Js.typeof, "string");
     expectToEqual(e->source->Js.typeof, "object");
     expectToEqual(e->ports, [||]);
 
     let reg = self->registration;
 
-    reg->PWA_ServiceWorkerRegistration.getNotifications()
+    reg->PWA_ServiceWorkerRegistration.getNotifications
     |> then_(ns => {
          Js.log2("notifications", ns);
          resolve();
@@ -76,7 +75,8 @@ self->addEventListener(
 
     let clients = self->clients;
 
-    clients->matchAll()
+    let opts = Clients.MatchAllOptions.make(~_type=ClientType.window, ());
+    clients->matchAllWithOptions(opts)
     |> then_(arr => {
          expectToEqual(arr->Array.length, 1);
 
@@ -99,10 +99,8 @@ self->addEventListener(
        })
     |> ignore;
 
-    self
-    ->registration
-    ->ServiceWorkerRegistration.showNotification(
-        "Test Notification",
+    let notif =
+      Notification.Options.make(
         ~body="Hello there",
         ~icon="https://image.flaticon.com/icons/png/512/1374/1374680.png",
         ~badge="https://image.flaticon.com/icons/png/512/1374/1374680.png",
@@ -121,6 +119,13 @@ self->addEventListener(
           ),
         |],
         (),
+      );
+
+    self
+    ->registration
+    ->ServiceWorkerRegistration.showNotificationWithOptions(
+        "Test Notification",
+        notif,
       )
     |> Js.Promise.then_(() => {
          Js.log("notification fired");

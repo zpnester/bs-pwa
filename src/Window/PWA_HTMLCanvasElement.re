@@ -13,78 +13,101 @@ include PWA_DomElementLike.Make({
 [@bs.set] external setWidth: (t, int) => unit = "width";
 [@bs.set] external setHeight: (t, int) => unit = "height";
 
-let getContext2d: t => PWA_CanvasRenderingContext2D.t = [%raw
-  {|
-function(self) {
-    return self.getContext("2d")
-}
-|}
-];
+// MDN: If the contextType doesn't match a possible drawing context, null is returned.
+[@bs.send] [@bs.return nullable]
+external getContext: (t, string) => option(PWA__.canvasContext) =
+  "getContext";
 
-let getContextWebgl: t => PWA_WebGLRenderingContext.t = [%raw
-  {|
-function(self) {
-    return self.getContext("webgl")
-}
-|}
-];
+[@bs.send] [@bs.return nullable]
+external getContextWithOptions:
+  (t, string, Js.t({.})) => option(PWA__.canvasContext) =
+  "getContext";
 
 [@bs.send]
-external captureStream: (t, ~frameRate: float=?, unit) => PWA_MediaStream.t =
+external getContext2d: (t, [@bs.as "2d"] _) => PWA_CanvasRenderingContext2D.t =
+  "getContext";
+
+[@bs.send]
+external getContext2dWithOptions:
+  (t, [@bs.as "2d"] _, Js.t({.})) => PWA_CanvasRenderingContext2D.t =
+  "getContext";
+
+[@bs.send] external captureStream: t => PWA_MediaStream.t = "captureStream";
+
+[@bs.send]
+external captureStream1: (t, ~framerate: float) => PWA_MediaStream.t =
   "captureStream";
 
+[@bs.send] external toDataURL: t => string = "toDataURL";
+
+[@bs.send] external toDataURL1: (t, ~type_: string) => string = "toDataURL";
+
 [@bs.send]
-external toDataURL: (t, ~type_: string=?, ~quality: float=?, unit) => string =
+external toDataURL2: (t, ~type_: string, ~quality: float) => string =
   "toDataURL";
 
-let hasToBlob_: t => bool = [%raw {|
-function(self) {
-  return !!self.toBlob;
-}
-|}];
+// toBlob is not available in old MS Edge
 
 [@bs.send]
-external toBlob__:
+external toBlob1_: (t, Js.Nullable.t(FileReader.Blob.t) => unit) => unit =
+  "toBlob";
+
+[@bs.send]
+external toBlob2_:
+  (t, Js.Nullable.t(FileReader.Blob.t) => unit, ~type_: string) => unit =
+  "toBlob";
+
+[@bs.send]
+external toBlob3_:
   (
     t,
     Js.Nullable.t(FileReader.Blob.t) => unit,
-    ~type_: string=?,
-    ~quality: float=?,
-    unit
+    ~type_: string,
+    ~quality: float
   ) =>
   unit =
   "toBlob";
 
-let toBlob_ = (self, ~type_=?, ~quality=?, ()) =>
+let toBlob2 = (self, ~type_, ~quality) => {
   Js.Promise.make((~resolve, ~reject) =>
-    self->toBlob__(
-      ~type_?,
-      ~quality?,
-      blob =>
-        switch (blob->Js.Nullable.toOption) {
-        | None => reject(. CanvasError)
-        | Some(blob) => resolve(. blob)
-        },
-      (),
+    self->toBlob3_(~type_, ~quality, blob =>
+      switch (blob->Js.Nullable.toOption) {
+      | None => reject(. CanvasError)
+      | Some(blob) => resolve(. blob)
+      }
     )
   );
+};
+
+let toBlob1 = (self, ~type_) => {
+  Js.Promise.make((~resolve, ~reject) =>
+    self->toBlob2_(~type_, blob =>
+      switch (blob->Js.Nullable.toOption) {
+      | None => reject(. CanvasError)
+      | Some(blob) => resolve(. blob)
+      }
+    )
+  );
+};
 
 let toBlob = self => {
-  if (self->hasToBlob_) {
-    Some(self->toBlob_)
-  } else {
-    None
-  }
-}
+  Js.Promise.make((~resolve, ~reject) =>
+    self->toBlob1_(blob =>
+      switch (blob->Js.Nullable.toOption) {
+      | None => reject(. CanvasError)
+      | Some(blob) => resolve(. blob)
+      }
+    )
+  );
+};
 
-let asCanvasElement_: Dom.element => Js.Nullable.t(t) = [%raw
+let asCanvasElement: Dom.element => option(t) = [%raw
   {|
 function(element) {
-  return (element instanceof HTMLCanvasElement) ? element : null;
+  return (element instanceof HTMLCanvasElement) ? element : undefined;
 }
 |}
 ];
-let asCanvasElement = elem => elem->asCanvasElement_->Js.Nullable.toOption;
 
 let createElement = doc =>
   doc

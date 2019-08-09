@@ -21,14 +21,13 @@ let options = self => {
   options_(self)->Js.Array.from;
 };
 
-let asSelectElement_: Dom.element => Js.Nullable.t(t) = [%raw
+let asSelectElement: Dom.element => option(t) = [%raw
   {|
 function(element) {
-  return (element instanceof HTMLSelectElement  ) ? element : null;
+  return (element instanceof HTMLSelectElement) ? element : undefined;
 }
 |}
 ];
-let asSelectElement = elem => elem->asSelectElement_->Js.Nullable.toOption;
 
 let createElement = doc =>
   doc

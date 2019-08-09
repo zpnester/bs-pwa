@@ -10,14 +10,15 @@ include PWA_HTMLElement.Make({
 [@bs.get] external disabled: t => bool = "disabled";
 [@bs.set] external setDisabled: (t, bool) => unit = "disabled";
 
-let asButtonElement_: Dom.element => Js.Nullable.t(t) = [%raw
+let asButtonElement: Dom.element => option(t) = [%raw
   {|
 function(element) {
-  return (element instanceof HTMLButtonElement) ? element : null;
+  if (element instanceof HTMLButtonElement) {
+    return element;
+  }
 }
 |}
 ];
-let asButtonElement = elem => elem->asButtonElement_->Js.Nullable.toOption;
 
 let createElement = doc =>
   doc

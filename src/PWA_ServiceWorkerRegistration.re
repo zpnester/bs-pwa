@@ -9,20 +9,13 @@ include PWA_EventTarget.Make({
 /* navigationPreload */
 
 [@bs.send]
-external getNotifications_:
-  (t, Js.Nullable.t({. "tag": string})) =>
-  Js.Promise.t(array(PWA_Notification.t)) =
+external getNotifications: t => Js.Promise.t(array(PWA_Notification.t)) =
   "getNotifications";
 
-let getNotifications = (self: t, ~tag: option(string)=?, ()) => {
-  let opts =
-    switch (tag) {
-    | Some(tag) => Js.Nullable.return({"tag": tag})
-    | None => Js.Nullable.undefined
-    };
-
-  self->getNotifications_(opts);
-};
+[@bs.send]
+external getNotifications1:
+  (t, {. "tag": string}) => Js.Promise.t(array(PWA_Notification.t)) =
+  "getNotifications";
 
 [@bs.get] [@bs.return nullable]
 external active: t => option(PWA_ServiceWorker.t) = "active";
@@ -33,81 +26,14 @@ external installing: t => option(PWA_ServiceWorker.t) = "installing";
 [@bs.get] [@bs.return nullable]
 external waiting: t => option(PWA_ServiceWorker.t) = "waiting";
 
-/* same as in Notification */
-type show_notification_options('a, 'b) = {
-  .
-  "actions": Js.Nullable.t(array(PWA_Notification_Action.t)),
-  "badge": Js.Nullable.t(string),
-  "body": Js.Nullable.t(string),
-  "dir": Js.Nullable.t(string),
-  "icon": Js.Nullable.t(string),
-  "image": Js.Nullable.t(string),
-  "lang": Js.Nullable.t(string),
-  "renotify": Js.Nullable.t(bool),
-  "requireInteraction": Js.Nullable.t(bool),
-  "tag": Js.Nullable.t(string),
-  "vibrate": Js.Nullable.t('a),
-  "data": Js.Nullable.t('b),
-};
-
 [@bs.send]
-external showNotification_:
-  (t, string, Js.Nullable.t(show_notification_options('a, 'b))) =>
-  Js.Promise.t(unit) =
+external showNotificationWithOptions:
+  (t, string, PWA_Notification.Options.t) => Js.Promise.t(unit) =
   "showNotification";
 
-let showNotification =
-    (
-      self: t,
-      title: string,
-      ~actions: option(array(PWA_Notification_Action.t))=?,
-      ~badge: option(string)=?,
-      ~body: option(string)=?,
-      ~dir: option(string)=?,
-      ~icon: option(string)=?,
-      ~image: option(string)=?,
-      ~lang: option(string)=?,
-      ~renotify: option(bool)=?,
-      ~requireInteraction: option(bool)=?,
-      ~tag: option(string)=?,
-      ~vibrate: option('a)=?,
-      ~data: option('b)=?,
-      (),
-    ) => {
-  open Belt.Option;
-  let opts =
-    if (isNone(actions)
-        && isNone(badge)
-        && isNone(body)
-        && isNone(dir)
-        && isNone(icon)
-        && isNone(image)
-        && isNone(lang)
-        && isNone(renotify)
-        && isNone(requireInteraction)
-        && isNone(tag)
-        && isNone(vibrate)
-        && isNone(data)) {
-      Js.Nullable.undefined;
-    } else {
-      Js.Nullable.return({
-        "actions": Js.Nullable.fromOption(actions),
-        "badge": Js.Nullable.fromOption(badge),
-        "body": Js.Nullable.fromOption(body),
-        "dir": Js.Nullable.fromOption(dir),
-        "icon": Js.Nullable.fromOption(icon),
-        "image": Js.Nullable.fromOption(image),
-        "lang": Js.Nullable.fromOption(lang),
-        "renotify": Js.Nullable.fromOption(renotify),
-        "requireInteraction": Js.Nullable.fromOption(requireInteraction),
-        "tag": Js.Nullable.fromOption(tag),
-        "vibrate": Js.Nullable.fromOption(vibrate),
-        "data": Js.Nullable.fromOption(data),
-      });
-    };
-
-  self->showNotification_(title, opts);
-};
+[@bs.send]
+external showNotification: (t, string) => Js.Promise.t(unit) =
+  "showNotification";
 
 [@bs.get] [@bs.return nullable]
 external pushManager: t => option(PWA_PushManager.t) = "pushManager";

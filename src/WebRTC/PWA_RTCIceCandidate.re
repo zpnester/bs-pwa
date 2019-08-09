@@ -10,11 +10,8 @@ module Init = {
   };
 };
 
-[@bs.new] external make_: Js.Nullable.t(Init.t) => t = "RTCIceCandidate";
-
-let make = (~init=?, ()) => {
-  make_(init->Js.Nullable.fromOption);
-};
+[@bs.new] external make: unit => t = "RTCIceCandidate";
+[@bs.new] external makeWithInit: Init.t => t = "RTCIceCandidate";
 
 /* TODO test all */
 

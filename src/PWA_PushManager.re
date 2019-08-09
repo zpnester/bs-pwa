@@ -1,64 +1,33 @@
 type t;
 
-type subscribe_opts;
+module ApplicationServerKey = {
+  type t;
 
-let setUserVisibleOnly: (subscribe_opts, Js.Nullable.t(bool)) => unit = [%raw
-  {|
-function(opts, userVisibleOnly) {
-    opts.userVisibleOnly = userVisibleOnly;
-}
-|}
-];
+  external string: string => t = "%identity";
+  external arrayBuffer: Js.Typed_array.ArrayBuffer.t => t = "%identity";
+};
 
-let setApplicationServerKeyString: (subscribe_opts, string) => unit = [%raw
-  {|
-function(opts, applicationServerKey) {
-    opts.applicationServerKey = applicationServerKey;
-}
-|}
-];
+module SubscribeOptions = {
+  type t;
 
-let setApplicationServerKeyArrayBuffer:
-  (subscribe_opts, Js.Typed_array.ArrayBuffer.t) => unit = [%raw
-  {|
-function(opts, applicationServerKey) {
-    opts.applicationServerKey = applicationServerKey;
-}
-|}
-];
+  [@bs.obj]
+  external make:
+    (
+      ~userVisibleOnly: bool=?,
+      ~applicationServerKey: ApplicationServerKey.t=?,
+      unit
+    ) =>
+    t =
+    "";
+};
 
 [@bs.send]
-external subscribe_:
-  (t, Js.Nullable.t(subscribe_opts)) => Js.Promise.t(PWA_PushSubscription.t) =
+external subscribeWithOptions:
+  (t, SubscribeOptions.t) => Js.Promise.t(PWA_PushSubscription.t) =
   "subscribe";
 
-let subscribe =
-    (
-      self,
-      ~userVisibleOnly: option(bool)=?,
-      ~applicationServerKey:
-         option(
-           [ | `String(string) | `ArrayBuffer(Js.Typed_array.ArrayBuffer.t)],
-         )=?,
-      (),
-    ) => {
-  let opts =
-    if (userVisibleOnly->Belt.Option.isNone
-        && applicationServerKey->Belt.Option.isNone) {
-      Js.Nullable.undefined;
-    } else {
-      let opts: subscribe_opts = [%raw "{}"];
-      setUserVisibleOnly(opts, Js.Nullable.fromOption(userVisibleOnly));
-      switch (applicationServerKey) {
-      | Some(`String(str)) => setApplicationServerKeyString(opts, str)
-      | Some(`ArrayBuffer(ab)) =>
-        setApplicationServerKeyArrayBuffer(opts, ab)
-      | None => ()
-      };
-      Js.Nullable.return(opts);
-    };
-  subscribe_(self, opts);
-};
+[@bs.send]
+external subscribe: t => Js.Promise.t(PWA_PushSubscription.t) = "subscribe";
 
 let urlB64ToUint8Array: string => Js.Typed_array.Uint8Array.t = [%raw
   {|
@@ -78,6 +47,8 @@ function(base64String) {
 }
 |}
 ];
+
+// MDN: A Promise that resolves to a PushSubscription object or null.
 
 [@bs.send]
 external getSubscription_:

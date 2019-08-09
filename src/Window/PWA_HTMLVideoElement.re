@@ -8,14 +8,13 @@ include PWA_HTMLMediaElement.Make({
 [@bs.get] external videoWidth: t => int = "videoWidth";
 [@bs.get] external videoHeight: t => int = "videoHeight";
 
-let asVideoElement_: Dom.element => Js.Nullable.t(t) = [%raw
+let asVideoElement: Dom.element => option(t) = [%raw
   {|
 function(element) {
-  return (element instanceof HTMLVideoElement) ? element : null;
+  return (element instanceof HTMLVideoElement) ? element : undefined;
 }
 |}
 ];
-let asVideoElement = elem => elem->asVideoElement_->Js.Nullable.toOption;
 
 let createElement = doc =>
   doc

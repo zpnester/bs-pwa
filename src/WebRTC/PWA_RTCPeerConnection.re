@@ -45,16 +45,10 @@ module Configuration = {
   external rtcpMuxPolicy: t => option(string) = "rtcpMuxPolicy";
 };
 
-[@bs.new] external make_: unit => t = "RTCPeerConnection";
+[@bs.new] external make: unit => t = "RTCPeerConnection";
 
-[@bs.new] external make__: Configuration.t => t = "RTCPeerConnection";
-
-let make = (~config=?, ()) => {
-  switch (config) {
-  | Some(config) => make__(config)
-  | None => make_()
-  };
-};
+[@bs.new]
+external makeWithConfiguration: Configuration.t => t = "RTCPeerConnection";
 
 /*let make = (~config: option())*/
 
@@ -78,7 +72,7 @@ external currentRemoteDescription: t => option(PWA_RTCSessionDescription.t) =
 [@bs.get] external iceConnectionState: t => string = "iceConnectionState";
 [@bs.get] external iceGatheringState: t => string = "iceGatheringState";
 
-[@bs.get] [@bs.return nullable] 
+[@bs.get] [@bs.return nullable]
 external localDescription: t => option(PWA_RTCSessionDescription.t) =
   "localDescription";
 
@@ -167,15 +161,14 @@ external addIceCandidate:
 /* addStream deprecated */
 /*[@bs.send] external addStream: (t, PWA_MediaStream.t) => unit = "addStream";*/
 
-[@bs.send] 
+[@bs.send]
 external addTrack:
   (t, PWA_MediaStreamTrack.t, PWA_MediaStream.t) => PWA_RTCRtpSender.t =
   "addTrack";
 
 [@bs.send] [@bs.variadic]
 external addTrack_:
-  (t, PWA_MediaStreamTrack.t, array(PWA_MediaStream.t)) =>
-  PWA_RTCRtpSender.t =
+  (t, PWA_MediaStreamTrack.t, array(PWA_MediaStream.t)) => PWA_RTCRtpSender.t =
   "addTrack";
 
 [@bs.send] external close: t => unit = "close";

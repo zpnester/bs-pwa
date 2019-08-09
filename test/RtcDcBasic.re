@@ -190,7 +190,7 @@ let createConnection = () => {
 
 let sendData = () => {
   let data = dataChannelSend->A.value;
-  getSendChannel()->DC.send(`String(data));
+  getSendChannel()->DC.send(DC.Data.string(data));
   Js.log("Sent Data: " ++ data);
 };
 
