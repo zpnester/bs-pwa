@@ -90,7 +90,7 @@ let onSendChannelStateChange = _ => {
 
   if (readyState == "open") {
     dataChannelSend->A.setDisabled(false);
-    dataChannelSend->A.focus();
+    dataChannelSend->A.focus;
     sendButton->B.setDisabled(false);
     closeButton->B.setDisabled(false);
   } else {
@@ -141,7 +141,7 @@ let gotDescription1 = desc => {
        Js.log2("Offer from localConnection", desc##sdp);
        getRemoteConnection()->PC.setRemoteDescription(desc);
      })
-  |> then_(() => getRemoteConnection()->PC.createAnswer())
+  |> then_(() => getRemoteConnection()->PC.createAnswer)
   |> then_(gotDescription2)
   |> catch(err => {
        Js.log2("Failed to create session description: ", err);
@@ -156,8 +156,7 @@ let createConnection = () => {
   localConnection := Some(lc);
   Js.log("Created local peer connection object localConnection");
 
-  let sc =
-    lc->RTCPeerConnection.createDataChannel(~label="sendDataChannel", ());
+  let sc = lc->RTCPeerConnection.createDataChannel("sendDataChannel");
   sendChannel := Some(sc);
   Js.log("Created send data channel");
 
@@ -174,7 +173,7 @@ let createConnection = () => {
   rc->PC.addEventListener(PC.icecandidate, e => onIceCandidate(rc, e));
   rc->PC.addEventListener(PC.datachannel, receiveChannelCallback);
 
-  lc->PC.createOffer()
+  lc->PC.createOffer
   |> then_(desc => gotDescription1(desc))
   |> catch(err => {
        Js.log2("Failed to create session description: ", err);

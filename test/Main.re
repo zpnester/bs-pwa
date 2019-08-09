@@ -341,7 +341,7 @@ Js.Global.setTimeout(
     expectToEqual(peer->iceGatheringState->Js.typeof, "string");
     expectToEqual(peer->signalingState->Js.typeof, "string");
 
-    peer->getStats()
+    peer->getStats
     |> then_(stats => {
          Js.log2("stats", stats);
          resolve();
@@ -355,7 +355,7 @@ Js.Global.setTimeout(
       //   expectToEqual(e##channel->Js.typeof, "object1");
       // });
 
-      let dc = peer->createDataChannel(~label="dc1", ());
+      let dc = peer->createDataChannel("dc1");
 
       expectToEqual(dc->RTCDataChannel.binaryType->Js.typeof, "string");
       expectToEqual(dc->RTCDataChannel.bufferedAmount->Js.typeof, "number");

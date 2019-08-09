@@ -110,7 +110,7 @@ let make = (name, localVideo, remoteVideo, myChannel, otherChannel) => {
            ->Array.forEach(track =>
                pc->addTrack_(track, [|stream|]) |> ignore
              );
-           pc->createAnswer();
+           pc->createAnswer;
          })
       |> then_(answer => pc->setLocalDescription(answer))
       |> then_(_ => {
@@ -147,7 +147,7 @@ let make = (name, localVideo, remoteVideo, myChannel, otherChannel) => {
          ->MediaStream.getTracks
          ->Array.forEach(track => pc->addTrack(track, stream) |> ignore);
 
-         pc->createOffer()
+         pc->createOffer
          |> then_(descr => pc->setLocalDescription(descr))
          |> then_(_ => {
               otherChannel#send(

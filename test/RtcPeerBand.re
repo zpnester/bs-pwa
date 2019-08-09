@@ -151,7 +151,7 @@ let gotDescription1 = desc => {
 
   getPc1()->RTCPeerConnection.setLocalDescription(desc)
   |> then_(() => getPc2()->RTCPeerConnection.setRemoteDescription(desc))
-  |> then_(() => getPc2()->RTCPeerConnection.createAnswer())
+  |> then_(() => getPc2()->RTCPeerConnection.createAnswer)
   |> then_(a => gotDescription2(a))
   |> catch(e => {
        onError(e);
@@ -172,7 +172,7 @@ let gotStream = s => {
 
   Js.log("Adding Local Stream to peer connection");
 
-  pc1->RTCPeerConnection.createOffer()
+  pc1->RTCPeerConnection.createOffer
   |> then_(desc => gotDescription1(desc))
   |> catch(err => {
        onError(err);
@@ -319,7 +319,7 @@ bandwidthSelector->HTMLSelectElement.addEventListener_("change", _ => {
   |> ignore;
 
   /* Fallback to the SDP munging with local renegotiation way of limiting the bandwidth. */
-  getPc1()->RTCPeerConnection.createOffer()
+  getPc1()->RTCPeerConnection.createOffer
   |> then_(offer => getPc1()->RTCPeerConnection.setLocalDescription(offer))
   |> then_(() => {
        let desc = fallbackDescr(getPc1(), bandwidth);
