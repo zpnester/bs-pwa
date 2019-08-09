@@ -2,7 +2,7 @@ open Belt;
 open PWA;
 open Js.Promise;
 
-let window = Window.window;
+let window = Window.windowUnsafe;
 let document = window->Window.document;
 let navigator = window->Window.navigator;
 

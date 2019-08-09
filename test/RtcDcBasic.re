@@ -2,7 +2,7 @@ open Belt;
 open Js.Promise;
 open PWA;
 
-let window = Window.window;
+let window = Window.windowUnsafe;
 let document = window->Window.document;
 
 let dataChannelSend =
