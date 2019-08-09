@@ -71,7 +71,7 @@ Notification.requestPermission()
 |> then_(p => {
      expectToEqual(p, `granted);
      let opts = Notification.Options.make(~body="hello", ());
-     let n = Notification.makeWithOptions("hi", opts);
+     let n = Notification.make2("hi", opts);
      n->Notification.setOnclick(_ => Js.log("clicked"));
 
      expectToEqual(n->Notification.icon, Some(""));
@@ -322,7 +322,7 @@ Js.Global.setTimeout(
   () => {
     open RTCPeerConnection;
     let config = Configuration.make(~iceCandidatePoolSize=2, ());
-    let peer = RTCPeerConnection.makeWithConfiguration(config);
+    let peer = RTCPeerConnection.make1(config);
 
     expectToEqual(peer->canTrickleIceCandidates, None);
 

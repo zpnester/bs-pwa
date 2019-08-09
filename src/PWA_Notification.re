@@ -79,4 +79,4 @@ external vibrate: t => option(Js.Json.t) = "vibrate";
 module Options = PWA_NotificationOption;
 
 [@bs.new] external make: string => t = "Notification";
-[@bs.new] external makeWithOptions: (string, Options.t) => t = "Notification";
+[@bs.new] external make2: (string, Options.t) => t = "Notification";

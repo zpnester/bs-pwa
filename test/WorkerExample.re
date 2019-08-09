@@ -1,17 +1,16 @@
-open PWA.WindowPrelude;
 open PWA.Worker;
 open FileReader_Helpers;
 open Expect;
 
 Js.log("worker example html");
 
-let decoder = PWA.TextDecoder.makeWithUtfLabel("utf8");
+let decoder = PWA.TextDecoder.make1("utf8");
 expectBool(decoder->PWA.TextDecoder.fatal);
 expectBool(decoder->PWA.TextDecoder.ignoreBOM);
 expectString(decoder->PWA.TextDecoder.encoding);
 
 let opts = PWA.Worker.Options.make(~name="worker1", ());
-let w = PWA.Worker.makeWithOptions("worker-src.js", opts);
+let w = PWA.Worker.make2("worker-src.js", opts);
 w->addEventListener(
   message,
   e => {

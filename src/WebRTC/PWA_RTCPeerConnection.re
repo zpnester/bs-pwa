@@ -47,10 +47,7 @@ module Configuration = {
 
 [@bs.new] external make: unit => t = "RTCPeerConnection";
 
-[@bs.new]
-external makeWithConfiguration: Configuration.t => t = "RTCPeerConnection";
-
-/*let make = (~config: option())*/
+[@bs.new] external make1: Configuration.t => t = "RTCPeerConnection";
 
 /* TODO delete if not implemented in browsers */
 [@bs.get] [@bs.return nullable]

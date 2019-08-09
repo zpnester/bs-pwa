@@ -2,7 +2,7 @@ type t;
 
 [@bs.new] external make: string => t = "URL";
 
-[@bs.new] external makeWithBase: (string, string) => t = "URL";
+[@bs.new] external make2: (string, ~base: string) => t = "URL";
 
 [@bs.get] external hash: t => string = "hash";
 [@bs.set] external setHash: (t, string) => unit = "hash";

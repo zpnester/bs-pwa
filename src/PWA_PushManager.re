@@ -22,7 +22,7 @@ module SubscribeOptions = {
 };
 
 [@bs.send]
-external subscribeWithOptions:
+external subscribe1:
   (t, SubscribeOptions.t) => Js.Promise.t(PWA_PushSubscription.t) =
   "subscribe";
 

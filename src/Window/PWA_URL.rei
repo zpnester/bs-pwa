@@ -2,7 +2,7 @@ type t;
 
 // constructors, avoid external
 let make: string => t;
-let makeWithBase: (string, string) => t;
+let make2: (string, ~base: string) => t;
 
 [@bs.get] external hash: t => string = "hash";
 [@bs.set] external setHash: (t, string) => unit = "hash";

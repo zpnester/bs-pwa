@@ -1,8 +1,8 @@
 type t;
 
-[@bs.new] external make: unit => t = "TextDecoder";
-[@bs.new] external make1: string => t = "TextDecoder";
-[@bs.new] external make2: (string, {. "fatal": bool}) => t = "TextDecoder";
+let make: unit => t;
+let make1: string => t;
+let make2: (string, {. "fatal": bool}) => t;
 
 [@bs.get] external encoding: t => string = "encoding";
 [@bs.get] external fatal: t => bool = "fatal";

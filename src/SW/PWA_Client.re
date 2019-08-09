@@ -3,8 +3,7 @@ module Make = (M: {type t;}) => {
   [@bs.get] external type_: M.t => PWA_ClientType.t = "type";
   [@bs.get] external url: M.t => string = "url";
 
-  /* transferable omitted */
-  [@bs.send] external postMessage: (M.t, 'a) => unit = "postMessage";
+  include PWA_WithPostMessage.Make(M);
 };
 
 type t;

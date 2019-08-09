@@ -11,7 +11,7 @@ module Init = {
 };
 
 [@bs.new] external make: unit => t = "RTCIceCandidate";
-[@bs.new] external makeWithInit: Init.t => t = "RTCIceCandidate";
+[@bs.new] external make1: Init.t => t = "RTCIceCandidate";
 
 /* TODO test all */
 

@@ -41,4 +41,4 @@ module Options = PWA_NotificationOption;
 // new, avoid external
 
 let make: string => t;
-let makeWithOptions: (string, Options.t) => t;
+let make2: (string, Options.t) => t;

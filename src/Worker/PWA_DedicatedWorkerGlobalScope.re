@@ -4,7 +4,7 @@ include PWA_WorkerGlobalScope.Make({
   type nonrec t = t;
 });
 
-include PWA_WithPostMessage.Make({
+include PWA_WithPostMessage.Make2({
   type nonrec t = t;
 });
 

@@ -27,7 +27,7 @@ external installing: t => option(PWA_ServiceWorker.t) = "installing";
 external waiting: t => option(PWA_ServiceWorker.t) = "waiting";
 
 [@bs.send]
-external showNotificationWithOptions:
+external showNotification2:
   (t, string, PWA_Notification.Options.t) => Js.Promise.t(unit) =
   "showNotification";
 

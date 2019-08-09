@@ -6,7 +6,6 @@ include PWA_DomElementLike.Make({
   type nonrec t = t;
 });
 
-// int
 [@bs.get] external width: t => int = "width";
 [@bs.get] external height: t => int = "height";
 
@@ -19,8 +18,7 @@ external getContext: (t, string) => option(PWA__.canvasContext) =
   "getContext";
 
 [@bs.send] [@bs.return nullable]
-external getContextWithOptions:
-  (t, string, Js.t({.})) => option(PWA__.canvasContext) =
+external getContext2: (t, string, Js.t({.})) => option(PWA__.canvasContext) =
   "getContext";
 
 [@bs.send]
@@ -28,7 +26,7 @@ external getContext2d: (t, [@bs.as "2d"] _) => PWA_CanvasRenderingContext2D.t =
   "getContext";
 
 [@bs.send]
-external getContext2dWithOptions:
+external getContext2d1:
   (t, [@bs.as "2d"] _, Js.t({.})) => PWA_CanvasRenderingContext2D.t =
   "getContext";
 

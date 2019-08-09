@@ -28,6 +28,6 @@ let b =
   Js.Typed_array.Int8Array.make([|65, 66, 67|])
   ->Js.Typed_array.Int8Array.buffer;
 
-self_->postMessageWithTransferList(b, [|Transferable.arrayBuffer(b)|]);
+self_->postMessage2(b, [|Transferable.arrayBuffer(b)|]);
 
 Js.log(b);

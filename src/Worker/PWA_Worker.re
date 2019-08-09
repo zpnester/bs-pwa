@@ -29,12 +29,12 @@ module Options = {
 };
 
 [@bs.new] external make: string => t = "Worker";
-[@bs.new] external makeWithOptions: (string, Options.t) => t = "Worker";
+[@bs.new] external make2: (string, Options.t) => t = "Worker";
 
-include PWA_WithPostMessage.Make({
+include PWA_WithPostMessage.Make2({
   type nonrec t = t;
 });
+// rejectionhandled
 // unhandledrejection
-// s
 
 [@bs.send] external terminate: t => unit = "terminate";

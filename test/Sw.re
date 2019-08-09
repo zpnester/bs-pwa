@@ -77,7 +77,7 @@ self_->addEventListener(
     let clients = self_->clients;
 
     let opts = Clients.MatchAllOptions.make(~_type=ClientType.window, ());
-    clients->matchAllWithOptions(opts)
+    clients->matchAll1(opts)
     |> then_(arr => {
          expectToEqual(arr->Array.length, 1);
 
@@ -124,10 +124,7 @@ self_->addEventListener(
 
     self_
     ->registration
-    ->ServiceWorkerRegistration.showNotificationWithOptions(
-        "Test Notification",
-        notif,
-      )
+    ->ServiceWorkerRegistration.showNotification2("Test Notification", notif)
     |> Js.Promise.then_(() => {
          Js.log("notification fired");
          resolve();

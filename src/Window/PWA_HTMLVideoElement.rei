@@ -8,7 +8,6 @@ include (module type of
 [@bs.get] external videoWidth: t => int = "videoWidth";
 [@bs.get] external videoHeight: t => int = "videoHeight";
 
-
 let asVideoElement: Dom.element => option(t);
 
 let createElement: PWA_Document.t => t;

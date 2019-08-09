@@ -22,7 +22,7 @@ module MatchAllOptions = {
 external matchAll: t => Js.Promise.t(array(PWA_Client.t)) = "matchAll";
 
 [@bs.send]
-external matchAllWithOptions:
+external matchAll1:
   (t, MatchAllOptions.t) => Js.Promise.t(array(PWA_Client.t)) =
   "matchAll";
 
