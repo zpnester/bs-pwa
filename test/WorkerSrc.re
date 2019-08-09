@@ -1,4 +1,5 @@
 open PWA;
+open WorkerPrelude;
 open DedicatedWorkerGlobalScope;
 open Expect;
 

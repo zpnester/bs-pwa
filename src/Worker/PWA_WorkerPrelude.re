@@ -1,0 +1,1 @@
+[@bs.val] external self_: PWA_DedicatedWorkerGlobalScope.t = "self";

@@ -1,17 +1,17 @@
 [%%debugger.chrome];
 
 open PWA;
+open WindowPrelude;
 open Belt;
 open Js.Promise;
 open Expect;
 
-let window = Window.windowUnsafe;
-let document = window->Window.document;
+let document = window_->Window.document;
 
 let p = RTCPeerConnection.make();
 
 let getMedia = () =>
-  window
+  window_
   ->Window.navigator
   ->Navigator.mediaDevices
   ->Option.getExn

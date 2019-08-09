@@ -34,5 +34,7 @@ module Options = {
 include PWA_WithPostMessage.Make({
   type nonrec t = t;
 });
+// unhandledrejection
+// s
 
-[@bs.send] external terminate: t => unit = "terminate" /* unhandledrejection_event even*/ /* rejectionhandled even*/;
+[@bs.send] external terminate: t => unit = "terminate";

@@ -1,6 +1,7 @@
 [%%debugger.chrome];
 
 open PWA;
+open WindowPrelude;
 open Window;
 open Navigator;
 open Belt;
@@ -88,7 +89,7 @@ switch (Notification.ctor) {
 
 let onUpdateFound = () => Js.log("updatefound event");
 
-switch (windowUnsafe->navigator->serviceWorker) {
+switch (window_->navigator->serviceWorker) {
 | Some(c) =>
   c->register("/sw.js")
   |> then_(reg => {
@@ -112,7 +113,7 @@ switch (windowUnsafe->navigator->serviceWorker) {
 | None => resolve()
 };
 
-switch (windowUnsafe->navigator->serviceWorker->Option.flatMap(controller)) {
+switch (window_->navigator->serviceWorker->Option.flatMap(controller)) {
 | Some(sw) =>
   Js.Global.setTimeout(() => sw->postMessage("hello"), 3000) |> ignore;
   Js.log("posted");
@@ -127,13 +128,13 @@ let image = [%bs.raw {|
 |}];
 
 let video =
-  windowUnsafe
+  window_
   ->document
   ->Document.getElementById("video")
   ->Option.flatMap(HTMLVideoElement.asVideoElement)
   ->Option.getExn;
 
-let canvas = windowUnsafe->document->HTMLCanvasElement.createElement;
+let canvas = window_->document->HTMLCanvasElement.createElement;
 
 expectToEqual(
   canvas
@@ -146,21 +147,21 @@ expectToEqual(
 /*let canvasStream = canvas->HTMLCanvasElement.captureStream(~frameRate=60.0, ());*/
 
 let take =
-  windowUnsafe
+  window_
   ->Window.document
   ->Document.getElementById("take")
   ->Option.flatMap(HTMLButtonElement.asButtonElement)
   ->Option.getExn;
 
 let tracks =
-  windowUnsafe
+  window_
   ->Window.document
   ->Document.getElementById("tracks")
   ->Option.flatMap(HTMLButtonElement.asButtonElement)
   ->Option.getExn;
 
 let stop =
-  windowUnsafe
+  window_
   ->Window.document
   ->Document.getElementById("stop")
   ->Option.flatMap(HTMLButtonElement.asButtonElement)
@@ -202,7 +203,7 @@ let stopCamera = () => {
   /* stream := None; */
 };
 
-windowUnsafe
+window_
 ->navigator
 ->Navigator.mediaDevices
 ->Option.getExn
@@ -277,7 +278,7 @@ tracks->HTMLButtonElement.addEventListener_("click", _ => {
 });
 
 let file =
-  windowUnsafe
+  window_
   ->document
   ->Document.getElementById("file")
   ->Option.flatMap(HTMLInputElement.asInputElement)
@@ -307,7 +308,7 @@ file->HTMLInputElement.addEventListener_("change", _ => {
 expectToEqual(file->HTMLInputElement.files, Some([||]));
 
 let date =
-  windowUnsafe
+  window_
   ->document
   ->Document.getElementById("date")
   ->Option.flatMap(HTMLInputElement.asInputElement)
@@ -424,7 +425,7 @@ Js.Global.setTimeout(
 // expectToEqual(peer->getSenders, [||]);
 
 let audio =
-  windowUnsafe
+  window_
   ->document
   ->Document.querySelector("audio")
   ->Option.getExn
@@ -457,33 +458,30 @@ expectToEqual(
 /* do not remove */
 /*let audioStream = audio->HTMLAudioElement.captureStream;*/
 
+expectToEqual(window_->document->Document.querySelectorAll("smth"), [||]);
 expectToEqual(
-  windowUnsafe->document->Document.querySelectorAll("smth"),
-  [||],
-);
-expectToEqual(
-  windowUnsafe->document->Document.querySelectorAll("video")->Js.Array.length,
+  window_->document->Document.querySelectorAll("video")->Js.Array.length,
   1,
 );
 expectToEqual(
-  windowUnsafe->document->Document.getElementById("take")->Option.isSome,
+  window_->document->Document.getElementById("take")->Option.isSome,
   true,
 );
 expectToEqual(
-  windowUnsafe->document->Document.getElementById("take1")->Option.isSome,
+  window_->document->Document.getElementById("take1")->Option.isSome,
   false,
 );
 expectToEqual(
-  windowUnsafe->document->Document.querySelector("#take")->Option.isSome,
+  window_->document->Document.querySelector("#take")->Option.isSome,
   true,
 );
 expectToEqual(
-  windowUnsafe->document->Document.querySelector("#take1")->Option.isSome,
+  window_->document->Document.querySelector("#take1")->Option.isSome,
   false,
 );
 
 let input =
-  windowUnsafe
+  window_
   ->document
   ->HTMLInputElement.createElement
   ->HTMLInputElement.asDomElement
@@ -491,7 +489,7 @@ let input =
   ->Option.getExn;
 
 let elem =
-  windowUnsafe
+  window_
   ->document
   ->Document.createElement("input")
   ->HTMLInputElement.asInputElement
@@ -503,7 +501,7 @@ Js.log("sync OK, wait for async");
 let window = "";
 Js.log(window);
 
-Window.windowUnsafe->Window.alert("test");
+WindowPrelude.window_->Window.alert("test");
 
 let window = 1;
 

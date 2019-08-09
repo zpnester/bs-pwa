@@ -1,4 +1,4 @@
-open PWA.Window;
+open PWA.WindowPrelude;
 open PWA.Worker;
 open FileReader_Helpers;
 open Expect;

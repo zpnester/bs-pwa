@@ -6,34 +6,35 @@ let self = "A"->Js.String.toLowerCase;
 Js.log(self);
 
 open PWA;
+open ServiceWorkerPrelude;
 open ServiceWorkerGlobalScope;
 open Js.Promise;
 open Clients;
 open Belt;
 
-let self = ServiceWorkerGlobalScope.self_;
+let self = self;
 
 expectToEqual(
-  self->registration->ServiceWorkerRegistration.scope,
+  self_->registration->ServiceWorkerRegistration.scope,
   "http://localhost:8081/",
 );
 
-self->importScripts("1.js");
+self_->importScripts("1.js");
 
-Js.log2("sw registration", self->registration);
+Js.log2("sw registration", self_->registration);
 Js.log2(
   "push manager",
-  self->registration->ServiceWorkerRegistration.pushManager,
+  self_->registration->ServiceWorkerRegistration.pushManager,
 );
 
-self->addEventListener(install, _ => Js.log("on install"));
+self_->addEventListener(install, _ => Js.log("on install"));
 
-self->addEventListener(activate, _ => Js.log("on activate"));
+self_->addEventListener(activate, _ => Js.log("on activate"));
 
-self->skipWaiting;
+self_->skipWaiting;
 
-self->addEventListener(fetch, _ => Js.log("on fetch"));
-self->addEventListener(
+self_->addEventListener(fetch, _ => Js.log("on fetch"));
+self_->addEventListener(
   message,
   e => {
     open MessageEvent;
@@ -51,7 +52,7 @@ self->addEventListener(
     expectToEqual(e->source->Js.typeof, "object");
     expectToEqual(e->ports, [||]);
 
-    let reg = self->registration;
+    let reg = self_->registration;
 
     reg->PWA_ServiceWorkerRegistration.getNotifications
     |> then_(ns => {
@@ -73,7 +74,7 @@ self->addEventListener(
       reg->PWA_ServiceWorkerRegistration.waiting->Belt.Option.isSome,
     );
 
-    let clients = self->clients;
+    let clients = self_->clients;
 
     let opts = Clients.MatchAllOptions.make(~_type=ClientType.window, ());
     clients->matchAllWithOptions(opts)
@@ -121,7 +122,7 @@ self->addEventListener(
         (),
       );
 
-    self
+    self_
     ->registration
     ->ServiceWorkerRegistration.showNotificationWithOptions(
         "Test Notification",
@@ -135,7 +136,7 @@ self->addEventListener(
   },
 );
 
-self->addEventListener(
+self_->addEventListener(
   notificationclick,
   event => {
     open NotificationEvent;
@@ -148,7 +149,7 @@ self->addEventListener(
     expectToEqual(event->notification->timestamp->Js.typeof, "number");
 
     if (event->action == Some("left")) {
-      self->clients->openWindow("/")
+      self_->clients->openWindow("/")
       |> then_(wc => {
            /* validate type */
            wc
@@ -169,14 +170,14 @@ self->addEventListener(
   },
 );
 
-self->addEventListener(notificationclose, _ =>
+self_->addEventListener(notificationclose, _ =>
   Js.log("on notification close")
 );
 
-self->addEventListener(push, _ => Js.log("on push"));
+self_->addEventListener(push, _ => Js.log("on push"));
 
-self->addEventListener(pushsubscriptionchange, _ =>
+self_->addEventListener(pushsubscriptionchange, _ =>
   Js.log("on pushsubscriptionchange")
 );
 
-self->addEventListener(sync, _ => Js.log("on sync"));
+self_->addEventListener(sync, _ => Js.log("on sync"));

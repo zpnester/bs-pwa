@@ -1,10 +1,11 @@
 open Belt;
 open PWA;
+open WindowPrelude;
+
 open Js.Promise;
 
-let window = Window.windowUnsafe;
-let document = window->Window.document;
-let navigator = window->Window.navigator;
+let document = window_->Window.document;
+let navigator = window_->Window.navigator;
 
 let remoteVideo =
   document
@@ -209,7 +210,7 @@ callButton->HTMLButtonElement.addEventListener_("click", _ => {
   |> then_(s => gotStream(s))
   |> catch(e => {
        Js.log(e);
-       window->Window.alert("getUserMedia() error");
+       window_->Window.alert("getUserMedia() error");
        resolve();
      })
   |> ignore;

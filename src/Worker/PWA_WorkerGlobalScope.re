@@ -1,17 +1,8 @@
-type t;
+module Make = (M: {type t;}) => {
+  include PWA_EventTarget.Make(M);
+  include PWA_WindowOrWorkerGlobalScope.Make(M);
 
-include PWA_EventTarget.Make({
-  type nonrec t = t;
-});
-
-[@bs.send] external importScripts: (t, string) => unit = "importScripts";
-
-[@bs.val] external self_: t = "self";
-
-// TODO navigator
-
-// TODO location
-
-include PWA_WindowOrWorkerGlobalScope.Make({
-  type nonrec t = t;
-});
+  [@bs.send] external importScripts: (M.t, string) => unit = "importScripts";
+  // TODO navigator
+  // TODO location
+};

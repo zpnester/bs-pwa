@@ -1,4 +1,8 @@
-include PWA_WorkerGlobalScope;
+type t;
+
+include PWA_WorkerGlobalScope.Make({
+  type nonrec t = t;
+});
 
 [@bs.get]
 external registration: t => PWA_ServiceWorkerRegistration.t = "registration";

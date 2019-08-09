@@ -57,3 +57,7 @@ module RTCPeerConnectionIceEvent = PWA_RTCPeerConnectionIceEvent;
 module Transferable = PWA_Transferable;
 module ArrayBufferView = PWA_ArrayBufferView;
 module TextDecoder = PWA_TextDecoder;
+
+module WindowPrelude = PWA_WindowPrelude;
+module WorkerPrelude = PWA_WorkerPrelude;
+module ServiceWorkerPrelude = PWA_ServiceWorkerPrelude;
