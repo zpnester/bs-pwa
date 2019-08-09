@@ -176,58 +176,41 @@ external createAnswer_:
   Js.Promise.t(PWA_RTCSessionDescription.Init.t) =
   "createAnswer";
 
-let createAnswer = (self, ~voiceActivityDetection=?, ()) => {
-  let options =
-    if (voiceActivityDetection->Belt.Option.isNone) {
-      Js.Nullable.undefined;
-    } else {
-      Js.Nullable.return({
-        "voiceActivityDetection":
-          voiceActivityDetection->Js.Nullable.fromOption,
-      });
-    };
-
-  createAnswer_(self, options);
-};
+[@bs.send]
+external createAnswer1:
+  (t, {.. "voiceActivityDetection": option(bool)}) =>
+  Js.Promise.t(PWA_RTCSessionDescription.Init.t) =
+  "createAnswer";
 
 [@bs.send]
-external createDataChannel_:
-  (t, string, Js.Nullable.t(PWA_RTCDataChannel.Init.t)) =>
-  PWA_RTCDataChannel.t =
+external createAnswer: t => Js.Promise.t(PWA_RTCSessionDescription.Init.t) =
+  "createAnswer";
+
+[@bs.send]
+external createDataChannel2:
+  (t, string, PWA_RTCDataChannel.Init.t) => PWA_RTCDataChannel.t =
   "createDataChannel";
 
-let createDataChannel = (self, ~label, ~init=?, ()) => {
-  createDataChannel_(self, label, init->Js.Nullable.fromOption);
-};
+[@bs.send]
+external createDataChannel: (t, string) => PWA_RTCDataChannel.t =
+  "createDataChannel";
 
 [@bs.send]
-external createOffer_:
+external createOffer1:
   (
     t,
-    Js.Nullable.t({
+    {
       .
-      "iceRestart": Js.Nullable.t(bool),
-      "voiceActivityDetection": Js.Nullable.t(bool),
-    })
+      "iceRestart": option(bool),
+      "voiceActivityDetection": option(bool),
+    }
   ) =>
   Js.Promise.t(PWA_RTCSessionDescription.Init.t) =
   "createOffer";
 
-let createOffer = (self, ~iceRestart=?, ~voiceActivityDetection=?, ()) => {
-  let options =
-    if (iceRestart->Belt.Option.isNone
-        && voiceActivityDetection->Belt.Option.isNone) {
-      Js.Nullable.undefined;
-    } else {
-      Js.Nullable.return({
-        "iceRestart": iceRestart->Js.Nullable.fromOption,
-        "voiceActivityDetection":
-          voiceActivityDetection->Js.Nullable.fromOption,
-      });
-    };
-
-  createOffer_(self, options);
-};
+[@bs.send]
+external createOffer: t => Js.Promise.t(PWA_RTCSessionDescription.Init.t) =
+  "createOffer";
 
 [@bs.val] [@bs.scope "RTCPeerConnection"]
 external generateCertificate:
@@ -244,13 +227,15 @@ external getReceivers: t => array(PWA_RTCRtpReceiver.t) = "getReceivers";
 [@bs.send] external getSenders: t => array(PWA_RTCRtpSender.t) = "getSenders";
 
 [@bs.send]
-external getStats:
-  (t, ~selector: PWA_MediaStream.t=?, unit) => Js.Promise.t(Js.t({..})) =
+external getStats1: (t, PWA_MediaStream.t) => Js.Promise.t(Js.t({..})) =
   "getStats";
+
+[@bs.send] external getStats: t => Js.Promise.t(Js.t({..})) = "getStats";
 
 [@bs.send]
 external removeTrack: (t, PWA_RTCRtpSender.t) => unit = "removeTrack";
 
+// todo remove if not needed
 // [@bs.send]
 // external setConfiguration: (t, Configuration.t) => unit = "setConfiguration";
 
