@@ -4,8 +4,8 @@ open WindowPrelude;
 
 open Js.Promise;
 
-let document = window_->Window.document;
-let navigator = window_->Window.navigator;
+let document = window()->Window.document;
+let navigator = window()->Window.navigator;
 
 let remoteVideo =
   document
@@ -210,7 +210,7 @@ callButton->HTMLButtonElement.addEventListener_("click", _ => {
   |> then_(s => gotStream(s))
   |> catch(e => {
        Js.log(e);
-       window_->Window.alert("getUserMedia() error");
+       window()->Window.alert("getUserMedia() error");
        resolve();
      })
   |> ignore;

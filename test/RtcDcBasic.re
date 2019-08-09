@@ -3,7 +3,7 @@ open Js.Promise;
 open PWA;
 open WindowPrelude;
 
-let document = window_->Window.document;
+let document = window()->Window.document;
 
 let dataChannelSend =
   document

@@ -6,12 +6,12 @@ open Belt;
 open Js.Promise;
 open Expect;
 
-let document = window_->Window.document;
+let document = window()->Window.document;
 
 let p = RTCPeerConnection.make();
 
 let getMedia = () =>
-  window_
+  window()
   ->Window.navigator
   ->Navigator.mediaDevices
   ->Option.getExn
